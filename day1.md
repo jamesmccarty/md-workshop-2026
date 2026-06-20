@@ -1,14 +1,14 @@
 
-# Day 1 - Foundations of Molecular Simulation #  
+# Day 1 - Foundations of Molecular Simulation  
 
-## More information coming soon ## 
+## More information coming soon  
 
-## Background ## 
+## Background 
 
-## Lennard Jones Fluid ## 
+## Lennard Jones Fluid  
 
-## miniprotein ## 
+## miniprotein 
 
-## (Optional) Trp-Cage ##
+## (Optional) Trp-Cage 
 
-## Introduction to PLUMED syntax and Histograms ##  
+## Introduction to PLUMED syntax and Histograms   

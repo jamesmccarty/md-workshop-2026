@@ -1,15 +1,15 @@
 
-# Day 2 - Enhanced Sampling and Statistical Analysis #  
+# Day 2 - Enhanced Sampling and Statistical Analysis   
 
-## More information coming soon ##  
+## More information coming soon   
 
-## Background ## 
+## Background 
 
-## Adding Restraints in PLUMED ##
+## Adding Restraints in PLUMED 
 
-## Metadyanmics ## 
+## Metadyanmics 
 
-## Path CVs ## 
+## Path CVs 
 
-## Error Analysis of Free Energy Surfaces  ##
+## Error Analysis of Free Energy Surfaces  
  
