@@ -1,6 +1,6 @@
 # Workshop Schedule
 
-## Day 1 - Foundations of Molecular Simulation
+## Day 1 - Foundations of Molecular Simulation  
 
 | Time | Activity | Description |
 |------|----------|-------------|
