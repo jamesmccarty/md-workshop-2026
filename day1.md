@@ -1,6 +1,7 @@
-# Day 1 - Foundations of Molecular Simulation
 
-## More information coming soon ### 
+# Day 1 - Foundations of Molecular Simulation #  
+
+## More information coming soon ## 
 
 ## Background ## 
 

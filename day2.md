@@ -1,6 +1,7 @@
-# Day 2 - Enhanced Sampling and Statistical Analysis
 
-## More information coming soon ### 
+# Day 2 - Enhanced Sampling and Statistical Analysis #  
+
+## More information coming soon ##  
 
 ## Background ## 
 
