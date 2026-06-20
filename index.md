@@ -26,6 +26,7 @@ Western Washington University
  [Apply here](https://docs.google.com/forms/d/e/1FAIpQLSe6wiQBp8TRDA_zDYHhQHi9elrNPFrWgTqwdM1tvNrDB8PgIg/viewform?usp=header)
  
  **Location**: CB 385  
- **Time**: 9:00 AM - 4:00 PM, Thursday, July 23  
-       9:00 AM - 4:00 PM, Friday, July 24   
+ **Time**:  
+   9:00 AM - 4:00 PM, Thursday, July 23  
+   9:00 AM - 4:00 PM, Friday, July 24   
 
