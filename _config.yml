@@ -5,5 +5,3 @@ theme: minima
 header_pages: 
  - index.md
  - schedule.md
- - day1.md
- - day2.md 
