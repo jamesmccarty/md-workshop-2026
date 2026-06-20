@@ -1,6 +1,5 @@
 
-# Summer 2026 Computational Workshop 
-July 23-24, 2026
+**July 23-24, 2026**
 Western Washington University 
 
 ![Workshop Banner](images/workshop_image.png)
