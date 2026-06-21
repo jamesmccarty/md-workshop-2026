@@ -1,7 +1,7 @@
 
 # Day 1 - Foundations of Molecular Simulation  
 
-The goal of today's sessions are to introduce the basic concepts of molecular dynamics (MD) simulations and provide hands-on experience running and analyzing simulations using the GROMACS MD package.  
+The goals of today's sessions are to introduce the basic concepts of molecular dynamics (MD) simulations and provide hands-on experience running and analyzing simulations using the GROMACS MD package.  
 
 **Learning Objectives**
 
