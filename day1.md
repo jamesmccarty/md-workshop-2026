@@ -32,8 +32,36 @@ Once this tutorial is completed students will be able to:
 
 [Lennard-Jones Fluid Tutorial](coming soon)
 
-## miniprotein 
+## Session 3: MD Simulation of a Mini-Protein Tutorial
 
-## (Optional) Trp-Cage 
+In this tutorial you will use GROMACS in the Unix command line to build and equilibrate a solvated protein system for the mini-protein [YYDPETGTWY](https://pubs.acs.org/doi/10.1021/ja8030533). The goal is to understand the MD simulation parameters that are chosen and the details about how the system was built.  
 
-## Introduction to PLUMED syntax and Histograms   
+Once this tutorial is completed students will be able to:
+
+- Simulate a protein in explicit solvent
+- Understand GROAMCS output files and be able to transfer files for analysis 
+- Calculate RMSD and monitor structural stability
+- Analyze protein dynamics
+
+**Tutorial**
+
+[Mini-Protein Tutorial](coming soon)
+
+## (Optional) Trp-Cage System
+
+For additional practice, you can try setting up and running an MD simulation of the larger [trp-cage protein](https://www.rcsb.org/structure/1L2Y).
+   
+
+## Introduction to PLUMED Syntax and Histograms
+
+The aim of this tutorial is to introduce the users to the PLUMED syntax. We will go through the writing of simple collective variable and we will use them to analyze existing trajectories.
+
+Once this tutorial is completed students will be able to:
+
+- Write a simple PLUMED input file and use it to analyze a trajectory
+- Print collective variables such as distances, torsional angles, and coordination numbers using the PRINT action
+- Be able to use PLUMED to calculate ensemble averages and histograms
+
+**Tutorial**
+
+[Analyzing Trajectories Using PLUMED Tutorial](coming soon)   
