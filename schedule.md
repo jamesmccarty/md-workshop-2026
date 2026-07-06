@@ -12,7 +12,7 @@
 | 12:15 - 1:15 | Lunch |
 | 1:15 - 2:45 | Tutorial: Analyzing trajectories and introduction to PLUMED syntax | Brief guide to PLUMED syntax, making histograms | 
 | 2:45 - 3:00 | Break | 
-| 3:00 - 3:50 | Collaboratoin time | Discussion, troubleshooting, and brainstorming research applications | 
+| 3:00 - 3:50 | Collaboration time | Discussion, troubleshooting, and brainstorming research applications | 
 | 3:50 - 4:00 | Complete survey | 
 
 ## Day 2 - Enhanced Sampling and Statistical Analysis
@@ -26,5 +26,5 @@
 | 12:15 - 1:15 | Lunch |
 | 1:15 - 2:45 | Tutorial: Statistical Analysis of Simulation Data | Error bars, block averaging, bootstrap analysis, and statistical uncertainty | 
 | 2:45 - 3:00 | Break | 
-| 3:00 - 3:50 | Collaboratoin time, wrap-up | Applying computational methods to research projects, discussion, and future directions | 
+| 3:00 - 3:50 | Collaboration time, wrap-up | Applying computational methods to research projects, discussion, and future directions | 
 | 3:50 - 4:00 | Complete survey |
