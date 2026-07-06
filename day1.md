@@ -30,7 +30,7 @@ Once this tutorial is completed students will be able to:
 
 **Tutorial**
 
-[Lennard-Jones Fluid Tutorial](coming soon)
+[Lennard-Jones Fluid Tutorial](day1/lj_fluid/lj_fluid_tutorial.md)
 
 ## Session 3: MD Simulation of a Mini-Protein Tutorial
 
