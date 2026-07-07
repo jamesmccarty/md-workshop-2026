@@ -38,8 +38,6 @@ Make sure that the **Port** is set to 22 and the **Connection type** is set to S
 
 A terminal window will open. Enter the username provided to you at the start of the workshop and press Enter. Next, enter your assigned password and press **Enter**
 
-![Login window](../../images/LoginScreen_screenshot.png)
-
 **Important**: When you type your password, nothing will appear on the screen. You will not see letters or dots.
 
 After successfully logging in, you should see a command prompt similar to:
@@ -73,15 +71,13 @@ This will copy the necessary tutorial files to your home directory on bigzam. Ch
 ls
 {% endhighlight %
 
-The $$ls$$ command lists the files and directories in your current location.
+The ls command lists the files and directories in your current location.
 
 Move into the lj-fluid directory:
 
 {% highlight git %}
 cd lj-fluid
 {% endhighlight %
-
-
 
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
