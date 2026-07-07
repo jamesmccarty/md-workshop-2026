@@ -26,6 +26,26 @@ Open **PuTTY** from the Windows Start menu. You shouldd see the PuTTY Configurat
 
 ![PuTTY window](../../images/PuTTYwindow.png)
 
+In the Host Name (or IP address) box, enter:
+
+{% highlight git %}
+bigzam.local
+{% endhighlight %}
+
+Make sure that the **Port** is set to 22 and the **Connection type** is set to SSH. Click **Open** and accept the Security Warning.
+
+#### Log In using the terminal window
+
+A terminal window will open. Enter the username provided to you at the start of the workshop and press Enter. Next, enter your assigned password and press **Enter**
+
+**Important**: When you type your password, nothing will appear on the screen. You will not see letters or dots.
+
+After successfully logging in, you should see a command prompt similar to:
+
+{% highlight git %}
+username@bigzam:~$
+{% endhighlight %}
+
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
 
