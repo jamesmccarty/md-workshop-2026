@@ -75,6 +75,8 @@ Check that you see the lj-fluid directory by typing:
 ls
 {% endhighlight %
 
+The ls command lists the files and directories in your current location.
+
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
 
