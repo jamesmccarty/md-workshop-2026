@@ -188,13 +188,13 @@ gen_seed                 = -1
 
 #### Generate GROMACS binary run input file and run the MD simulation
 
-Running an MD simulation in GROMACS requires two steps. First, we use the Gromacs preprocessor command *grompp* to prepare a binary run input file that GROMACS can read and execute. Second, we run the simulation using the *mdrun* command. First run the GROMACS preprocessor by typing the following in the terminal:
+Running an MD simulation in GROMACS requires two steps. First, we use the Gromacs preprocessor command `grompp` to prepare a binary run input file that GROMACS can read and execute. Second, we run the simulation using the `mdrun` command. First run the GROMACS preprocessor by typing the following in the terminal:
 
 {% highlight git %}
 gmx grompp -f md_run1.mdp -c Ar_864.pdb -p argon.top -o md_run1.tpr
 {% endhighlight %}
 
-Here the -f flag indicates the input MD parameter file, the -c flag indicates the input structure file, the -p flag indicates the input topology file. The -o flag specifies the output file name which is the binary run input file. Now we are ready to run the simulation using the *mdrun* command:
+Here the -f flag indicates the input MD parameter file, the -c flag indicates the input structure file, the -p flag indicates the input topology file. The -o flag specifies the output file name which is the binary run input file. Now we are ready to run the simulation using the `mdrun` command:
 
 {% highlight git %}
 gmx mdrun -v -s md_run1.tpr -o md_run1.trr -x md_run1.xtc -cpo md_run1.cpt -c md_run1.gro -e md_run1.edr -g md_run1.log  
@@ -208,11 +208,14 @@ During this 100 ps simulation, the Argon atoms should melt from the lattice stru
 gmx energy -f md_run1.edr -o temperature.xvg -xvg none
 {% endhighlight %}
 
-Type "8 0" at the prompt to select the temperature and hit enter. The temperature.xvg file will have the time vs. temperature over the course of the simulation. You can plot this with any plotting tool. For example, in xmgrace:
+Type "8 0" at the prompt to select the temperature and hit enter. The temperature.xvg file will have the time vs. temperature over the course of the simulation. You can plot this with any plotting tool.
 
-{% highlight git %}
-xmgrace temperature.xvg 
-{% endhighlight %}
+For this example, you can copy your `temperature.xvg` file to your local machine using WinSCP:
+
+
+Then you can plot this file using Python using the following Google Colab link:
+
+[simple plotting code]()
 
 See if you can repeat this procedure to plot the potential energy. Does the potential energy reach a stable equilibrium?
 
@@ -226,7 +229,7 @@ Now we run the GROMACS preprocessor to generate a new binary run input file for 
 gmx grompp -f Ar_nvt.mdp -c md_run1.gro -t md_run1.cpt -p argon.top -o Ar_nvt.tpr
 {% endhighlight %}
 
-Notice here the input coordinate file is the *md_run1.gro* file that we generated in our previous simulation. This is the final coordinates from our equilibration simulation. Also, we have added the -t flag to indicate to restart the simulation from the previous checkpoint file. Now we run the simulation as before with:
+Notice here the input coordinate file is the `md_run1.gro` file that we generated in our previous simulation. This is the final coordinates from our equilibration simulation. Also, we have added the -t flag to indicate to restart the simulation from the previous checkpoint file. Now we run the simulation as before with:
 
 {% highlight git %}
 gmx mdrun -v -s Ar_nvt.tpr -o Ar_nvt.trr -x Ar_nvt.xtc -cpo Ar_nvt.cpt -c Ar_nvt.gro -e Ar_nvt.edr -g Ar_nvt.log  
