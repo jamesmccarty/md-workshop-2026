@@ -52,6 +52,21 @@ You are now connected to the workshop computer.
 
 #### Set your environment variables
 
+**Important**: You need to do this step every time you log in to bigzam. This will ensure the correct software is in your path. In the terminal type:
+
+{% highlight git %}
+source setup.sh
+{% endhighlight %}
+
+#### Copy the Lennard Jones Tutorial Files  
+
+In the terminal type:
+{% highlight git %}
+cp -r /opt/workshop/lj-fluid/ ~/
+{% endhighlight %}
+
+**Tip**: You can press the Tab key to automatically complete file and directory names. This can save time and help avoid typing errors.
+
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
 
