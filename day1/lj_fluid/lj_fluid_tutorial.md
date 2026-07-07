@@ -38,6 +38,8 @@ Make sure that the **Port** is set to 22 and the **Connection type** is set to S
 
 A terminal window will open. Enter the username provided to you at the start of the workshop and press Enter. Next, enter your assigned password and press **Enter**
 
+![terminal window](../../images/LoginScreen_screenshot.png)
+
 **Important**: When you type your password, nothing will appear on the screen. You will not see letters or dots.
 
 After successfully logging in, you should see a command prompt similar to:
