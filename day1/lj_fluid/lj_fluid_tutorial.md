@@ -24,7 +24,6 @@ During the workshop, you will run molecular dynamics simulations on a Linux work
 
 Open **PuTTY** from the Windows Start menu. You shouldd see the PuTTY Configuration window:
 
-![]({{ site.url }}{{ site.baseurl }}/images/PuTTYwindow.png){: style="width: 300px; border: 10px"}
 
 In the Host Name (or IP address) box, enter:
 
