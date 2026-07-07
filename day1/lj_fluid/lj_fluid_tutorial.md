@@ -77,6 +77,27 @@ ls
 
 The ls command lists the files and directories in your current location.
 
+Move into the lj-fluid directory:
+
+{% highlight git %}
+cd lj-fluid
+{% endhighlight %}
+
+From this directory, if you type $$ls$$, you should see the following:
+
+#### Useful Terminal Commands
+
+| Command           | Description                    |
+| ----------------- | ------------------------------ |
+| `pwd`             | Show your current directory    |
+| `ls`              | List files and directories     |
+| `cd directory`    | Move into a directory          |
+| `cd ..`           | Move up one directory          |
+| `mkdir directory` | Create a new directory         |
+| `clear`           | Clear the terminal screen      |
+| `exit`            | Log out of the remote computer |
+
+
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
 
