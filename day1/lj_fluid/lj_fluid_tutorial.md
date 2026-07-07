@@ -65,7 +65,15 @@ In the terminal type:
 cp -r /opt/workshop/lj-fluid/ ~/
 {% endhighlight %}
 
+This will copy the necessary tutorial files to your home directory on bigzam.
+
 **Tip**: You can press the Tab key to automatically complete file and directory names. This can save time and help avoid typing errors.
+
+Check that you see the lj-fluid directory by typing:
+
+{% highlight git %}
+ls
+{% endhighlight %
 
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
