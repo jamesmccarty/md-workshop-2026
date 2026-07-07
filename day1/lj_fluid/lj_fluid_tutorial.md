@@ -73,7 +73,7 @@ Check that you see the lj-fluid directory by typing:
 
 {% highlight git %}
 ls
-{% endhighlight %
+{% endhighlight %}
 
 The ls command lists the files and directories in your current location.
 
