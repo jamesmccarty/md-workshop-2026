@@ -197,10 +197,10 @@ gmx grompp -f md_run1.mdp -c Ar_864.pdb -p argon.top -o md_run1.tpr
 Here the -f flag indicates the input MD parameter file, the -c flag indicates the input structure file, the -p flag indicates the input topology file. The -o flag specifies the output file name which is the binary run input file. Now we are ready to run the simulation using the `mdrun` command:
 
 {% highlight git %}
-gmx mdrun -v -s md_run1.tpr -o md_run1.trr -x md_run1.xtc -cpo md_run1.cpt -c md_run1.gro -e md_run1.edr -g md_run1.log  
+gmx mdrun -v -s md_run1.tpr -deffnm md_run1 -nt 1
 {% endhighlight %}
 
-The -s flag signals the input binary run input file. The rest of the flags indicate output files that will be produced as the simulation runs. The -o flag specifies the trajectory file, the -x flag specifies the output trajectory in compressed binary format, the -cpo flag is a checkpoint file, the -c flag is the output coordinates, the -e flag specifies the output energy file, and the -g flag indicates the output log file.
+The -s flag signals the input binary run input file. The -deffnm flag signals the prefix for all of the output files that will be produced as the simulation runs. These output files include the trajectory file (.xtc), a checkpoint file for restarting (.cpo), the final coordinates (.gro), the output energy file (.edr), and the output simulation log file (.log). All these files will be created during the simulation run. 
 
 During this 100 ps simulation, the Argon atoms should melt from the lattice structure and become a liquid. The temperature should equilibrate to 94.4 K and the potential energy should reach a stable equilibrium. To check the temperature and energy, we can look at the instantaneous quantities in the md_run1.edr file. To check the temperature:
 
@@ -208,9 +208,9 @@ During this 100 ps simulation, the Argon atoms should melt from the lattice stru
 gmx energy -f md_run1.edr -o temperature.xvg -xvg none
 {% endhighlight %}
 
-Type "8 0" at the prompt to select the temperature and hit enter. The temperature.xvg file will have the time vs. temperature over the course of the simulation. You can plot this with any plotting tool.
+Type "8 0" at the prompt to select the temperature and hit enter. This will create a `temperature.xvg` file will have the time vs. temperature over the course of the simulation. You can plot this with any plotting tool.
 
-For this example, you can copy your `temperature.xvg` file to your local machine using WinSCP:
+For this example, you can copy your `temperature.xvg` file to your local machine using WinSCP by dragging the newly create `temperature.xvg` file from the right panel to the left panel as seen here:
 
 
 Then you can plot this file using Python using the following Google Colab link:
