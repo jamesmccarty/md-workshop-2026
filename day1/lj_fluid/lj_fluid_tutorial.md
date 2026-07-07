@@ -22,6 +22,9 @@ During the workshop, you will run molecular dynamics simulations on a Linux work
 
 #### Open PuTTY
 
+Open **PuTTY** from the Windows Start menu. You shouldd see the PuTTY Configuration window:
+
+![PuTTY window](../../images/PuTTYwindow.png)
 
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
