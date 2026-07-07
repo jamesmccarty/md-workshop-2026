@@ -83,7 +83,9 @@ Move into the lj-fluid directory:
 cd lj-fluid
 {% endhighlight %}
 
-From this directory, if you type $$ls$$, you should see the following:
+From this directory, if you type `ls`, you should see the following:
+
+![tutorial window](../../images/Screenshot_LJ_workshop_files.png)
 
 #### Useful Terminal Commands
 
@@ -96,7 +98,6 @@ From this directory, if you type $$ls$$, you should see the following:
 | `mkdir directory` | Create a new directory         |
 | `clear`           | Clear the terminal screen      |
 | `exit`            | Log out of the remote computer |
-
 
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
@@ -124,6 +125,7 @@ ATOM      4 Ar   Ar  A   4       0.000   2.890   2.890  1.00  0.00
 
 Copy the pdb file back to your local computer using **WinSCP** app from the Windows Start menu. You shouldd see the WinSCP window:
 
+![WinSCP window](../../images/screenshot_winscp.png)
 
 In the Host Name box, enter:
 
@@ -133,19 +135,15 @@ bigzam.local
 
 Make sure **File protocol** is set to SFTP and **Port number** is 22. Enter your assigned User name and Password in the corresponding boxes and hit the Login button and accept the Security Warning. You should see a window that looks similar to the following:
 
+![WinSCP files](../../images/screenshot_winscp_2.png)
 
 On the right panel are your files on bigzam, and on the left panel are your files on your local Windows machine. In the right panel, double click on the lj-fluid folder to see the contents of the folder. Copy the `Ar_864.pdb` file to your local Windows machine by dragging this file from the right panel to the left panel. 
 
 To visualize the pdb format you can load the pdb file into PyMOL on your local Windows machine:
 
+![WinSCP files](../../images/pymol_screenshot.png)
 
-
-
-Now in the dropdown menu from the VMD Main window select Graphics --> Representations. In the Graphical Representations window select Drawing Method --> VDW (for van der Waals radius). You should see something that looks like:
-
-![]({{ site.url }}{{ site.baseurl }}/images/Argonlattice.png){: style="width: 300px; border: 10px"}
-
-Notice that the argon atoms are arranged on a lattice to start.
+Use the "right click" on the mouse to zoom in or out of the lattice structure. Notice that the argon atoms are arranged on a lattice to start.
 
 #### Topology File
 
