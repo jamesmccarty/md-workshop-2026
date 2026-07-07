@@ -38,6 +38,8 @@ Make sure that the **Port** is set to 22 and the **Connection type** is set to S
 
 A terminal window will open. Enter the username provided to you at the start of the workshop and press Enter. Next, enter your assigned password and press **Enter**
 
+![Login window](../../images/LoginScreen_screenshot.png)
+
 **Important**: When you type your password, nothing will appear on the screen. You will not see letters or dots.
 
 After successfully logging in, you should see a command prompt similar to:
@@ -45,6 +47,41 @@ After successfully logging in, you should see a command prompt similar to:
 {% highlight git %}
 username@bigzam:~$
 {% endhighlight %}
+
+You are now connected to the workshop computer.
+
+#### Set your environment variables
+
+**Important**: You need to do this step every time you log in to bigzam. This will ensure the correct software is in your path. In the terminal type:
+
+{% highlight git %}
+source setup.sh
+{% endhighlight %}
+
+#### Copy the Lennard Jones Tutorial Files  
+
+In the terminal type:
+{% highlight git %}
+cp -r /opt/workshop/lj-fluid/ ~/
+{% endhighlight %}
+
+**Tip**: You can press the Tab key to automatically complete file and directory names. This can save time and help avoid typing errors.
+
+This will copy the necessary tutorial files to your home directory on bigzam. Check that you see the lj-fluid directory by typing:
+
+{% highlight git %}
+ls
+{% endhighlight %
+
+The $$ls$$ command lists the files and directories in your current location.
+
+Move into the lj-fluid directory:
+
+{% highlight git %}
+cd lj-fluid
+{% endhighlight %
+
+
 
 ## GROMACS
 GROMACS is an open source MD simulation package. On the [GROMACS homepage](https://www.gromacs.org/) you can find more information about the software and documentation. To run a simulation, we need three input files:
