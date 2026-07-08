@@ -217,7 +217,7 @@ Then you can plot this file using Python using the following Google Colab link:
 
 [simple plotting code]()
 
-See if you can repeat this procedure to plot the potential energy. Does the potential energy reach a stable equilibrium?
+**Optional Extension**: See if you can repeat this procedure to plot the potential energy. Does the potential energy reach a stable equilibrium?
 
 #### Extending the Simulation
 
@@ -232,24 +232,22 @@ gmx grompp -f Ar_nvt.mdp -c md_run1.gro -t md_run1.cpt -p argon.top -o Ar_nvt.tp
 Notice here the input coordinate file is the `md_run1.gro` file that we generated in our previous simulation. This is the final coordinates from our equilibration simulation. Also, we have added the -t flag to indicate to restart the simulation from the previous checkpoint file. Now we run the simulation as before with:
 
 {% highlight git %}
-gmx mdrun -v -s Ar_nvt.tpr -o Ar_nvt.trr -x Ar_nvt.xtc -cpo Ar_nvt.cpt -c Ar_nvt.gro -e Ar_nvt.edr -g Ar_nvt.log  
+gmx mdrun -v -s Ar_nvt.tpr -deffnm Ar_nvt -nt 1 
 {% endhighlight %}
 
-This will generate a 1 ns (1000 ps) trajectory.
+This will generate a 1 ns (1000 ps) trajectory called `Ar_nvt.xtc.` 
 
 #### Visualizing the simulation
 
-If we want to visualize the trajectory we can use vmd. Type in the terminal:
+If we want to visualize the trajectory we can convert the `Ar_nvt.xtc` file to a pdb file that can be viewed in PyMOL. Type in the terminal:
 
 {% highlight git %}
-vmd Ar_nvt.xtc Ar_nvt.gro
+gmx trjconv -s Ar_nvt.tpr -f Ar_nvt.xtc -o Ar_trajectory.pdb
 {% endhighlight %}
 
-Again go to Graphics --> Representations and choose Drawing Method --> VDW. You can now play the trajectory. Tip: You can also display the simulation box with the tcl command (type at the VMD> prompt:)
+When prompted, select Group 0 for System and hit enter. 
 
-{% highlight git %}
-pbc box
-{% endhighlight %}
+Again transfer this file from bigzam onto your Windows machine using WinSCP. Then load the full trajectory into PyMOL. 
 
 
 #### Analyzing the simulation
@@ -301,13 +299,13 @@ gmx grompp -f Ar_anneal.mdp -c Ar_nvt.gro -t Ar_nvt.cpt -p argon.top -o Ar_annea
 followed by
 
 {% highlight git %}
-gmx mdrun -v -s Ar_anneal.tpr -o Ar_anneal.trr -x Ar_anneal.xtc -cpo Ar_anneal.cpt -c Ar_anneal.gro -e Ar_anneal.edr -g Ar_anneal.log  
+gmx mdrun -v -s Ar_anneal.tpr -deffnm Ar_anneal -nt 1   
 {% endhighlight %}
 
 See if you can make a plot of the temperature as a function of the simulation time. Does the temperature behave as you expect?
 
 When does the freezing begin?
 
- Compute the radial distribution of the sold state by taking account of only the second half of the simulation.
+Compute the radial distribution of the sold state by taking account of only the second half of the simulation.
 
 
