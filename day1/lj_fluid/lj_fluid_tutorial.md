@@ -289,7 +289,7 @@ D[   System ] 2.4641 (+/- 0.0890) 1e-5 cm^2/s
 
 The value from Rahman's 1964 paper is $$D=2.43\times 10^{-5}$$ cm$$^2$$/s.
 
-![msd_plot](../../msd_lj.png)
+![msd_plot](../../images/msd_lj.png)
 
 #### Extensions
 
