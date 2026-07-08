@@ -84,4 +84,25 @@ The input structure file is signaled by the -cp flag and is the structure file t
 
 **WARNING** When you run the `gmx solvate` command, the topology file is modified. This means that if you run this command more than once on the same topology file, you will get a mismatch in atoms between your structure file and topology file that can lead to errors later on. Whenever GROMACS modifies an existing file, a backup of the original file is created starting with a hashtag (#topol.top). 
 
- 
+## Adding ions
+
+Usually, we will want to add small molecule ions (NaCl) in order to neutralize the system (if the protein has a nonzero net charge) and to perform the simulation at physiological or experimental salt conditions. The GROMACS command `genion` will randomly replace water molecules with ions. In order to run `genion` we need to generate a compiled GROMACS input file (.tpr) file. A .tpr file contains information from both the structure file (.gro) and topology file (.tpr) and is generated using the grompp (GROMACS pre-processor) command, which will also be used later when we run our first simulation. 
+
+To produce a processed input (.tpr) file, we need an additional input file with extension .mdp (molecular dynamics parameter file) that contains specified parameters for running a simulation. For this tutorial, you can use the `ions.mdp` file provided. Generate the .tpr file by typing the following in the terminal:
+
+{% highlight git %}
+gmx grompp -f ions.mdp -c conf_solv.gro -p topol.top -o ions.tpr
+{% endhighlight %}
+
+where -o specifies the output .tpr file which we have called `ions.tpr`. Now that you have generated the `ions.tpr` file, you can add small ions with the command:
+
+{% highlight git %}
+gmx genion -s ions.tpr -o conf_solv_ions.gro -p topol.top -conc 0.15 -neutral
+{% endhighlight %}
+
+where the -conc signals to make the final ion concentration 0.15 M and -neutral signals to neutralize the system so that the net charge in the system is zero. GROMACS will randomly replace certain molecules with small ions to reach our specified concentration and charge balance. When prompted select group 13 for SOL, which is the solvent group. This will tell GROMACS to replace some of the solvent molecules with small ions. 
+
+Congratulation, you have now built a simulation box containing a small protein, water, and ions. To run an MD simulation of this model, we will need the generated GROMACS structure file (conf_solv_ions.gro) that contains the initial positions of all the atoms in the simulation box and the GROMACS topology file (topol.top), that contains information on how to handle the calculation of the forces on the atoms. Before performing an MD simulation of this model, we will first perform an energy minimization of this structure to relax any steric restraints. 
+
+## Energy minimization 
+
