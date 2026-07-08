@@ -212,8 +212,9 @@ Type "8 0" at the prompt to select the temperature and hit enter. This will crea
 
 For this example, you can copy your `temperature.xvg` file to your local machine using WinSCP by dragging the newly create `temperature.xvg` file from the right panel to the left panel as seen here:
 
+![WinSCP refresh](../../images/WinSCP_refresh.png)
 
-Then you can plot this file using Python using the following Google Colab link:
+Then you can plot this file using any plotting tool you normally use. For example, you can use Python by following Google Colab link and uploading your temperature.xvg file:
 
 [simple plotting code](https://colab.research.google.com/drive/19TW4aycUOPRcPWVzK8U2fh3190kTYYde?usp=sharing)
 
@@ -247,28 +248,30 @@ gmx trjconv -s Ar_nvt.tpr -f Ar_nvt.xtc -o Ar_trajectory.pdb
 
 When prompted, select Group 0 for System and hit enter. 
 
-Again transfer this file from bigzam onto your Windows machine using WinSCP. Then load the full trajectory into PyMOL. 
+Again transfer this file from bigzam onto your Windows machine using WinSCP. Then load the full trajectory into PyMOL. Although the motion of the atoms appears random, the liquid has an underlying structure that we can analyze.  
 
 
 #### Analyzing the simulation
 
-To compute the [radial distribution function](https://en.wikipedia.org/wiki/Radial_distribution_function) type:
+The [radial distribution function](https://en.wikipedia.org/wiki/Radial_distribution_function) can be used to quantify the liquid structure. To calculate the radial distribution function using GROMACS, in the terminal type:
 
 {% highlight git %}
 gmx rdf -s Ar_nvt.tpr -f Ar_nvt.xtc -o rdf.xvg -xvg none  
 {% endhighlight %}
 
-When prompted select Group 0 for the 'ref' and Group 0 for the 'sel' and then type Ctrl-D to run the calculation. This will produce the output radial distribution function as a data file that you can plot in your favorite plotting program. For example, in xmgrace:
+When prompted select Group 0 for the 'ref' and Group 0 for the 'sel' and then type Ctrl-D to run the calculation. This will produce the output radial distribution function as a data file that you can plot in your favorite plotting program. For this tutorial, transfer the `rdf.xvg` file to your Windows machine using WinSCP as before. 
 
-{% highlight git %}
-xmgrace rdf.xvg   
-{% endhighlight %}
+Then upload your file to the Python Google colab document here:
+
+[radial distribution plotting code](https://colab.research.google.com/drive/1SmDuXhKx7UsHeGMFHRz0nwDZThzeXwLP?usp=sharing)
 
 An example is shown here:
 
-![]({{ site.url }}{{ site.baseurl }}/images/Argonrdf.png){: style="width: 400px; border: 10px"}
+![rdf plot](../../images/LJ_rdf.png)
 
-How does this compare with the results from Rahman's 1964 paper?
+In Rahman's 1964 paper, the peak of the first solvation shell is reported as 3.7 $$ \AA $$. To compare with experimental X-ray diffraction data, we need to compute the numerical Fourier Transform of the radial distribution function. The Python Google colab document includes a script to download the experimental data, perform the Fourier Transform, and plot the scattering function. An example plot is shown here:
+
+![scattering_plot](../../images/lj_scattering.png) 
 
 Another quantity of interest is the [mean squared displacement](https://en.wikipedia.org/wiki/Mean_squared_displacement) of the atoms. This can be used to analyze the self diffusion of Ar atoms from the Einstein relation: $$\lim _{t \rightarrow \infty}\left\langle\left\|\mathbf{r}_{i}(t)-\mathbf{r}_{i}(0)\right\|^{2}\right\rangle=6 D t$$
 
@@ -281,12 +284,12 @@ gmx msd -s Ar_nvt.tpr -f Ar_nvt.xtc -o msd.xvg -xvg none
 Select group 0 for System when prompted. Here we see that fitting the mean squred displacement from 100 to 900 ps gives:
 
 {% highlight git %}
-D[   System ] 2.3474 (+/- 0.0467) 1e-5 cm^2/s
+D[   System ] 2.4641 (+/- 0.0890) 1e-5 cm^2/s
 {% endhighlight %}
 
 The value from Rahman's 1964 paper is $$D=2.43\times 10^{-5}$$ cm$$^2$$/s.
 
-![]({{ site.url }}{{ site.baseurl }}/images/Argonmsd.png){: style="width: 400px; border: 10px"}
+![msd_plot](../../msd_lj.png)
 
 #### Extensions
 
