@@ -215,7 +215,7 @@ For this example, you can copy your `temperature.xvg` file to your local machine
 
 Then you can plot this file using Python using the following Google Colab link:
 
-[simple plotting code]()
+[simple plotting code](https://colab.research.google.com/drive/19TW4aycUOPRcPWVzK8U2fh3190kTYYde?usp=sharing)
 
 **Optional Extension**: See if you can repeat this procedure to plot the potential energy. Does the potential energy reach a stable equilibrium?
 
