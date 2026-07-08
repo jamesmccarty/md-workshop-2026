@@ -39,13 +39,13 @@ In this tutorial you will use GROMACS in the Unix command line to build and equi
 Once this tutorial is completed students will be able to:
 
 - Simulate a protein in explicit solvent
-- Understand GROAMCS output files and be able to transfer files for analysis 
+- Understand GROMACS output files and be able to transfer files for analysis 
 - Calculate RMSD and monitor structural stability
 - Analyze protein dynamics
 
 **Tutorial**
 
-[Mini-Protein Tutorial](coming soon)
+[Mini-Protein Tutorial](day1/mini-protein/mini-protein_tutorial.md)
 
 ## (Optional) Trp-Cage System
 
