@@ -106,3 +106,34 @@ Congratulation, you have now built a simulation box containing a small protein, 
 
 ## Energy minimization 
 
+Before we can run a MD simulation, we need to relax the system to remove steric clashes or unphysical geometries. To run an energy minimization we need another parameter file (em.mdp) file that contains the parameters for the energy minimization. An example em.mdp file is provided with the workshop tutorial files. Again we use the grompp command to compile a GROMACS .tpr file as follows:
+
+{% highlight git %}
+gmx grompp -f em.mdp -c conf_solv_ions.gro -p topol.top -o em.tpr
+{% endhighlight %}
+
+where -o signals the output `em.tpr` file. Now to run the energy minimization we use the GROMACS `mdrun` command:
+
+{% highlight git %}
+gmx mdrun -v -s em.tpr -deffnm em -nt 1 
+{% endhighlight %}
+
+The -v flag means “verbose” and means that GROMACS will print to the screen the minimization process each step. The -deffnm flag signals to make all output files with the same prefix “em”. The output files will be `em.log` (ASCII-text log file), `em.edr` (binary energy file), `em.trr` (binary full-precision trajectory), and `em.gro` (the final energy minimized structure). It is a good idea to check how the total potential energy changes during the minimization. We can used the generated `em.edr` file for this analysis.
+
+{% highlight git %}
+gmx energy -f em.edr -o potential.xvg -xvg none 
+{% endhighlight %}
+
+When prompted, select “10” for the potential energy, and then hit “0” to terminate the input. The file `potential.xvg` will be a data file with the potential energy at each step of the energy minimization procedure. You can plot this file using your favorite plotting software (Python for me). 
+
+On your Windows machine, you can open the WinSCP app and transfer the `potential.xvg` file to your local Windows computer:
+
+ 
+
+Then plot the potential energy using the following Google Colab script:
+
+[plotting potential energy]()
+
+As we see in a plot of the potential energy, the potential energy in (kJ/mol) is negative (for attractive energy), and (for a simple protein in water) on the order of $$-10^5$$ to $$-10^6$$, depending on the system size and number of water molecules.
+
+
