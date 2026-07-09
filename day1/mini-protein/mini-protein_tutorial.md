@@ -256,7 +256,93 @@ gmx mdrun -v -s short-production.tpr -deffnm short-production -nt 1
 
 This run will take about 5 minutes. Once finished you can move on to analyzing the results. 
 
+## Analysis of MD Simulation
+
+### Correcting for Periodic Boundary Effects
+
+When your simulation finishes, you will have produced a trajectory file called `short-production.xtc`. The .xtc file format is a compressed trajectory format in GROMACS. This file contains information about all the positions of the atoms at each time frame. For long trajectories, the protein molecule may drift across the periodic box image during the simulation. This can cause the molecule to appear split across the box, but this is just an artifact of how the simulation box is visualized. Before computing any distance quanties, we need to make sure the protein remains whole. 
+
+The Gromacs command `trjconv` is a post-processing tool to manipulate the atomic coordinates, extract a subset of the coordinates, correct for periodic boundary conditions (pbc), or manually alter the trajectory (time units, frame frequency, etc.). Here we will correct for the periodicity of the system and remove the water and ion molecules from our analysis. The protein will diffuse through the unit cell and may appear to “jump” across to the other side of the box. To account for such actions, apply the following command:
+
+{% highlight git %}
+gmx trjconv -s short-production.tpr -f short-production.xtc -o protein_noPBC.xtc -pbc whole -ur compact
+{% endhighlight %}
+
+When prompted select option 1 for the protein.
+
+where -s signals the input short-production.tpr file that was used to run the MD simulation and -f signals the trajectory that was produced by the GROMACS mdrun command (short-production.xtc). The -o is the output modified trajectory file that we will call protein_noPBC.xtc. The -pbc whole flag signals to make molecules that were split by the periodic boundary conditions whole and the -ur compact flag signals to keep all molecules in the original unit cell. 
+
+### Saving a pdb reference frame
+
+Before doing any further analysis we should make a reference pdb structure file of our protein. The `trjconv` command can be used to write a pdb file for any simulation frame. Here we will write the first frame (frame 0):
+
+{% highlight git %}
+gmx trjconv -s short-production.tpr -f short-production.xtc -o protein-reference.pdb -pbc whole -ur compact -dump 0
+{% endhighlight %}
+
+Again, select option 1 for protein when prompted. Here the output file is a pdb file called `protein-reference.pdb` and we are writing just the first frame with the -dump 0 option. This step ensures we have a reference structure pdb file whose atoms correspond to our processed trajectory file (protein_noPBC.xtc). 
+
+### Visualize the short production trajectory
+
+To visualize the entire trajectory in PyMOL, you can convert the .xtc file to a pdb file using `trjconv` command:
+
+{% highlight git %}
+gmx trjconv -s protein-reference.pdb -f protein_noPBC.xtc -o full_trajectory.pdb 
+{% endhighlight %}
+
+Again, select option 1 for protein when prompted. The resulting trajectory can be viewed in PyMOL:
+
+
+### Root-mean-square deviation (RMSD) of atomic positions, RMSF, and radius of gyration 
+
+The root-mean-square deviation of atomic positions (or simply root-mean-square deviation, RMSD) is the measure of the average distance between the atoms (usually the backbone atoms) of superimposed proteins. This gives a measure of the overall change in the conformation of the protein as the rmsd with respect to a reference state. We can use the first frame of the trajectory as a reference state and compare all subsequent frames with this initial frame to quantify how much the protein structure changes over the course of the trajectory. 
+
+To compute the RMSD enter the command:
+{% highlight git %}
+gmx rms -s protein-reference.pdb -f protein_noPBC.xtc -o rmsd.xvg -xvg none 
+{% endhighlight %}
+
+We must select which atoms to use for the least-squares aliment. Common choices include the backbone atoms or all heavy atoms. When prompted, select option 4 for Backbone atoms. The next prompt will ask us to select a group for the RMSD calculation. You can again experiment with different selections. Here we will select option 4 again for the Backbone atoms. 
+
+An alternative metric is to compute the root mean square fluctuations (RMSF). The RMSF captures, for each atom, the fluctuation about its average position. This gives insight into the flexibility of regions of the peptide. The RMSF (and the average structure) are calculated with the rmsf command. We are most interested in the fluctuations on a per residue basis, which is controlled by the flag -res.
+
+To compute the RMSF enter the command:
+{% highlight git %}
+gmx rmsf -s protein-reference.pdb -f protein_noPBC.xtc -o rmsf-per-residue.xvg -ox average.pdb -res -xvg none
+{% endhighlight %}
+
+Again, select group 4 for Backbone atoms for comparison. 
+
+A side product of the RMSF calculation is the average protein structure over the course of the simulation (average.pdb). Note that the average protein structure is not necessarily a physically relevant structure if there are large conformational changes during the simulation. 
+
+The GROMACS command `gyrate` allows you to check the radius of gyration of the system. This quantity characterizes the overall size of the molecule. If the protein is unfolding or adopting “open” configurations, the radius of gyration will increase. Conversely, of the protein is collapsing into a globule state, the radius of gyration will decrease. 
+
+{% highlight git %}
+gmx gyrate -s protein-reference.pdb -f protein_noPBC.xtc -o gyrate.xvg -xvg none 
+{% endhighlight %}
+ 
+When prompted, select group 3 for C-alpha. This will compute the radius of gyration using only the alpha carbon positions. 
+
+Open the WinSCP app on your Windows machine and copy the rmsd.xvg, rmsf-per-residue.xvg, and gyrate.xvg file to your local Windows machine. Plot these using the script here:
+
+[plotting link](https://colab.research.google.com/drive/17I-Avgki0Uy9pFu5mlFR4sMXTTSbZXrJ?usp=sharing)
 
 
 
+### Principal Component Analysis
 
+A very common analysis method is to extract the “principal” or “essential” motions that have the largest amplitudes and involve the largest parts of the structure. Principal component analysis (PCA) of the trajectory, which is sometimes also referred to as ‘essential dynamics’ (ED), aims at identifying large scale collective motions of atoms and thus reveal the structures underlying the atomic fluctuations. The fluctuations of particles are correlated due to coupled interactions between particles. The degree of correlation will vary and notably particles which are directly connected through bonds or lie in the vicinity of each other will move in a concerted manner. The correlations between the motions of the particles give rise to collective motions in the system that is often directly related to its function or (bio)physical properties. The study of the structure of the atomic fluctuations can give valuable insight in the behavior of a macromolecule.
+
+The first step in PCA is the construction of the covariance matrix, which captures the degree of collinearity of atomic motions for each pair of atoms. This matrix is subsequently diagonalized, yielding a matrix of eigenvectors and a diagonal matrix of eigenvalues. Each of the eigenvectors describes a collective motion of particles, where the components of the vector indicate how much the corresponding atom participates in the motion. The associated eigenvalue is a measure of the total motility associated with an eigenvector. Usually most of the motion in the system (>90%) is described by less than 10 eigenvectors or principal components. Since the covariance analysis produces a lot of files, the analysis is best performed in a subdirectory below the directory of the MD run:
+
+{% highlight git %}
+mkdir COVAR
+
+cd COVAR
+{% endhighlight %}
+
+The program `covar` will construct the covariance matrix and perform the diagonalization. Type the following command:
+
+{% highlight git %}
+gmx covar -s ../protein-reference.pdb -f ../protein_noPBC.xtc -o eigenvalues.xvg -v eigenvectors.trr 
+{% endhighlight %}
