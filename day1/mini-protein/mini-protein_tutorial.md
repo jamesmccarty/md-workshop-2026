@@ -132,8 +132,74 @@ On your Windows machine, you can open the WinSCP app and transfer the `potential
 
 Then plot the potential energy using the following Google Colab script:
 
-[plotting potential energy]()
+[plotting potential energy](https://colab.research.google.com/drive/1IAxAV68sigJivKXr8yEkjrAlkc7p-9sG?usp=sharing)
 
 As we see in a plot of the potential energy, the potential energy in (kJ/mol) is negative (for attractive energy), and (for a simple protein in water) on the order of $$-10^5$$ to $$-10^6$$, depending on the system size and number of water molecules.
 
+![energy_minimization](../../images/mini_protein_minimization.png)
+
+## Temperature equilibration with position restraints 
+
+The above energy minimization only optimizes the local geometry and solvent orientation. Before we can run a long MD trajectory, we still need to equilibrate the solvent molecules and ions around the protein at the temperature we wish to simulate. To allow the solvent molecules to reach 300 K, we will perform a short (20 ps) simulation with the protein positions restrained. Position restraints thus allow us to equilibrate the solvent around the protein, without causing significant structural changes in the protein as the temperature reaches 300 K. The restraint parameters are contained in the `posre.itp` file. The `nvt-posres.mdp` file is provided with the workshop tutorial files and contains the parameters for the simulation.
+
+We use the grompp command as before, but this time we will use the final structure from our energy minimzation procedure (em.gro):
+
+{% highlight git %}
+gmx grompp -f nvt-posres.mdp -c em.gro -r em.gro -p topol.top -o nvt-posres.tpr
+{% endhighlight %}
+
+Here the -r option specifies a structure file (em.gro) used for the position restraints. Notice that the input file is the energy minimized structure (em.gro). 
+
+You can view the contents of the `nvt-posres.mdp` file by typing in the terminal:
+
+{% highlight git %}
+cat nvt-posres.mdp
+{% endhighlight %}
+
+
+A few important lines to note are the first line:
+{% highlight git %}
+define          = -DPOSRES      ; position restrain the protein
+{% endhighlight %}
+
+This sets the position restraint option. And the last lines:
+
+{% highlight git %}
+; Velocity generation
+gen_vel         = yes           ; assign velocities from Maxwell distribution
+gen_temp        = 300           ; temperature for Maxwell distribution
+gen_seed        = -1            ; generate a random seed
+{% endhighlight %}
+
+This tells GROMACS that we will generate initial velocities by drawing randomly from a Maxwell-Boltzmann distribution at 300 K. The temperature is being set by the thermostat lines:
+
+{% highlight git %}
+; Temperature coupling is on
+tcoupl          = V-rescale                 ; modified Berendsen thermostat
+tc-grps         = Protein Non-Protein   ; two coupling groups - more accurate
+tau_t           = 0.1     0.1           ; time constant, in ps
+ref_t           = 300     300           ; reference temperature, one for each group, in K
+{% endhighlight %}
+
+Here we are using the V-rescale thermostat and using two separate temperature coupling groups: one for Protein and one for Non-Protein, both being set to a temperature of 300 K. 
+
+Finally we can run the molecular dynamics as follows:
+
+{% highlight git %}
+gmx mdrun -v -s nvt-posres.tpr -deffnm nvt-posres -nt 1
+{% endhighlight %}
+
+Congratulations! You have just performed your first MD simulation of a protein. When this job finishes, you can check the temperature to confirm the thermostat is working as expected:
+
+{% highlight git %}
+gmx energy -f nvt-posres.edr -o temperature.xvg -xvg none
+{% endhighlight %}
+
+Type “16 0” at the prompt to select the temperature of the system and exit. You can plot the output `temperature.xvg` file by transfering this file to your Windows machine using WinSCP and plotting using the same Python script you used for the Lennard Jones Fluid Tutorial:
+
+[Plot temperature](https://colab.research.google.com/drive/19TW4aycUOPRcPWVzK8U2fh3190kTYYde?usp=sharing)
+
+Your temperature will look something like:
+
+![nvt_equilibration](../../images/mini_protein_temp.png)
 
