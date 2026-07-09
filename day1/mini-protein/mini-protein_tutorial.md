@@ -203,3 +203,60 @@ Your temperature will look something like:
 
 ![nvt_equilibration](../../images/mini_protein_temp.png)
 
+## Pressure equilibration
+
+The previous equilibration step stabilized the temperature of the system. Next, we need to perform pressure equilibration without position restraints to allow the system density to reach its equilibrated value. This can be done using the mdp file `npt-equil.mdp` provided with the tutorial files. 
+
+Again we use the grompp command:
+
+{% highlight git %}
+gmx grompp -f npt-equil.mdp -c nvt-posres.gro -p topol.top -o npt-equil.tpr -t nvt-posres.cpt
+{% endhighlight %}
+
+Importantly, we are using the structure file from our previous equilibration run (-c nvt-posres.gro) and the -t flag signals to use the velocities from the checkpoint file from our previous nvt equilibration (nvt-posres.cpt). (We are not randomly generating velocities, but getting them from the previous equilibration). 
+
+You can view the contents of the `npt-equil.mdp` file as before:
+
+{% highlight git %}
+cat npt-equil.mdp
+{% endhighlight %}
+
+Notice we are no longer using the position restraint flag. We also see the lines for the barostat that controls the pressure:
+
+{% highlight git %}
+; Pressure coupling is on
+pcoupl                  = Parrinello-Rahman         ; Pressure coupling on in NPT
+pcoupltype              = isotropic                 ; uniform scaling of box vectors
+tau_p                   = 2.0                       ; time constant, in ps
+ref_p                   = 1.0                       ; reference pressure, in bar
+compressibility     = 4.5e-5                ; isothermal compressibility of water, bar^-1
+{% endhighlight %}
+
+Again we run the simulation as follows:
+
+{% highlight git %}
+gmx mdrun -v -s npt-equil.tpr -deffnm npt-equil -nt 1
+{% endhighlight %}
+
+**Note**: the pressure equilibration here is short for the purpose of this tutorial. In practice, you should run a longer equilibration of several 100 ps to ensure the system is properly equilibrated.
+
+## Production Run
+
+Once the system has been equilibrated we can run a longer production run. In this tutorial we will perform 240 ps (0.24 ns) using the `short-production.mdp` file included with the tutorial files. This run can be done by using the `grompp` command:
+
+{% highlight git %}
+gmx grompp -f short-production.mdp -c npt-equil.gro -p topol.top -o short-production.tpr -t npt-equil.cpt
+{% endhighlight %}
+
+where the input structure (-c npt-equil.gro) is the final structure from the above pressure equilibration and the -t npt-equil.cpt is the checkpoint file from the previous pressure equilibration. And we run the production molecular dynamics as follows:
+
+{% highlight git %}
+gmx mdrun -v -s short-production.tpr -deffnm short-production -nt 1 
+{% endhighlight %}
+
+This run will take about 5 minutes. Once finished you can move on to analyzing the results. 
+
+
+
+
+
