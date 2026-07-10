@@ -52,7 +52,7 @@ Once this tutorial is completed students will be able to:
 For additional practice, you can try setting up and running an MD simulation of the larger [trp-cage protein](https://www.rcsb.org/structure/1L2Y).
    
 
-## Sessoin 4: Introduction to PLUMED Syntax and Histograms
+## Session 4: Introduction to PLUMED Syntax and Histograms
 
 The aim of this tutorial is to introduce the users to the PLUMED syntax. We will go through the writing of simple collective variable and we will use them to analyze existing trajectories.
 
@@ -64,4 +64,4 @@ Once this tutorial is completed students will be able to:
 
 **Tutorial**
 
-[Analyzing Trajectories Using PLUMED Tutorial](coming soon)   
+[Analyzing Trajectories Using PLUMED Tutorial](day1/intro_plumed_syntax/analysis.md)   
