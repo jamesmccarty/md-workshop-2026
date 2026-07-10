@@ -1,13 +1,19 @@
 # Simulation of Liquid Argon
 
-In this tutorial you will learn how to perform a molecular dynamics (MD) of liquid argon using the GROMACS MD package. The goal will be to reproduce some of the results from the pioneering paper [A. Rahman, “Correlations in the Motion of Atoms in Liquid Argon”, Phys. Rev. Lett. 136, A405, 1964](https://journals.aps.org/pr/abstract/10.1103/PhysRev.136.A405)
+In this tutorial you will learn how to perform a molecular dynamics (MD) of liquid argon using the GROMACS MD package. 
+
+![LJ_fluid](../../images/lennard_jones_fluid_fig1.png)
+
+The total interaction energy between a pair of Argon atoms is the sum of the attractive induced dipole (van der Waals interaction) and the short-ranged repulsive interaction between electron clouds. This short-ranged repulsive interaction acts as a barrier preventing the two atomic nuclei from sitting closer than their combined van der Waals radii. You can see an interactive PhET simulation of this interaction [here](https://phet.colorado.edu/sims/html/atomic-interactions/latest/atomic-interactions_all.html)
+
+The interaction between atoms is modeled by two parameters: $$\sigma$$ which determines the van der Waals radius (in distance units), and $$\epsilon$$ which determines the depth of the attractive potential energy minimum (in energy units).
 
 Once this tutorial is completed students will be able to:
 
 - Understand the basic format of GROMACS structure, topology, and parameter files
-- Prepare a simple Lennard-Jones fluid simulation and run a molecular dynamics simulation
-- Calculate the radial distribution function for a fluid and connect to scattering experiments
-- Calculate the mean square displacement and use the plot of MSD vs. time to estimate the diffusion coefficient
+- Prepare a simple fluid simulation and run a molecular dynamics simulation of this model.
+- Calculate the radial distribution function for a fluid and connect to scattering experiments.
+- Calculate the mean square displacement (MSD) and use the plot of MSD vs. time to estimate the diffusion coefficient. 
 
 **Files**
 Files to complete this tutorial can be accessed here:
