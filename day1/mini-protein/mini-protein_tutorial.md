@@ -2,12 +2,13 @@
 
 In this tutorial you will use GROMACS in the Unix command line to build and equilibrate a solvated protein system for the mini-protein [YYDPETGTWY](https://pubs.acs.org/doi/10.1021/ja8030533). The goal is to understand the MD simulation parameters that are chosen and the details about how the system was built.
 
+![mini_protein](../../images/mini_protein_vmd.png)
+
 Once this tutorial is completed students will be able to:
 
 - Set up a protein in explicit solvent for MD simulation
 - Understand GROMACS output files and be able to transfer files for analysis
-- Calculate RMSD and monitor structural stability
-- Analyze protein dynamics
+- Calculate RMSD and monitor structural stability and fluctuations
 
 **Files**
 Files to complete this tutorial can be accessed here:
