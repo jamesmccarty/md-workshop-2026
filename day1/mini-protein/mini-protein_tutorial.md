@@ -285,6 +285,8 @@ gmx trjconv -s short-production.tpr -f short-production.xtc -o protein_noPBC.xtc
 
 When prompted select option 1 for the protein.
 
+![Figure_select_protein](../../images/Select_Protein.png)
+
 where -s signals the input short-production.tpr file that was used to run the MD simulation and -f signals the trajectory that was produced by the GROMACS mdrun command (short-production.xtc). The -o is the output modified trajectory file that we will call protein_noPBC.xtc. The -pbc whole flag signals to make molecules that were split by the periodic boundary conditions whole and the -ur compact flag signals to keep all molecules in the original unit cell. 
 
 ![PBC_box](../../images/Figure_PBC_image.png)
