@@ -322,7 +322,7 @@ To compute the RMSD enter the command:
 gmx rms -s protein-reference.pdb -f protein_noPBC.xtc -o rmsd.xvg -xvg none 
 {% endhighlight %}
 
-We must select which atoms to use for the least-squares aliment. Common choices include the backbone atoms or all heavy atoms. When prompted, select option 4 for Backbone atoms. The next prompt will ask us to select a group for the RMSD calculation. You can again experiment with different selections. Here we will select option 4 again for the Backbone atoms. 
+We must select which atoms to use for the least-squares aliment. Common choices include the backbone atoms or all heavy atoms. When prompted, select option `4` for `Backbone atoms`. The next prompt will ask us to select a group for the RMSD calculation. You can again experiment with different selections. Here we will select option `4` again for the `Backbone atoms`. 
 
 An alternative metric is to compute the root mean square fluctuations (RMSF). The RMSF captures, for each atom, the fluctuation about its average position. This gives insight into the flexibility of regions of the peptide. The RMSF (and the average structure) are calculated with the rmsf command. We are most interested in the fluctuations on a per residue basis, which is controlled by the flag -res.
 
@@ -331,7 +331,7 @@ To compute the RMSF enter the command:
 gmx rmsf -s protein-reference.pdb -f protein_noPBC.xtc -o rmsf-per-residue.xvg -ox average.pdb -res -xvg none
 {% endhighlight %}
 
-Again, select group 4 for Backbone atoms for comparison. 
+Again, select group `4` for `Backbone atoms` for comparison. 
 
 A side product of the RMSF calculation is the average protein structure over the course of the simulation (average.pdb). Note that the average protein structure is not necessarily a physically relevant structure if there are large conformational changes during the simulation. 
 
@@ -341,28 +341,27 @@ The GROMACS command `gyrate` allows you to check the radius of gyration of the s
 gmx gyrate -s protein-reference.pdb -f protein_noPBC.xtc -o gyrate.xvg -xvg none 
 {% endhighlight %}
  
-When prompted, select group 3 for C-alpha. This will compute the radius of gyration using only the alpha carbon positions. 
+When prompted, select group `3` for `C-alpha`. This will compute the radius of gyration using only the alpha carbon positions. 
 
-Open the WinSCP app on your Windows machine and copy the rmsd.xvg, rmsf-per-residue.xvg, and gyrate.xvg file to your local Windows machine. Plot these using the script here:
+After exectuting these commands, open the WinSCP app on your Windows machine and copy the resulting `rmsd.xvg`, `rmsf-per-residue.xvg`, and `gyrate.xvg` files to your local Windows machine. Plot these using the script here:
 
 [plotting link](https://colab.research.google.com/drive/17I-Avgki0Uy9pFu5mlFR4sMXTTSbZXrJ?usp=sharing)
 
+Congratulations! You have completed this tutorial. You have now set up a protein in water, performed the equilibration and short production MD simulations, and performed some structural analysis of results. 
+
+![RMSD_plot](../../images/miniprotein_rmsd.png)
+
+![RMSF_plot](../../images/miniprotein_rmsf.png)
+
+![Rg_plot](../../images/Rg_plot_miniprotein.png)
 
 
-### Principal Component Analysis
+## Optional Extensions
 
-A very common analysis method is to extract the “principal” or “essential” motions that have the largest amplitudes and involve the largest parts of the structure. Principal component analysis (PCA) of the trajectory, which is sometimes also referred to as ‘essential dynamics’ (ED), aims at identifying large scale collective motions of atoms and thus reveal the structures underlying the atomic fluctuations. The fluctuations of particles are correlated due to coupled interactions between particles. The degree of correlation will vary and notably particles which are directly connected through bonds or lie in the vicinity of each other will move in a concerted manner. The correlations between the motions of the particles give rise to collective motions in the system that is often directly related to its function or (bio)physical properties. The study of the structure of the atomic fluctuations can give valuable insight in the behavior of a macromolecule.
+Coming Soon! 
 
-The first step in PCA is the construction of the covariance matrix, which captures the degree of collinearity of atomic motions for each pair of atoms. This matrix is subsequently diagonalized, yielding a matrix of eigenvectors and a diagonal matrix of eigenvalues. Each of the eigenvectors describes a collective motion of particles, where the components of the vector indicate how much the corresponding atom participates in the motion. The associated eigenvalue is a measure of the total motility associated with an eigenvector. Usually most of the motion in the system (>90%) is described by less than 10 eigenvectors or principal components. Since the covariance analysis produces a lot of files, the analysis is best performed in a subdirectory below the directory of the MD run:
+## Where to go from here
+Optional: If you are interesting in learning about characterizing protein dynamics and performing principal component analysis (PCA), check out the tutorial on Trp-Cage protein [here](../trp-cage/trp-cage_tutorial.md)
 
-{% highlight git %}
-mkdir COVAR
+If you are pressed for time, it is suggested that you skip ahead to the [Brief Introduction to PLUMED Syntax and Making Histograms tutorial](../intro_plumed_syntax/analysis.md). Here you will learn how to compute many other properties of interest using the PLUMED plug-in and how to calculate ensemble averages.  
 
-cd COVAR
-{% endhighlight %}
-
-The program `covar` will construct the covariance matrix and perform the diagonalization. Type the following command:
-
-{% highlight git %}
-gmx covar -s ../protein-reference.pdb -f ../protein_noPBC.xtc -o eigenvalues.xvg -v eigenvectors.trr 
-{% endhighlight %}
