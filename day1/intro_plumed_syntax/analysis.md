@@ -1,6 +1,6 @@
 # A Brief Introduction to PLUMED Syntax and Making Histograms
 
-The aim of this tutorial is to introduce the users to the PLUMED syntax. We will go through the writing of simple collective variable and we will use them to analyze existing trajectories.
+The aim of this tutorial is provide an introduction to the PLUMED syntax. You will learn how to calculate some simple collective variables for analyzing existing trajectories.
 
 Once this tutorial is completed students will be able to:
 
@@ -17,7 +17,9 @@ These files are already located on bigzam:
 
 ## Getting Started
 
-Use PuTTY to connect to bigzam as you did in the previous [tutorial](../lj_fluid/lj_fluid_tutorial.md). Open PuTTY from the Window Start menu and enter `bigzam.local` for the Host Name. Log in using the terminal using your username and password. Once connected to the workshop computer, set your environment variables:
+Use PuTTY to connect to bigzam as you did in the previous [tutorial](../lj_fluid/lj_fluid_tutorial.md). Open PuTTY from the Window Start menu and enter `bigzam.local` for the Host Name. Login using the terminal using your username and password. 
+
+**Important**: Once connected to the workshop computer, set your environment variables by typing:
 
 {% highlight git %}
 source setup.sh
@@ -42,7 +44,9 @@ cd ~/intro_2_plumed
 
 ## What is PLUMED? 
 
-PLUMED is a plug-in library that can be incorporated into many MD codes including GROMACS. Once it is incorporated you can use PLUMED to perform a variety of different analyses on-the-fly and to bias the sampling in MD simulations as we will do in Day 2 of this workshop. Additionally, PLUMED can be used as a standalone code for analyzing trajectories. If you are using the code in this way you can run the PLUMED executable by issuing the command:
+So far we have been using GROMACS to build and run MD simulations. GROMACS comes with some analysis tools (such as RMSD, RMSF, and radius of gyration that you used in the previous tutorial). However, the features in GROMACS for analyzing trajectories are somewhat limited. Furthermore, some researchers may use other MD codes and analysis codes developed for one code may not be compatible with other MD codes. To overcome this issue, the MD community of researchers has developed a set of analysis tools called the The community-developed PLUgin for MolEcular Dynamics ([PLUMED](https://www.plumed.org/)) that can be used with several different MD codes. 
+
+PLUMED is a plug-in library that can be incorporated into many MD codes including GROMACS. Once it is incorporated you can use PLUMED to perform a variety of different analyses on-the-fly and to bias the sampling in MD simulations as we will do in Day 2 of this workshop! Additionally, PLUMED can be used as a standalone code for analyzing trajectories. If you are using the code in this way you can run the PLUMED executable simply by issuing the command:
 
 {% highlight git %}
 plumed
@@ -54,16 +58,18 @@ To see a list of all option that PLUMED can do, type the following into the term
 plumed --help
 {% endhighlight %}
 
-The output of this command is a list of tasks that PLUMED can perform. In this tutorial we will use PLUMED as a post-procession tool to analyze MD simulation trajectories. The PLUMED tool for analyzing trajectories is the driver tool. Let's look at the options of PLUMED driver by issuing the following command:
+The output of this command is a list of tasks that PLUMED can perform. In this tutorial we will use PLUMED as a post-processing tool to analyze MD simulation trajectories. The PLUMED tool for analyzing existing trajectories is the `driver` tool. Let's look at the options of PLUMED driver by issuing the following command:
 
 {% highlight git %}
 plumed driver --help
 {% endhighlight %}
 
 This shows you a list of all the things we can do with the PLUMED driver. For all of these options, however, we are going to need to create a PLUMED input file. 
-This tutorial will introduce you to the syntax of the PLUMED input file. We will use this syntax later in the second day of the workshop to run enhanced sampling simulations during a MD simulation, so all the things that you will learn now will be useful later when you will run PLUMED coupled to GROMACS.
+This tutorial will introduce you to the syntax of the PLUMED input file. We will use this syntax later in the second day of the workshop to run enhanced sampling simulations on-the-fly during a MD simulation, so all the things that you will learn now will be useful later when you will run PLUMED coupled to GROMACS.
 
 ## Computing and printing simple collective variables
+
+Chemical systems contain an enormous number atoms, which, in most cases makes it simply impossible for us to understand anything by monitoring the atom positions directly. Consequently, we introduce Collective variables (CVs) that describe the chemical processes we are interested in and monitor these simpler quantities instead.
 
 A collective variable is any mathematical function of the atomic coordinates that can be useful for tracking structural changes in a complex molecular system containing hundreds or thousands of atoms. Instead of tracking and visualizing each individual atom's motion, it is often more informative to monitor a few judiciously chosen collective variables (CVs) that can tell us about what structural state the molecule is in. 
 
@@ -77,7 +83,7 @@ It is always a good idea to view the movie of the trajectory to try and understa
 
 Folding of GB1 around frame 240:
 
-[GB1 folded](../../images/GB1_folded.png)
+![GB1 folded](../../images/GB1_folded.png)
 
 Recall that we skipped every 10 frames, so frame 240 corresponds to frame 2400 in the traj-whole.xtc trajectory. 
 
