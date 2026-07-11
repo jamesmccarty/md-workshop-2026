@@ -87,7 +87,7 @@ Folding of GB1 around frame 240:
 
 Recall that we skipped every 10 frames, so frame 240 corresponds to frame 2400 in the traj-whole.xtc trajectory. 
 
-Now that you have a sense of the trajectory, we can compute and print some collective variables. One of the simplest collective variable (CV) we can monitor is the distance between two atoms.
+Now that you have a sense of the trajectory, we can compute and print some collective variables. One of the simplest collective variables (CV) we can monitor is the distance between two atoms. 
 
 On bigzam, have a look at the first ten lines of the pdb file by typing:
 
@@ -129,7 +129,7 @@ ATOM     70  CA  GLY     9       5.210  12.640   6.970  1.00  1.00
 ATOM     74  CA  LYS    10       3.590  12.600   3.500  1.00  1.00            
 {% endhighlight %}
 
-Suppose we want to monitor the distance between CA on residue 1 and CA on residue 10 during the simulation. To do this, we can create a plumed file called plumed.dat with the following lines:
+Suppose we want to monitor the distance between atom CA on residue 1 and atom CA on residue 10 during the simulation. To do this, we can create a plumed file called `plumed_example1.dat` with the following lines:
 
 {% highlight git %}
 d: DISTANCE ATOMS=2,74
@@ -137,7 +137,135 @@ d: DISTANCE ATOMS=2,74
 PRINT ARG=d FILE=distance.dat STRIDE=1
 {% endhighlight %}
 
-In the above input file, we define the variable d as the distance between atom 2 (CA on residue 1) and atom 74 (CA on residue 74). Then we use the PRINT command to print the variable d to the file `distance.dat`. The STRIDE keyword sets how frequently to print to the output file. (STRIDE=1 means print every frame). 
+In the above input file, we define the variable d as the [DISTANCE](https://www.plumed.org/doc-v2.9/user-doc/html/_d_i_s_t_a_n_c_e.html) between atom 2 (CA on residue 1) and atom 74 (CA on residue 10). Then we use the [PRINT](https://www.plumed.org/doc-v2.9/user-doc/html/_p_r_i_n_t.html) command to print the variable `d` to the file we have named `distance.dat`. The STRIDE keyword sets how frequently to print to the output file. (STRIDE=1 means print every frame). 
+
+Edit the `plumed_example1.dat` file by typing in the terminal:
+{% highlight git %}
+nano plumed_example1.dat
+{% endhighlight %}
+
+Replace where you see the `__FILL__` string to be the atom numbers corresponding to CA on residue 1 and CA on residue 10 (`ATOMS=2,74`). Write changes by typing `Ctrl+O` followed by the `Enter` key. Then `Ctrl+X` to exit the text editor. 
+
+Once your `plumed_example1.dat` file is complete, you can run the PLUMED driver as follows: 
+
+{% highlight git %}
+plumed driver --plumed plumed_example1.dat --mf_xtc traj-whole.xtc
+{% endhighlight %}
+
+The --plumed flag signals the input PLUMED file to use (plumed_example1.dat) and the --mf_xtc flag signals the input trajectory file in GROMACS .xtc format (traj-whole.xtc). When you execute the above command, PLUMED writes a lot of information to the screen about the input that it is reading and the actions that it will execute. It is a good idea to take a moment to inspect this output and confirm PLUMED is actually doing what you intend to do.
+
+The output file you have created is called `distance.dat`. Take a moment to look at the contents of this file by typing:
+
+{% highlight git %}
+head distance.dat
+{% endhighlight %}
+
+{% highlight git %}
+#! FIELDS time d
+ 0.000000 1.440748
+ 1.000000 2.463681
+ 2.000000 1.931046
+ 3.000000 1.790541
+ 4.000000 2.524961
+ 5.000000 2.238710
+ 6.000000 2.477309
+ 7.000000 2.357945
+ 8.000000 1.561409
+{% endhighlight %}
+
+The first line is a comment that begins with `#!` and informs you about the content of each column. The first column is the time and the second column is our variable d. 
+
+## A note about Units in PLUMED 
+
+By default all PLUMED input and output quantities have the following units:
+
+- Length: nanometers
+- Energy: kJ/mol
+- Time: picoseconds
+- Mass: amu
+- Charge: e
+
+If you want to specify different units from these default units, you can do this using the [UNITS](https://www.plumed.org/doc-v2.9/user-doc/html/_u_n_i_t_s.html) keyword. For example, if I want to use energy units of Angstroms for distance and Hartree for energy and femtosecond (fs) for time, I could add the following line to the top of my `plumed.dat` input file:
+
+{% highlight git %}
+UNITS LENGTH=A TIME=fs ENERGY=Ha
+{% endhighlight %}
+ 
+## Dihedral angles and MOLINFO shortcuts
+
+A common property to characterize protein secondary structure are the backbone dihedral angles ($$\phi$$ and $$\psi$$). To calculate a dihedral angle in PLUMED, we use the [TORSION](https://www.plumed.org/doc-v2.9/user-doc/html/_t_o_r_s_i_o_n.html) action and a set of 4 atoms. For residue $$i$$, the dihedral $$\phi$$ is defined by these atoms: C(i-1),N(i),CA(i),C(i) and the dihedral $$\psi$$ is defined by the atoms: N(i),CA(i),C(i),N(i+1). 
+
+![dihedral_picture](../../images/dihedral_def.png)
+
+Suppose we want to calculate the dihedral angle for residue Thr2. In the terminal, view the pdb file again by typing:
+
+{% highlight git %}
+head -n 20 GB1_native.pdb
+{% endhighlight %}
+
+Here I have highlighted the atoms we would need to specify the $$\phi$$ angle for residue 2:
+
+![phi_atoms](../../images/figure_phi_Thr2.png)
+
+After inspecting `GB1_native.pdb` we can define the dihedral angle $$\phi$$ of residue 2 in plumed as follows:
+
+{% highlight git %}
+phi_THR2: TORSION ATOMS=3,9,10,11
+{% endhighlight %}
+
+In this line, we define the variable `phi_THR2` and the torsion angle specified by the atoms 3,9,10, and 11 which correspond to C(i-1),N(i),CA(i),C(i) for residue 2. 
+
+Similarly, we could calculate the $$\psi$$ angle for residue 2 by specifying the atoms N(i),CA(i),C(i),N(i+1). After quick inspection of the `GB1_native.pdb` file, the plumed command would be:
+
+{% highlight git %}
+psi_THR2: TORSION ATOMS=9,10,11,16
+{% endhighlight %}
+
+This process of manually specifying 4 atoms for each torsion angle can be cumbersome, and fortunately, PLUMED provides some shortcuts to select atoms with specific properties. To use this feature, you need to include a MOLINFO line along with a reference PDB file. This command is used to provide information on the molecules that are present in your system. At the top of our plumed.dat file we add the line:
+
+{% highlight git %}
+MOLINFO STRUCTURE=GB1_native.pdb
+{% endhighlight %}
+
+By specifying a pdb file as a reference structure using the MOLINFO action, we can use the following shortcuts to calculate the $$\phi$$ and $$\psi$$ angle for residue 2:
+
+{% highlight git %}
+t1: TORSION ATOMS=@phi-2
+t2: TORSION ATOMS=@psi-2
+{% endhighlight %} 
+
+The PLUMED input file `plumed_example2.dat` will calculate the dihedral angles $$\phi$$ and $$\psi$ for residue 2 using two different ways. Edit this file by typing:
+
+{% highlight git %}
+nano plumed_example2.dat
+{% endhighlight %}
+
+{% highlight git %}
+MOLINFO STRUCTURE=GB1_native.pdb
+
+phi_THR2: TORSION ATOMS=__FILL__
+psi_THR2: TORSION ATOMS=9,10,11,16
+
+t1: TORSION ATOMS=@phi-2
+t2: TORSION ATOMS=__FILL__
+
+PRINT ARG=phi_THR2,psi_THR2,t1,t2 FILE=dihedrals.dat STRIDE=1
+{% endhighlight %}
+
+Replace where you see the `__FILL__` with the correct information. Write changes by typing `Ctrl+O` followed by the `Enter` key. Then `Ctrl+X` to exit the text editor. After completing the PLUMED input file above, let's use it to analyze the trajectory traj-whole.xtc using the driver tool:
+
+{% highlight git %}
+plumed driver --plumed plumed_example2.dat --mf_xtc traj-whole.xtc
+{% endhighlight %}
+
+The output file will be called `dihedrals.dat` and will contain the dihderal angle values calculated for each simulation frame. Notice how the MOLINFO command makes it particularly easy to calculate any protein dihedral angle we want. For instance suppose that you want to calculate and print the $$\phi$$ angle in the sixth residue of the protein and the $$\psi$$ angle in the eighth residue of the protein. You can do so using the following input:
+
+{% highlight git %}
+MOLINFO STRUCTURE=GB1_native.pdb
+phi6: TORSION ATOMS=@phi-6
+psi8: TORSION ATOMS=@psi-8
+PRINT ARG=phi6,psi8 FILE=dihedrals_r6_r8.dat
+{% endhighlight %}
 
 
 
