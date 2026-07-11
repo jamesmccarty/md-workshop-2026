@@ -287,7 +287,7 @@ When prompted select option 1 for the protein.
 
 ![Figure_select_protein](../../images/Select_Protein.png)
 
-where -s signals the input short-production.tpr file that was used to run the MD simulation and -f signals the trajectory that was produced by the GROMACS mdrun command (short-production.xtc). The -o is the output modified trajectory file that we will call protein_noPBC.xtc. The -pbc whole flag signals to make molecules that were split by the periodic boundary conditions whole and the -ur compact flag signals to keep all molecules in the original unit cell. 
+In the above command, the -s signals the input short-production.tpr file that was used to run the MD simulation and -f signals the trajectory that was produced by the GROMACS mdrun command (short-production.xtc). The -o is the output modified trajectory file that we will call protein_noPBC.xtc. The -pbc whole flag signals to make molecules that were split by the periodic boundary conditions whole and the -ur compact flag signals to keep all molecules in the original unit cell. 
 
 ![PBC_box](../../images/Figure_PBC_image.png)
 
@@ -309,8 +309,9 @@ To visualize the entire trajectory in PyMOL, you can convert the .xtc file to a 
 gmx trjconv -s protein-reference.pdb -f protein_noPBC.xtc -o full_trajectory.pdb 
 {% endhighlight %}
 
-Again, select option 1 for protein when prompted. The resulting trajectory can be viewed in PyMOL:
+Again, select option 1 for protein when prompted. The resulting trajectory file (full_trajectory.pdb) can be viewed in PyMOL after transfering to your Windows machine using WinSCP:
 
+![pymol_image_here](../../images/miniprotein_pymol.png)
 
 ### Root-mean-square deviation (RMSD) of atomic positions, RMSF, and radius of gyration 
 
