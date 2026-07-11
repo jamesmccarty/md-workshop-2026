@@ -1,6 +1,6 @@
 # Simulation of miniprotein in water
 
-In this tutorial you will use GROMACS in the Unix command line to build and equilibrate a solvated protein system for the mini-protein [YYDPETGTWY](https://pubs.acs.org/doi/10.1021/ja8030533). The goal is to understand the MD simulation parameters that are chosen and the details about how the system was built.
+In this tutorial you will use GROMACS and the Linux command line to build and equilibrate a solvated protein system for the mini-protein [YYDPETGTWY](https://pubs.acs.org/doi/10.1021/ja8030533). The goal is to understand the MD simulation parameters that are chosen and the details about how to prepare a biological molecule for MD simulation.
 
 ![mini_protein](../../images/mini_protein_vmd.png)
 
@@ -19,11 +19,11 @@ These files are already located on bigzam:
 
 ## Getting Started
 
-Use PuTTY to connect to bigzam as you did in the previous [tutorial](../lj_fluid/lj_fluid_tutorial.md). Open PuTTY from the Window Start menu and enter `bigzam.local` for the Host Name. Log in using the terminal using your username and password:
+Use PuTTY to connect to bigzam as you did in the previous [tutorial](../lj_fluid/lj_fluid_tutorial.md). Open PuTTY from the Window Start menu and enter `bigzam.local` for the Host Name. Login using the terminal using your username and password:
 
 ![terminal window](../../images/LoginScreen_screenshot.png)
 
-Once connected to the workshop computer, set your environment variables:
+**Important**: Once connected to the workshop computer, set your environment variables:
 
 {% highlight git %}
 source setup.sh
@@ -46,7 +46,7 @@ Move into the miniprotein directory:
 cd ~/miniprotein
 {% endhighlight %}
 
-From this directory, you will run the simulation. 
+From this directory, you will prepare and run the MD simulation. 
 
 ## Convert a pdb structure file (.pdb) to a GROMACS topology (.top) and structure (.gro) file
 
@@ -60,9 +60,15 @@ gmx pdb2gmx -f 2RVD.pdb -o conf.gro -p topol.top -ignh
 
 where -f signals the input pdb file, here called `2RVD.pdb` and -o is the output structure file and -p is the output topology file. The flag -ignh means to ignore H atoms in the PDB file. The -ignh flag is useful to deal with non-conventional naming of H atoms in pdb files; however, if you need to persevere the exact position of the H coordinates in the structure file, then you should not use the -ignh flag.
 
-Typing the above command will prompt you to select a force field. The force field is the set of parameterized potential energy functions that are used to calculate all the forces acting on the atoms. A number of force field models are provided within GROMACS. Select the force field model by typing the appropriate number and hitting the Enter/Return key. You will also be prompted to select a water model. For this tutorial select the AMBER99SB-ILDN force fields from [Lindorff-Larsen et al., Proteins 78, 1950-58, 2010](https://onlinelibrary.wiley.com/doi/full/10.1002/prot.22711), and when prompted, select the TIP3P water model. You should now have generated a structure file conf.gro, a topology file topol.top, and a position restraint file posre.itp.
+Typing the above command will prompt you to select a force field. Unlike the simple liquid argon simulation, the model for the potential energy function of a protein is more complex and has multiple terms describing bonds, angles, dihedral rotations, improper torsions, electrostatics, and van der Waals interactions. These are parameterized in a set of energy functions called the Force Field. In molecular dynamics, the term `force field` means the set of parameterized potential energy functions that are used to calculate all the forces acting on the atoms. 
 
-The topology file `topol.top` contains all the information necessary to define the molecule within a simulation. This information includes nonbonded parameters (atom types and charges) as well as bonded parameters (bonds, angles, and dihedrals).
+A number of force field models are provided within GROMACS. Select the force field model by typing the appropriate number and hitting the Enter/Return key. You will also be prompted to select a water model. For this tutorial select the AMBER99SB-ILDN force fields from [Lindorff-Larsen et al., Proteins 78, 1950-58, 2010](https://onlinelibrary.wiley.com/doi/full/10.1002/prot.22711), and when prompted, select the [TIP3P](https://en.wikipedia.org/wiki/Water_model) water model.
+
+![force_field_selection](../../images/GROMACS_forcefield_select.png)
+
+ You should now have generated a structure file `conf.gro`, a topology file `topol.top`, and a position restraint file `posre.itp`.
+
+The topology file `topol.top` contains all the information necessary to define the molecule within a simulation. This information includes non-covalent parameters (atom types and charges) as well as bonded parameters (bonds, angles, and dihedrals).
 
 ## Defining a simultion box and adding solvent molecules to the box
 
@@ -75,7 +81,7 @@ gmx editconf -f conf.gro -o conf_box.gro -c -d 1.0 -bt cubic
 
 The -f flag signals the input GROMACS structure file (conf.gro) which we created above. The -o signals a new output structure file (conf_box.gro) which contains the box definition. The -c flag centers the protein in the box, and the -d specifies a minimum distance from the protein to the edge of the box (in nm). Specifying a solute-box distance of 1.0 nm means that there are at least 2.0 nm between any two periodic images of a protein. This distance will be sufficient for just about any cutoff scheme commonly used in simulations. The -bt cubic flag indicates to use a cubic box shape. 
 
-Now that we have generated a simulation box, which we must fill with water. We add solvent by typing
+Now that we have generated a simulation box, which we must fill with water. We add solvent by typing:
 
 {% highlight git %}
 gmx solvate -cp conf_box.gro -cs spc216.gro -o conf_solv.gro -p topol.top
@@ -103,7 +109,15 @@ gmx genion -s ions.tpr -o conf_solv_ions.gro -p topol.top -conc 0.15 -neutral
 
 where the -conc signals to make the final ion concentration 0.15 M and -neutral signals to neutralize the system so that the net charge in the system is zero. GROMACS will randomly replace certain molecules with small ions to reach our specified concentration and charge balance. When prompted select group 13 for SOL, which is the solvent group. This will tell GROMACS to replace some of the solvent molecules with small ions. 
 
-Congratulation, you have now built a simulation box containing a small protein, water, and ions. To run an MD simulation of this model, we will need the generated GROMACS structure file (conf_solv_ions.gro) that contains the initial positions of all the atoms in the simulation box and the GROMACS topology file (topol.top), that contains information on how to handle the calculation of the forces on the atoms. Before performing an MD simulation of this model, we will first perform an energy minimization of this structure to relax any steric restraints. 
+![solvent_selection](../../images/GROMACS_solv.png)
+
+Congratulation, you have now built a simulation box containing a small protein, water, and ions. 
+
+![figure_box_miniprotein)](../../images/figure_miniprotein_box.png)
+
+**Key idea**: In order to run an MD simulation of a protein model starting from a protein data bank (.pdb) structure file, you need to generate a GROMACS structure file (conf_solv_ions.gro) that contains the initial positions of all the atoms in the simulation box and a GROMACS topology file (topol.top), that contains information on how to handle the calculation of the forces on the atoms. 
+
+Before performing an MD simulation of this model, we will first perform an energy minimization of this structure to relax any steric restraints. 
 
 ## Energy minimization 
 
