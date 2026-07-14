@@ -148,7 +148,33 @@ To plot the resulting `2dproj.xvg`, transfer this file to your local Windows mac
 
 ![Figure_2D](../../images/trp-cage_2D_projection.png)
 
+## Making Porcupine Plot
 
+
+A porcupine plot is a convenient way to visualize the principal motion in a single image. To do this, you can generate another pdb file with two frames representing the two extremes along the PC 1 axis:
+
+{% highlight git %}
+gmx anaeig -s ../trp-cage-reference.pdb -f ../long-production_whole.xtc -v eigenvectors.trr -eig eigenvalues.xvg -extr ev1.pdb -first 1 -last 1
+{% endhighlight %}
+
+Now, transfer the output `ev1.pdb` file to your local Windows machine using WinSCP and load this pdb file into PyMOL. You should see movie toggle between only two frames. 
+
+The python script [modevectors.py](https://github.com/jamesmccarty/modevectors/blob/master/modevectors.py) will allow us to plot the vectors representing the molecular motion. You will need to download this file [here](https://drive.google.com/file/d/1Zdz3Fr-NsVw_P4CYSHwUyX4mfPgT72Hw/view?usp=sharing) to you local Windows machine. Once downloaded, withinn PyMOL, select from the top menu: File --> Run Script ... and find and upload the `modevectors.py` script that you downloaded.
+
+In the PyMOL consol type:
+{% highlight git %}
+modevectors ev1, ev1, 1, 2, factor=1, headrgb=(1,0,0), tailrgb=(1,0,0), cutoff=0.5, outname=ev11
+{% endhighlight %}
+  
+This will generate a porcupine plot such as the one shown here:
+
+![porcupine_plot](../../trp-cage-porcupine.png)
+
+Congratulations you have now completed this tutorial. It is suggested now to move on to the [Brief Introduction to PLUMED Syntax and Making Histograms tutorial](../intro_plumed_syntax/analysis.md)
+
+## Optional Extension
+
+Coming soon ... 
 
 
 
