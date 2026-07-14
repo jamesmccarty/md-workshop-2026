@@ -107,4 +107,12 @@ Use the WinSCP app on your windows machine to transfer the eigenvalues.xvg file 
 
 As you can see, there are only a few large eigenvalues, all other are relatively small, suggesting that a large fraction of the total motion is explained by only a few principal components.     
  
+To see what type of mtion the individual eigenvectors correspond to, we filter the original trajectory and project the coordinates onto a selected eigenvector. For example, to project the coordinates onto the first (principal) component, type:
 
+{% highlight git %}
+gmx anaeig -s ../trp-cage-reference.pdb -f ../long-production_whole.xtc -filt filter1.pdb -v eigenvectors.trr -eig eigenvalues.xvg -first 1 -last 1 -skip 100
+{% endhighlight %}
+
+Select the index group that was used for the least squares fit. This is Group 4 (Backbone). Answer 4 twice when asked for a group. The output pdb file `filter1.pdb` will show the animation of the dynamics along the first principal component. To view this movie, copy the `filter1.pdb` file to your local Windows machine using the WinSCP app and open the file with PyMOL. Note that the pdb file will only contain the Backbone atoms (no side chain atoms) because this is the group we selected. To see the movie slower you can set in the PyMOL toolbar: Movie --> Frame Rate --> 5 FPS. 
+
+![Filtered_traj_plot](../../images/filtered_traj_pymol.png) 
