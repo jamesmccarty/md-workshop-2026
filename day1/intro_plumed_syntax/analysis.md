@@ -267,5 +267,15 @@ psi8: TORSION ATOMS=@psi-8
 PRINT ARG=phi6,psi8 FILE=dihedrals_r6_r8.dat
 {% endhighlight %}
 
+To DO: Plotting Ramachandran here. 
 
+## Radius of Gyration and Coordination Number
+
+
+## Virtual Atoms 
+
+
+## Plotting Distances and Making Histograms 
+
+This will be important for Day 2 discussion of error bars
 
