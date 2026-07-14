@@ -168,7 +168,7 @@ modevectors ev1, ev1, 1, 2, factor=1, headrgb=(1,0,0), tailrgb=(1,0,0), cutoff=0
   
 This will generate a porcupine plot such as the one shown here:
 
-![porcupine_plot](../../trp-cage-porcupine.png)
+![porcupine_plot](../../images/trp-cage-porcupine.png)
 
 Congratulations you have now completed this tutorial. It is suggested now to move on to the [Brief Introduction to PLUMED Syntax and Making Histograms tutorial](../intro_plumed_syntax/analysis.md)
 
