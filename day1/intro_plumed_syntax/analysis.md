@@ -137,7 +137,9 @@ d: DISTANCE ATOMS=2,74
 PRINT ARG=d FILE=distance.dat STRIDE=1
 {% endhighlight %}
 
-In the above input file, we define the variable d as the [DISTANCE](https://www.plumed.org/doc-v2.9/user-doc/html/_d_i_s_t_a_n_c_e.html) between atom 2 (CA on residue 1) and atom 74 (CA on residue 10). Then we use the [PRINT](https://www.plumed.org/doc-v2.9/user-doc/html/_p_r_i_n_t.html) command to print the variable `d` to the file we have named `distance.dat`. The STRIDE keyword sets how frequently to print to the output file. (STRIDE=1 means print every frame). 
+In PLUMED, a variable should be given a name (in the example above, d), which is then used to refer to this variable in subsequent actions, such as the PRINT command. In the above input file, we define the variable d as the [DISTANCE](https://www.plumed.org/doc-v2.9/user-doc/html/_d_i_s_t_a_n_c_e.html) between atom 2 (CA on residue 1) and atom 74 (CA on residue 10). A lists of atoms should be provided as comma separated numbers, with no space.
+
+Then we use the [PRINT](https://www.plumed.org/doc-v2.9/user-doc/html/_p_r_i_n_t.html) command to print the variable `d` to the output file we have named `distance.dat`. The STRIDE keyword sets how frequently to print to the output file. (STRIDE=1 means print every frame). 
 
 Edit the `plumed_example1.dat` file by typing in the terminal:
 {% highlight git %}
@@ -234,7 +236,7 @@ t1: TORSION ATOMS=@phi-2
 t2: TORSION ATOMS=@psi-2
 {% endhighlight %} 
 
-The PLUMED input file `plumed_example2.dat` will calculate the dihedral angles $$\phi$$ and $$\psi$ for residue 2 using two different ways. Edit this file by typing:
+The PLUMED input file `plumed_example2.dat` will calculate the dihedral angles $$\phi$$ and $$\psi$$ for residue 2 using two different ways. Edit this file by typing:
 
 {% highlight git %}
 nano plumed_example2.dat
@@ -267,15 +269,123 @@ psi8: TORSION ATOMS=@psi-8
 PRINT ARG=phi6,psi8 FILE=dihedrals_r6_r8.dat
 {% endhighlight %}
 
-To DO: Plotting Ramachandran here. 
+Copy your output file `dihedrals.dat` to your Windows machine using WinSCP. This file will have the following columns: 
+
+{% highlight git %}
+#! FIELDS time phi_THR2 psi_THR2 t1 t2
+{% endhighlight %}
+ 
+The following script will generate a 2-D plot of $$\phi$$ vs. $$\psi$$:
+
+[plot dihedral angle data](https://colab.research.google.com/drive/1reLdPMQjWHA6dcw79tao8fCFp56X49TU?usp=sharing)
+
+![2D_dihedral_plot](../../images/dihedral_plot.png)
 
 ## Radius of Gyration and Coordination Number
 
+Let's now prepare a PLUMED input file to calculate:
+- the radius of gyration defined by all the CA atoms.
+- the total number of contacts (COORDINATION) between all protein CA atoms. 
+
+Let's first get a list of indexes of the CA atoms by typing:
+{% highlight git %}
+grep 'CA' GB1_native.pdb
+{% endhighlight %}
+
+A PLUMED file called `plumed_example3.dat` is included in the workshop files. Look at the `plumed_example3.dat` file by typing:
+Let's first get a list of indexes of the CA atoms by typing:
+
+{% highlight git %}
+cat plumed_example3.dat
+{% endhighlight %}
+
+The first line define a GROUP of atoms by specifying a long list of all the CA atoms. We define this GROUP with the variable name ca. We can now refer to this list with the variable name ca.
+
+{% highlight git %}
+ca: GROUP ATOMS=2,10,17,29,38,46,54,62,70,74,83,90,98,107,111,120,127,134,141,150,155,162,170,175,180,187,192,201,210,217,228,237,246,258,263,271,279,287,291,298,306,310,319,333,340,352,360,368,373,380,389,396,407,414,421,428
+{% endhighlight %}
+
+We now refer to this list and tell PLUMED to calculate the radius of gyration (GYRATION) for this group. This variable will be stored with the name `Rg`. 
+
+{% highlight git %}
+Rg: GYRATION ATOMS=ca
+{% endhighlight %}
+
+Next we tell PLUMED to calculate the COORDINATION among the ca GROUP and store this variable with the name `Co`:
+
+{% highlight git %}
+Co: COORDINATION GROUPA=ca R_0=0.8
+{% endhighlight %}
+
+In the above line, the COORDINATION is defined as any distance between atoms within the group that is less than a cutoff distance specified by `R_0`, which we set here to 0.8 nm. (Recall that nm is the default units for PLUMED). 
+
+Finally, last line tells PLUMED to print the value of the variables Rg and Co to a file called COLVAR for each frame of the simulation. 
+
+{% highlight git %}
+PRINT ARG=Rg,Co FILE=COLVAR STRIDE=1
+{% endhighlight %}
+
+Once you understand the lines of this PLUMED input file, run the calculation with the driver:
+
+{% highlight git %}
+plumed driver --plumed plumed_example3.dat --mf_xtc traj-whole.xtc
+{% endhighlight %}
+
+This will create a COLVAR file like this one:
+{% highlight git %}
+#! FIELDS time Rg Co
+ 0.000000 2.458704 165.184127
+ 1.000000 2.341932 164.546604
+ 2.000000 2.404708 162.606975
+ 3.000000 2.454297 143.850122
+ 4.000000 2.569342 147.110408
+ 5.000000 2.304027 163.608703
+ 6.000000 2.116676 177.549800
+ 7.000000 2.068599 183.177947
+ 8.000000 2.021605 181.929951
+{% endhighlight %}
+
+Notice that the first line informs you about the content of each column.
 
 ## Virtual Atoms 
 
+Sometimes, when calculating a CV, you may not want to use the positions of a number of atoms directly. Instead you may want to define a virtual atom whose position is generated based on the positions of a collection of other atoms. For example you might want to use the center of mass (COM) or the geometric center (CENTER) of a group of atoms.
 
-## Ensemble Averates and Making Histograms 
+Look at the PLUMED example input file `plumed_example4.dat` by typing:
 
-This will be important for Day 2 discussion of error bars
+{% highlight git %}
+cat plumed_example4.dat
+{% endhighlight %}
+
+{% highlight git %}
+# geometric center of first residue
+first: CENTER ATOMS=1,2,3,4,5,6,7,8
+# geometric center of last residue
+last: CENTER ATOMS=427-436
+# distance between centers of first and last residues
+d1: DISTANCE ATOMS=first,last
+# print the distance every step
+PRINT ARG=d1 STRIDE=1 FILE=distance_r1_r56.dat
+{% endhighlight %}
+
+In this example, we are defining a variable named `first` as the geometric center of the first residue of the protein and a variable named `last` as the geometric center of the last residue. We then calculate the distance between these "virtual" atoms and print this to a file `distance_r1_r56.dat`. 
+
+Once you understand the PLUMED input file containing the above instructions, you can execute it on the trajectory using the following command:
+
+{% highlight git %}
+plumed driver --plumed plumed_example4.dat --mf_xtc traj-whole.xtc
+{% endhighlight %}
+
+## Ensemble Averages and Making Histograms 
+
+By now you should have generated three time-series data files for the GB1 trajectory:
+- distance.dat: This is the distance between CA atoms on residues 1 and 10 from example 1.
+- COLVAR: This is the radius of gyration (Rg) and COORDINATION (Co) of the CA carbon group from example 3.
+- distance_r1_r56.dat: This is the distance between the geometric centers of residue 1 and residue 56 from example 4. 
+
+Let's plot these by transferring each of these files to your Windows machine using the WinSCP app. A Python code for plotting these files is provided here:
+
+[code to plot_distances](https://colab.research.google.com/drive/18VzTAY32tEFRc-WJmuUM8pYAk4By-LHp?usp=sharing)
+
+
 
