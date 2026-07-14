@@ -275,7 +275,7 @@ To DO: Plotting Ramachandran here.
 ## Virtual Atoms 
 
 
-## Plotting Distances and Making Histograms 
+## Ensemble Averates and Making Histograms 
 
 This will be important for Day 2 discussion of error bars
 
