@@ -144,7 +144,7 @@ gmx anaeig -s ../trp-cage-reference.pdb -f ../long-production_whole.xtc -v eigen
 
 To plot the resulting `2dproj.xvg`, transfer this file to your local Windows machine and use the following Python script:
 
-[plot_2D_surface]()
+[plot_2D_surface](https://colab.research.google.com/drive/1hLRIrq_dy1-P6hCe5Lx4YjcPY4jjy7qZ?usp=sharing)
 
 ![Figure_2D](../../images/trp-cage_2D_projection.png)
 
