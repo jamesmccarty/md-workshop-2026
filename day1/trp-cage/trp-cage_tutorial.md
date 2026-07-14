@@ -116,3 +116,39 @@ gmx anaeig -s ../trp-cage-reference.pdb -f ../long-production_whole.xtc -filt fi
 Select the index group that was used for the least squares fit. This is Group 4 (Backbone). Answer 4 twice when asked for a group. The output pdb file `filter1.pdb` will show the animation of the dynamics along the first principal component. To view this movie, copy the `filter1.pdb` file to your local Windows machine using the WinSCP app and open the file with PyMOL. Note that the pdb file will only contain the Backbone atoms (no side chain atoms) because this is the group we selected. To see the movie slower you can set in the PyMOL toolbar: Movie --> Frame Rate --> 5 FPS. 
 
 ![Filtered_traj_plot](../../images/filtered_traj_pymol.png) 
+
+As you can see, the animation is still kind of jerky. This is because the motion is not smooth, but due to random fluctuations. To see a smooth animation of the motion along the first principal component, we can artificially interpolate between the two extreme conformations along this eigenvector. Try typing:
+
+{% highlight git %}
+gmx anaeig -s ../trp-cage-reference.pdb -f ../long-production_whole.xtc -extr extreme1.pdb -v eigenvectors.trr -eig eigenvalues.xvg -first 1 -last 1 -nframes 30
+{% endhighlight %}
+
+Again, select Group 4 when prompted. The output pdb file will be `extreme1.pdb`. Try copying this file to your local Windows machine and visualzing this pdb file in PyMOL. 
+
+Now repeat the last command for the second eigenvector:
+
+{% highlight git %} 
+gmx anaeig -s ../trp-cage-reference.pdb -f ../long-production_whole.xtc -extr extreme2.pdb -v eigenvectors.trr -eig eigenvalues.xvg -first 2 -last 2 -nframes 30
+{% endhighlight %}
+
+And visualize the `extreme2.pdb` file in PyMol as you did before. How would you describe the motion along the first and second eigenvalues? To contrast with a higher eigenvalue, repeat the above procedure for eigenvector 20 (or 50, or any other number of your choice). 
+### Two dimensional projection of the configuration space
+
+One way to visualize the sampled conformational space is to plot the subspace spanned by the first two principal components. This is a so-called two-dimensional projections. Along the x-axis we plot the first principal component, which is the direction of largest covariance, and on the y-axis, we plot the second principal component. In this plot, each point represents a snapshot from the simulation, and the distribution of points shows the sampled region along the first two eigenvectors. 
+
+To generate a 2-D projection along the first two eigenvectors, type:
+
+{% highlight git %}
+gmx anaeig -s ../trp-cage-reference.pdb -f ../long-production_whole.xtc -v eigenvectors.trr -eig eigenvalues.xvg -2d -first 1 -last 2 -xvg none 
+{% endhighlight %}
+
+To plot the resulting `2dproj.xvg`, transfer this file to your local Windows machine and use the following Python script:
+
+[plot_2D_surface]()
+
+![Figure_2D](../../images/trp-cage_2D_projection.png)
+
+
+
+
+
