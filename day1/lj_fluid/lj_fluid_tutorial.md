@@ -339,7 +339,7 @@ The value from the literature at 94.4 K is reported as $$D=2.43\times 10^{-5}$$ 
 ![msd_plot](../../images/msd_lj.png)
 
 
-Congratulations, you have completed this tutorial. You should now move on to the mini-protein tutorial [here](../mini-protein/mini-protein_tutorial.md)
+Congratulations, you have completed this tutorial. At this point, you should now move on to the mini-protein tutorial [here](../mini-protein/mini-protein_tutorial.md) If you have extra time at the end of the day, you can consider the following optional extensions. 
  
 #### Optional Extention 1  
 
@@ -363,4 +363,4 @@ See if you can make a plot of the temperature as a function of the simulation ti
 
 Run a longer trajectory of argon at 10 K and compare the radial distribution with that at 94.4 K. What can you infer about the structure at 10 K? 
 
-
+[Return to Day 1 homepage](../../day1.md)

@@ -1,4 +1,55 @@
-### Coming Soon ... 
+## Analysis of Trp-Cage protein with Principal Component Analysis (PCA)
+
+In this tutorial you will learn how to analyze the dyanamics of a small protein: [trp-cage](https://www.rcsb.org/structure/1L2Y). Although a protein's function is often linked to its conformational dynamics, it is not always obvious how to extract relevant motions from a simulated trajectory. One reason for this is that all the atoms are wiggling and jiggling at the same time and it is not straightforward to distinguish between slow, collective motions and fast, local fluctuations. A princial component analysis (PCA) can help to filter global, collective (often slow) motions from local, fast motions. Once this tutorial is completed students will be able to:
+
+- Perform PCA analysis using GROMACS post-processing tools.
+- Filter the trajectory along one of the slow, collective modes. 
+- Project the protein configurational space onto the sub-space spanned by the first two eigenvectors.
+- Create a "porcupine" plot used to illustrate the direction and magnitude of a protein's slow atomic movements
+
+Files Files to complete this tutorial can be accessed here: [tutorial files](coming soon)
+
+These files are already located on bigzam: /opt/workshop/trp-cage/
+
+### Getting Started
+
+Use PuTTY to connect to bigzam using your workshop username and password as you have done in previous tutorials. 
+
+Important: Once connected to the workshop computer, set your environment variables by typing:
+
+{% highlight git %}
+source setup.sh 
+{% endhighlight %}
+
+Copy the tutorial files by typing in the terminal:
+
+{% highlight git %}
+cp -r /opt/workshop/trp-cage ~/
+{% endhighlight %}
+
+This will copy the necessary tutorial files to your home directory on bigzam. Move into the trp-cage directory:
+
+{% highlight git %}
+cd ~/trp-cage
+{% endhighlight %}
+
+In this tutorial, you work with a pre-calculated trajectory to save time. However, all the input files needed to the generate the trajectory are provided with this tutorial. (If you want extra practice preparing a GROMACS simulation, you can repeat the steps from the [mini-protein tutorial](../mini-protein/mini-protein_tutorial.md) to generate a trajectory for trp-cage). The trajectory file that you will work with is called `long-production.xtc` and contains a 400 ns trajectory of the trp-cage protein in water. 
+
+### Fix Broken Molecules by Correcting for Periodic Boundary Conditions 
+
+Before analyzing any trajectory, you need to fix molecules that may be broken by the periodic boundary conditions ([See mini-protein tutorial](../mini-protein/mini-protein_tutorial.md])). To do this, you can use the `trjconv` command in GROMACS. In the terminal, type:
+
+{% highlight git %}
+gmx trjconv -f long-production.xtc -s long-production.tpr -o long-production_whole.xtc -pbc whole -ur compact
+{% endhighlight %} 
+
+when prompted, select Group 1 for Protein. Now, create a reference pdb file by typing:
+
+{% highlight git %}
+gmx trjconv -f long-production.xtc -s long-production.tpr -o trp-cage-reference.pdb -pbc whole -ur compact -dump 0
+{% endhighlight %}
+
+Again, select Group 1 for Protein. You should now have a protein trajectory file called `long-production_whole.xtc` and a reference pdb file called `trp-cage-reference.pdb`. You are now ready to move on with PCA analysis.
 
 ### Principal Component Analysis
 
@@ -14,10 +65,46 @@ cd COVAR
 
 The program `covar` will construct the covariance matrix and perform the diagonalization. Type the following command:
 
+{% highlight git %}
+gmx covar -s ../trp-cage-reference.pdb -f ../long-production_whole.xtc -o eigenvalues.xvg -v eigenvectors.trr -xvg none
+{% endhighlight %}
 
-The program `covar` will construct the covariance matrix and perform the diagonalization. Type the following command:
+After entering this command, you will be prompted twice. The first prompt will ask you to choose a group for the least squares fit. Choose Group 4 for Backbone. This will perform a least-squares fit of each from of the trajectory to remove the center of mass motion and rotational tumbling of the protein. 
+
+A second prompt will ask you to choose a group for the covariance analysis. Again, select Group 4 for Backbone. The eigenvectors corresponding to the largest eigenvalues are called "principal components." They represent the largest amplitude of collective motions. The eigenvalues give the variance along the principal component, i.e. the contribution of each principal component to the overall fluctuation of the protein. 
+
+If you issue the command:
 
 {% highlight git %}
-gmx covar -s ../protein-reference.pdb -f ../protein_noPBC.xtc -o eigenvalues.xvg -v eigenvectors.trr
+ls 
 {% endhighlight %}
+
+you will see that the `gmx covar` has generated both eigenvalues and eigenvectors in files called `eigenvalues.xvg` and `eigenvectors.trr`. Recall that the eigenvalues indicate the contributions of the eigenvector to the mean square fluctuations. The eigenvalues are sorted according to size. View the first ten eigenvalues by typing:
+
+{% highlight git %}
+head eigenvalues.xvg 
+{% endhighlight %}
+
+You will see something like:
+{% highlight git %}
+         1 0.136405
+         2 0.0582073
+         3 0.0247107
+         4 0.0211923
+         5 0.014929
+         6 0.0130243
+         7 0.010675
+         8 0.00836928
+         9 0.0066959
+        10 0.00506618
+{% endhighlight %}
+
+Use the WinSCP app on your windows machine to transfer the eigenvalues.xvg file to your local Windows machine. Then plot with your favorite plotting software. Here is a Python script that will plot the eigenvalues:
+
+[Eigenvalue Plotting](https://colab.research.google.com/drive/1UbHcRROpwItAD9jarD1-U2byuluPFmzf?usp=sharing)
+
+![Eigenvalue_Plot](../../images/eigenvalues.png)
+
+As you can see, there are only a few large eigenvalues, all other are relatively small, suggesting that a large fraction of the total motion is explained by only a few principal components.     
+ 
 
