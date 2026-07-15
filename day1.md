@@ -17,7 +17,7 @@ By the end of today, participants should be able to:
 
 Slides coming soon!
 
-## Session 2: Simulating a Simple Fluid Tutorial
+## Session 2: Tutorial Simulating a Simple Fluid 
 
 In this tutorial you will learn how to perform a molecular dynamics (MD) of liquid argon using the GROMACS MD package. This will introduce you to the basics of an MD simulation and how to analyze structural properties of a fluid.  
 
@@ -32,7 +32,7 @@ Once this tutorial is completed students will be able to:
 
 [Fluid Tutorial](day1/lj_fluid/lj_fluid_tutorial.md)
 
-## Session 3: MD Simulation of a Mini-Protein Tutorial
+## Session 3: Tutorial MD Simulation of a Mini-Protein in Water
 
 In this tutorial you will use GROMACS in the Unix command line to build and equilibrate a solvated protein system for the mini-protein [YYDPETGTWY](https://pubs.acs.org/doi/10.1021/ja8030533). The goal is to understand the MD simulation parameters that are chosen and the details about how the system was built.  
 
@@ -47,10 +47,14 @@ Once this tutorial is completed students will be able to:
 
 [Mini-Protein Tutorial](day1/mini-protein/mini-protein_tutorial.md)
 
-## (Optional) Trp-Cage System
+## (Optional) Tutorial Analysis of Trp-Cage System
 
 For additional practice, you can try setting up and running an MD simulation of the larger [trp-cage protein](https://www.rcsb.org/structure/1L2Y).
    
+**Tutorial**
+
+[Analysis of Trp-cage Tutorial](day1/trp-cage/trp-cage_tutorial.md)
+
 
 ## Session 4: Introduction to PLUMED Syntax and Histograms
 
