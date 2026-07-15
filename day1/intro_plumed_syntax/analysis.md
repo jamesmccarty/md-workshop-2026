@@ -388,6 +388,7 @@ Let's plot these by transferring each of these two files to your Windows machine
 
 First you will upload your COLVAR file by running the following cell:
 
+![screenshot_upload](../../images/GB1_upload.png)
 
 After loading the data, we store the values in an array an compute the mean and standard deviation as follows:
 
