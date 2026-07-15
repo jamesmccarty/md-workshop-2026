@@ -378,14 +378,42 @@ plumed driver --plumed plumed_example4.dat --mf_xtc traj-whole.xtc
 
 ## Ensemble Averages and Making Histograms 
 
-By now you should have generated three time-series data files for the GB1 trajectory:
-- distance.dat: This is the distance between CA atoms on residues 1 and 10 from example 1.
+By now you should have generated some time-series data files for the GB1 trajectory:
 - COLVAR: This is the radius of gyration (Rg) and COORDINATION (Co) of the CA carbon group from example 3.
 - distance_r1_r56.dat: This is the distance between the geometric centers of residue 1 and residue 56 from example 4. 
 
-Let's plot these by transferring each of these files to your Windows machine using the WinSCP app. A Python code for plotting these files is provided here:
+Let's plot these by transferring each of these two files to your Windows machine using the WinSCP app. A Python code for plotting the Radius of gyration and Coordination number COLVAR file is provided here:
 
-[code to plot_distances](https://colab.research.google.com/drive/18VzTAY32tEFRc-WJmuUM8pYAk4By-LHp?usp=sharing)
+[code to plot COLVAR file](https://colab.research.google.com/drive/12nDFwYWMnNqAvo32h29XZhUBHMLxKOZw?usp=sharing)
+
+First you will upload your COLVAR file by running the following cell:
+
+
+After loading the data, we store the values in an array an compute the mean and standard deviation as follows:
+
+![screenshot_mean](../../images/screenshot_mean_GB1.png)
+
+Have a look at the time-series plot of the radius of gyration over time. Can you see where the protein is folding? How can you tell? Notice the single mean value doesn't really convey the whole story since the distribution is clearly bimodal. Upon folding into a globular state, the radius of gyration becomes smaller and fluctuates about a value closer to 1 nm. 
+
+![Rg_Figure](../../images/GB1_Rg_timeseries.png)
+
+A histogram can be more informative than the single mean value since a histogram shows you the distribution of values over the trajectory. 
+
+![Rg_histo](../../images/GB1_Rg_histo.png)
+
+Notice how the histogram clearly shows a bimodal distribution between two state: the unfolded state with higher Rg and the folded state with smaller Rg.
+
+Repeating the analysis for the coordination number, we see the CA coordination gets bigger upon folding. This makes sense because in the folded globular state there are more contacts formed between residues on average than in the unfolded state. 
+
+![Co_Figure](../../images/GB1_Co_timeseries.png)
+
+Again we see the histogram of the CA coordination is bimodal representing the unfolded and folded states:
+
+![Co_histo](../../images/GB1_Co_histo.png)
+
+
+
+
 
 
 
