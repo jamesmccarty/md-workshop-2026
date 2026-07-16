@@ -19,7 +19,7 @@ Throughout today's tutorial you will play with the terminally capped alanine mol
 
 ![Alanine_dipeptide1](../../images/belfast-2-ala.png)
 
-While simple, this system is a nice example because it presents two metastable states separated by a high free-energy barrier. It is conventional use to characterize the two states in terms of Ramachandran dihedral angles, which are denoted with $$\phi$$ and $$\psi$$.
+While simple, this system is a nice example because it presents two metastable states separated by a high free-energy barrier. It is conventional to characterize the two states in terms of Ramachandran dihedral angles, which are denoted with $$\phi$$ and $$\psi$$. As you can see the $$\phi$$ and $$\psi$$ angles distinguish between the C7eq and C7ax state shown in red and green in the Ramachandran plot. 
 
 ![Alanine_dipeptide2](../../images/belfast-2-transition_ala.png)
 
