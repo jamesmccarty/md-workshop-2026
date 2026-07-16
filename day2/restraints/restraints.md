@@ -15,7 +15,7 @@ In the [previous introduction to PLUMED syntax tutorial](../../day1/intro_plumed
 
 ## The molecule of the day
 
-Throughout today's tutorial you will play with the terminally capped alanine molecule (specifically, N-acetyl-L-alanine-N'-methylamide). The molecule has the total chemical formula C<sub>6</sub>H<sub>12</sub>N<sub>2></sub>O<sub>2</sub> and consists of a central alanine amino group, with flanking acetyl and methylamide groups to have neural (uncharged) end-groups. In the computational literature this molecule is frequently abbreviated as Ace-Ala-NMe. 
+Throughout today's tutorial you will play with the terminally capped alanine molecule (specifically, N-acetyl-L-alanine-N'-methylamide). The molecule has the total chemical formula C<sub>6</sub>H<sub>12</sub>N<sub>2</sub>O<sub>2</sub> and consists of a central alanine amino group, with flanking acetyl and methylamide groups to have neural (uncharged) end-groups. In the computational literature this molecule is frequently abbreviated as Ace-Ala-NMe. 
 
 ![Alanine_dipeptide1](../../images/belfast-2-ala.png)
 
