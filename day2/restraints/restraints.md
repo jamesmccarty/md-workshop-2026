@@ -32,7 +32,7 @@ These files are already located on bigzam:
 
 ## Getting Started 
 
-Use PuTTY to connect to bigzam as you did in previous [tutorials](../lj_fluid/lj_fluid_tutorial.md). Open PuTTY from the Window Start menu and enter `bigzam.local` for the Host Name. Login using the terminal using your username and password.
+Use PuTTY to connect to bigzam as you did in previous [tutorials](../../day1/lj_fluid/lj_fluid_tutorial.md). Open PuTTY from the Window Start menu and enter `bigzam.local` for the Host Name. Login using the terminal using your username and password.
 
 **Important**: Once connected to the workshop computer, set your environment variables by typing:
 
