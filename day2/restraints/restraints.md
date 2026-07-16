@@ -115,14 +115,55 @@ head dihedrals_weak_restraint.dat
 
 we see that we have written to the file the time (in ps), the $\phi$ and $\psi$ angles (in radians) and the value of the bias potential (in kJ/mol). 
 
+{% highlight git %}
+#! FIELDS time phi psi restraint.bias
+#! SET min_phi -pi
+#! SET max_phi pi
+#! SET min_psi -pi
+#! SET max_psi pi
+ 0.000000 -1.498385 0.273949 0.000013
+ 0.200000 -1.201216 0.855335 0.446359
+ 0.400000 -1.381729 1.547420 0.069940
+ 0.600000 -1.224698 1.245825 0.378956
+ 0.800000 -1.523365 0.695065 0.002730
+{% endhighlight %}
 
+The restraint is only one contribution to the potential energy. The molecule also experiences its own torsional potential, and the observed $$\phi$$ distribution  will reflect both the effect of the bias and the underlying free energy landscape of the molecule. Here the bias we are adding is fairly weak (10 kJ/mol). 
 
+Investigate what happens when you increase the force constant (KAPPA) in the harmonic restraint. Here, you are effectively making the restoring spring stiffer. In the plumed template provided `plumed_example2.dat` edit the file by typing 
+
+{% highlight git %}
+nano plumed_example2.dat
+{% endhighlight %}
+
+{% highlight git %}
+# set up two variables for Phi and Psi dihedral angles 
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
+
+# Set up harmonic restraint 
+restraint: RESTRAINT ARG=phi KAPPA=__FILL__ AT=-1.5
+
+# Print output
+PRINT FILE=dihedrals_strong_restraint.dat ARG=phi,psi,restraint.bias STRIDE=100
+{% endhighlight %}
+
+Replace where it says `__FILL__` with a KAPPA values of 250 kJ/mol. Then save by typing `Ctrl+O` followed by the `Enter` key. Then `Ctrl+X` to exit the text editor. 
+
+After you have saved changes to the `plumed_example2.dat` file, rerun the biased simulation using the new restraint by typing:
+
+{% highlight git %}
+gmx mdrun -v -deffnm run1 -plumed plumed_example2.dat -nt 1
+{% endhighlight %}
+
+The resulting output file will be called `dihedrals_strong_restraint.dat`. 
 
 ## Adding a moving restraint 
 
 
 
 
-## (Optional) Umbrella Sampling in PLUMED
+## (Optional) Umbrella Sampling in PLUME
+
 
 
