@@ -162,7 +162,19 @@ Transfer both the outputs, `dihedrals_weak_restraint.dat` and `dihedrals_strong_
 
 [plotting fixed bias restraint](https://colab.research.google.com/drive/16zAuRBcJ5jKBzlM-j3aC3Adl6bdNG52_?usp=sharing)
 
+First upload both files to the Google Colab:
+
 ![screenshot_dihderal_restraint_plot](../../images/screenshot_dihedral_restraint_plot.png) 
+
+Here we see that the biased simulation with the weak harmonic restraint ($$\kappa=10$$) samples a larger range of $$\phi$$ values and the parabolla corresponding to the harmonic bias potential is shallower. The biased simulation with the strong harmonic restraint ($$\kappa=250$$) is centered more sharply around $$\phi_0$$ and has a steeper parabolla. 
+
+![potential_energy_restraint_plot](../../images/PErestraint_plot.png)
+
+Next, look at the distribution of sampled $$\phi$$ values from the histogram. 
+
+histo_restraint_plot.png
+
+Here we see that the weaker biased simulation is not Gaussian distributed about the mean but has a pronounced tail toward more negative $$\phi$$ value. On the other hand, the strongly biased simulation shows a Gaussian distributed value of $$\phi$$ about the mean due to the strong harmonic restraint placed at this value. 
 
  
 
