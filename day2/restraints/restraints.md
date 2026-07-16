@@ -1,4 +1,4 @@
-# Implementing Restraints
+# Using Restraints
 
 In this tutorial you will learn how to implement a restraint using PLUMED. By applying restraints on one or more collective variables, you can restrict the sampling to a desired region. This will introduce you to the idea of using a bias to manipulate a simulation on-the-fly. 
 
