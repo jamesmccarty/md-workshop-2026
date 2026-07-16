@@ -158,6 +158,14 @@ gmx mdrun -v -deffnm run1 -plumed plumed_example2.dat -nt 1
 
 The resulting output file will be called `dihedrals_strong_restraint.dat`. 
 
+Transfer both the outputs, `dihedrals_weak_restraint.dat` and `dihedrals_strong_restraint.dat`, from your biased simulation to your local Windows machine using the WinSCP app. Then you can use the following Google Colab link for plotting the histogram of the $$\phi$$ angle. 
+
+[plotting fixed bias restraint](https://colab.research.google.com/drive/16zAuRBcJ5jKBzlM-j3aC3Adl6bdNG52_?usp=sharing)
+
+![screenshot_dihderal_restraint_plot](../../images/screenshot_dihedral_restraint_plot.png) 
+
+ 
+
 ## Adding a moving restraint 
 
 
