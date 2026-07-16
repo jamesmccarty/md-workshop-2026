@@ -172,7 +172,7 @@ Here we see that the biased simulation with the weak harmonic restraint ($$\kapp
 
 Next, look at the distribution of sampled $$\phi$$ values from the histogram. 
 
-![histo_restraint_plot[(../../images/histo_restraint_plot.png)
+![histo_restraint_plot](../../images/histo_restraint_plot.png)
 
 Here we see that the weaker biased simulation is not Gaussian distributed about the mean but has a pronounced tail toward more negative $$\phi$$ value. On the other hand, the strongly biased simulation shows a Gaussian distributed value of $$\phi$$ about the mean due to the strong harmonic restraint placed at this value. 
 
