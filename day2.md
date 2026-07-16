@@ -18,13 +18,26 @@ By the end of today, participants should be able to:
 
 Slides coming soon!
 
-## Session 2: Enhanced Sampling Tutorial
+## Session 2: Implementing Restraints 
+
+In this tutorial you will learn how to implement a restraint using PLUMED. By applying restraints on one or more collective variables, you can restrict the sampling to a desired region. This will introduce you to the idea of using a bias to manipulate a simulation on-the-fly.
+
+Once this tutorial is completed students will be able to: 
+
+- Apply a restraint on a simulations over one or more collective variables
+- Understand the effect of a restraint on the acquired statistics
+- Perform an out-of-equilibrium simulation with a moving restraint 
+
+**Tutorial**
+
+[Using Restraints Tutorial](day2/restraints/restraints.md)
+
+## Session 3: Metadynamics Tutorial
 
 In this tutorial you will learn how to perform a metadynamics enhanced sampling simulation using PLUMED. We will use the alanine dipeptide molecule as a simple model system for exploring conformational transitions and free energy calculations.
 
 Once this tutorial is completed students will be able to:
 
-- Apply a restraint on a simulations over one or more collective variables
 - Define and assess collective variables for enhanced sampling
 - Run a metadynamics simulation using PLUMED
 - Calculate free energies from a metadynamics simulation
@@ -33,7 +46,7 @@ Once this tutorial is completed students will be able to:
 
 [Metadynamics Tutorial](coming soon)
 
-## Session 3: Path Collective Variables Tutorial
+## Session 4: Path Collective Variables Tutorial
 
 The primary goals of this tutorial are to show you how you might use path collective variables for describing and simulating activated molecular processes, and to provide hands-on experience with setting up, running, and analyzing biased path-CV simulations, such as path-metadynamics. We will study alanine dipeptide with path collective variables to demonstrate how one might perform enhanced sampling along a putative reaction coordinate.
 
@@ -44,7 +57,7 @@ Once this tutorial is completed students will be able to:
 
 [Path CVs Tutorial](coming soon)
 
-## Session 4: Error Analysis of Free Energy Surfaces Tutorial 
+## Session 5: Error Analysis of Free Energy Surfaces Tutorial 
 
 The goals of this tutorial are to The aim of this tutorial are for you to understand how to analyze free energy surfaces, compute error bars, and understand statistical uncertainties from MD simulation results. 
 
