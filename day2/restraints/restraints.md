@@ -223,6 +223,12 @@ The plot of the $$\phi$$ value over the first 200 ps shows the result of our out
 
 ![Figure_pulling](../../images/Figure_pulling_phi.png)
 
+We visualize this on a 2-D Ramachandran plot where each point is a frame from the simulation plotting the $$\phi$$ vs. $$\psi$$ value. Notice that by pulling along the $$\phi$$ coordinate, we were able to force the transition from the C7eq to the C7ax state. 
+
+![Figure_pulling](../../images/Figure_pulling_phi_Ramachandran.png)
+
+  
+
 ## (Optional) Umbrella Sampling in PLUME
 
 
