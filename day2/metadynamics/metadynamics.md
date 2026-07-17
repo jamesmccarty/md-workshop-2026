@@ -218,4 +218,23 @@ We see in the above, that the free energy estimate is rapidly changing at the be
 
 ## Missing slow degrees of freedom 
 
-  
+Let's investigate what would happen if we had choosen to bias the $$\psi$$ angle instead of the $$\phi$$ angle.  Complete the template `plumed_metad_psi.dat` file similar to the previous exercise to run this calculation, this time setting the `METAD` argument to `ARG=psi`. 
+
+Once your `plumed_metad_psi.dat` file is complete, run a metadynamics simulation with the following command:
+
+{% highlight git %}
+gmx mdrun -v -deffnm metad_run1 -plumed plumed_metad_psi.dat
+{% endhighlight %}  
+
+When the job finishes, the output file will be `COLVAR_psi`. As you did earlier, transfer this file to your local Windows machine using WinSCP and plot the behavior of the CV during the simulation using the [Colab here](https://colab.research.google.com/drive/1zA_lNQPlknAXWwefqT6jc9Nm9-GoZTJv?usp=sharing). Here we will plot at the same time the evolution of the metadynamics CV $$\psi$$ and of the other dihedral $$\psi$$. 
+
+![Figure_badCV](../../images/metad_badCV.png)
+
+Notice that something different happened compared to the previous metadynamics simulation where you biased the $$\phi$$ angle. At first the behavior of $$\psi$$ looks diffusive in the angle range; however, around t=1000 ps, $$\psi$$ seems trapped at a value at which it was previously diffusing without problems. The reason is that the non-biased CV $$\phi$$ after a while has jumped into a different local minima. Since $$\phi$$ is not directly biased, one has to wait for this (slow) degree of freedom to equilibrate before the free energy along $$\psi$$ can converge.
+
+(Optional): Try repeating the analysis done previously and calcualte the estimate of the free energy as a function of time to assess the convergence of this metadynamics simulation. 
+
+## Metadyanmics on two CVs and Reweighting
+
+
+
