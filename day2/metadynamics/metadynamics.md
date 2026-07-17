@@ -120,4 +120,57 @@ PRINT ARG=phi,psi,metad.bias FILE=COLVAR_phi STRIDE=100
 
 **Important**: When running a metadynamics simulation, don't forget to PRINT the metadynamics bias (metad.bias) because you will need this for post-processing.
 
-  
+Once your `plumed_metad_phi.dat` file is complete, you can run a metadynamics simulations with the following command:
+
+{% highlight git %}
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o metad_run1.tp
+{% endhighlight %}
+
+{% highlight git %}
+gmx mdrun -v -deffnm metad_run1 -plumed plumed_metad_phi.dat -nt 1
+{% endhighlight %}
+
+When this job finishes, you will have produced a `HILLS` file along with a `COLVAR_phi` file. The `HILLS` file contains each of the Gaussian bias kernels that were deposited during the simulation. To get a quick estimate of the free energy surface as a function of the $$\phi$$ angle, you can use the PLUMED utility `sum_hills`, which sums the Gaussian kernels deposited during the simulation and stored in the `HILLS` file. Here, it is sufficient to type the following command line:
+
+{% highlight git %}
+plumed sum_hills --hils HILLS 
+{% endhighlight %} 
+
+The command above generates a file called `fes.dat` in which the free-energy surface as function of $$\phi$$ is calculated on a regular grid based on the sum of Gaussian hills that were added. 
+
+## Analyzing Results
+
+First, let's look at the output `COLVAR_phi` and `fes.dat` file from your metadynamics simulation. Use the WinSCP app to transfer these files from bigzam to your local Windows machine. Use the following Google Colab to upload and plot these files:
+
+[Plotting results](https://colab.research.google.com/drive/13Ql_sJOa80ZDo5eNu-TFWCZaABRP_w-Q?usp=sharing)
+
+The contents of the `COLVAR_phi` file are:
+
+{% highlight git %}
+#! FIELDS time phi psi metad.bias
+ 0.000000 -1.498385 0.273949 0.000000
+ 0.200000 -1.181761 0.833923 0.000000
+ 0.400000 -1.536486 2.057503 0.000000
+ 0.600000 -1.632213 2.782492 0.000000
+ 0.800000 -1.854007 2.674607 0.000000
+{% endhighlight %}
+
+Plotting the first two columns shows $$\phi$$ vs. time over the course of the metadynamics simulation:
+
+![Metad_phi_plot](../../images/metad_phi_plot.png)
+
+The above plot shows  let's how $\phi$ evolves during the metadynamics simulation. We see that the system is initialized in one of the two metastable states of alanine dipeptide. After a while (t = 500 ps), the system is pushed by the metadynamics bias potential to visit the other local minimum. As the simulation continues, the bias potential fills the underlying free-energy landscape, and the system is able to diffuse in the entire conformational space.
+
+If we look at the 2-D Ramachandran we see that the simulation sampled both the C7eq to the C7ax states:
+
+![Metad_Ramachandran](../../images/Metad_ramachandran.png)
+
+Finally, let's look at a plot of the `fes.dat` file. This gives an estimate of the free energy as a function of the dihedral $$\phi$$. 
+
+![Metad_fes_plot](../../images/Metad_fes.png)
+
+**Note**: the free energy from `sum_hills` is defined only up to an irrelevant constant, so the entire curve could be shifted up or down without physical consequence (for example, if we wanted to set the minimum to zero, then the free energy would be defined relative to the most stable ground state).  
+
+## Assessing Convergence
+
+
