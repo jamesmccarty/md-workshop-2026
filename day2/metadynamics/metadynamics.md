@@ -236,5 +236,64 @@ Notice that something different happened compared to the previous metadynamics s
 
 ## Metadyanmics on two CVs and Reweighting
 
+The PLUMED input example, `plumed_metad_phi_psi.dat` will run a metadynamics simulation on both the $$\phi$$ and $$\psi$$ angles simultaneously. Biasing both $$\phi$$ and $$\psi$$ should allow us to exhaustively sample all possible configurations in the Ramachandran space. First, have a look at the `plumed_metad_phi_psi.dat` file and make sure you understand each section:
+
+{% highlight git %}
+cat plumed_metad_phi_psi.dat
+{% endhighlight %}
+
+{% highlight git %}
+# Activate MOLINFO functionalities
+MOLINFO STRUCTURE=dialaA.pdb 
+# Compute the backbone dihedral angle phi, defined by atoms C-N-CA-C
+# you might want to use MOLINFO shortcuts
+phi: TORSION ATOMS=@phi-2
+# Compute the backbone dihedral angle psi, defined by atoms N-CA-C-N
+# here also you might want to use MOLINFO shortcuts
+psi: TORSION ATOMS=@psi-2 
+
+# Activate well-tempered metadynamics in phi
+metad: METAD ...
+    ARG=phi,psi
+   # Deposit a Gaussian every 500 time steps
+    PACE=500
+    # set initial Gaussian height equal to 1.2 kJ/mol  
+    HEIGHT=1.2
+     # set Gaussian width (sigma)
+    SIGMA=0.1,0.1 
+    # The bias factor should be wisely chosen 
+    BIASFACTOR=8 
+   # Gaussians will be written to HILLS file and stored on grid 
+   FILE=HILLS GRID_MIN=-pi,-pi GRID_MAX=pi,pi
+...
+
+# Print both collective variables on COLVAR file every 10 steps
+PRINT ARG=phi,psi,metad.bias FILE=COLVAR STRIDE=100
+{% endhighlight %}
+
+This file looks very similar to our previous ones except that in the METAD section we include both phi and psi as arguments with `ARG=phi,psi` (no spaces between commas in PLUMED), and we include a SIGMA value for each and the HILLS file will be on a 2D grid. 
+
+After inspecting the input file, run the metadynamics simulation as:
+
+{% highlight git %}
+gmx mdrun -v -deffnm run1 -plumed plumed_metad_phi_psi.dat
+{% endhighlight %}
+
+The output files will be called `COLVAR` containing the information about the $$\phi$$ and $$\psi$$ values and `HILLS` containing information about the Gaussian hills deposited. 
+
+Let's assess the sampling by looking at a 2D-Ramachandran plot. Transfer the `COLVAR` file to your local machine and upload [here for plotting](https://colab.research.google.com/drive/17dmn4k9-aLvbhGTfkUURj5WsVZNU0S8E?usp=sharing).
+
+![2D_MetaD_plot](../../images/2D_Metad_Ramachandran.png)
+
+Here we see that we have sampled extensively the C7eq and C7ax states but relatively infrequently the transition states between them. 
+
+In the previous exercise where we biased only $$\phi$$, we computed the free energy as a function of the same variable directly from the sum of Gaussian kernels using the sum_hills utility. Now, when we bias both $$\phi$$ and $$\psi$$ simultaneously, the bias is a sum of two-dimensional Gaussians centered on pairs of $$\phi$$,$$\psi$$ values. 
+  
+Additionally, in many cases you might decide that the variable you would like to analyze after having performed a metadynamics simulation is not the same variable that was biased. For example, you might want to calculate the free energy as a function of some collective variable other than those biased during the metadynamics simulation. 
+
+Earlier, when we analyzed a standard MD simulation in GROMACS (without metadynamics) you simply calculated histograms of these variables directly from your trajectory. Now, however, the presence of the metadynamics bias potential has altered the statistical weight of each frame, so we can't just calculate the histogram from the MD trajectory as before. To remove the effect of this bias (and thus be able to calculate properties of the system in the unbiased ensemble), you must reweight (unbias) your simulation. 
 
 
+
+
+  
