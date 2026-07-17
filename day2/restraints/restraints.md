@@ -332,6 +332,8 @@ Notice the moving restraint on the RMSD drove the system from the C7eq to the C7
 
 We have seen above how to use PLUMED to create a harmonic restraining potential  about a specific value of $$\phi$$. We can use the restraint to force the system to sample higher energy states along a reaction coordinate. In **umbrella sampling** we run many such simulations each with a unique strong harmonic restraint centered around specific values of $$\phi$$. Each simulation remains close to its specific value, allowing for overlap between neighbor simulations, i.e. simulations centered around consecutive $$\phi$$ values. By stitching these individually biased trajectories together, we cover all possible values of $$\phi$$ along a reaction coordinate. 
 
+![Figure Umbrella Sampling](../../images/Umbrella_sampling_method.png)
+
 The weighted histogram analysis method (WHAM) provides a scheme for obtaining the optimal estimate of the unbiased histogram of $$\phi$$ from each of the biased probability distributions by accounting for each of the restraining potentials.From this estimate of the unbiased histogram along the reaction coordinate, we can construct an estimate of the **free energy surface** along this coordinate. 
 
 Here I create a bash file called `run_us.sh` that will launch each separate restrained simulation from its own separate directory:
@@ -440,3 +442,43 @@ Run this using the PLUMED driver on the concatenated trajectory by typing:
 {% highlight git %}
 plumed driver --mf_xtc concatenated.xtc --plumed plumed-wham.dat
 {% endhighlight %} 
+
+The python code `wham.py` will run the iterative WHAM optimization and get a weight per frame. Run this by typing:
+
+{% highlight git %}
+python wham.py biases.dat 25 2.49
+{% endhighlight %} 
+
+where 25 is the number of windows and 2.49 is $$RT$$ in units of kJ/mol. The result is a file called `weight.dat` with one weight per frame. We can assign this weight to each sampled $$\phi$$ value to compute the free energy profile along $$\phi$$. 
+
+Then assign each $$\phi$$ value in `allphi.dat` to the weight by typing: 
+{% highlight git %}
+paste allphi.dat weights.dat | grep -v \# > allphi-w.dat
+{% endhighlight %}  
+
+This creates a file called `allphi-w.dat` which has a line for each $$\phi$$ value and its assigned weight:
+ 
+{% highlight git %}
+ 0.000000 -1.497988	0.002555818652810523585600099850
+ 10.000000 -2.756400	0.000404575092851750114323478025
+ 20.000000 -2.867971	0.000172305439814177655975455106
+ 30.000000 -2.952951	0.000073661040685496487591746306
+ 40.000000 -2.938855	0.000085439268700633757571381854
+ 50.000000 -2.870851	0.000167459192407052405221143387
+ 60.000000 -2.847128	0.000211116777873891916334977981
+ 70.000000 -2.914030	0.000109361274168485696819258512
+ 80.000000 -3.016811	0.000030548240369112431155055459
+ 90.000000 -2.908864	0.000115041781372963292486358289
+{% endhighlight %} 
+
+The first column is the frame number, the second column is the $$\phi$$ value and the third column is the weight. Finally, we use this to construct the free energy surface with the provided code `do_fes.py`:
+
+{% highlight git %}
+python do_fes.py allphi-w.dat 1 -3.1415 3.1415 50 2.49 fes.dat
+{% endhighlight %}
+
+The resulting free energy profile will be written to the output `fes.dat` file and produces a free energy surface that can be plotted and looks like:
+
+![FES_umbrella_sampling](../../images/FES_umbrella_sampling.png)
+
+ 
