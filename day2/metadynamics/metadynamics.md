@@ -54,4 +54,4 @@ Within this directory you will find the following files:
 
 ## Metadynamics
 
-
+In the previous tutorial on [using restraints](../day2/restraints/restraints.md), you learned how to use PLUMED to bias an MD simulation on-the-fly. In this tutorial we will use metadynamics to accelerate the sampling and reconstruct the unbiased free energy surface. Here you can find a brief recap of the metadynamics theory.
