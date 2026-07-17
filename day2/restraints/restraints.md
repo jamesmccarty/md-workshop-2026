@@ -227,9 +227,105 @@ We visualize this on a 2-D Ramachandran plot where each point is a frame from th
 
 ![Figure_pulling](../../images/Figure_pulling_phi_Ramachandran.png)
 
-  
+### Pulling along a more complex path
 
-## (Optional) Umbrella Sampling in PLUME
+Sometimes it is useful to use a moving restraint to schedule a sequence of events. For example, you can use a MOVINGRESTAINT to drive multiple collective variables at the same time in specific points and also to stop for a while in specificregions using a fixed harmonic potential. 
 
+In `plumed_example4.dat` we set up a MOVINGRESTRAINT to go from the C7eq state vertically toward $$\phi=−1.5$$ rad;$$\psi=−1.3$$ rad. We then stop at this intermediate state for a while, then move toward $$\phi=1.3$$;$$\psi=−1.3$$ rad which corresponds to C7ax.
 
+{% highlight git %}
+# set up two variables for Phi and Psi dihedral angles 
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
 
+# Here we set up a moving restraint 
+restraint: ...
+        MOVINGRESTRAINT
+        ARG=phi,psi
+        AT0=-1.5,1.3  STEP0=0      KAPPA0=0,0
+        AT1=-1.5,1.3  STEP1=2000   KAPPA1=1000,1000
+        AT2=-1.5,-1.3 STEP2=10000   KAPPA2=1000,1000
+        AT3=-1.5,-1.3 STEP3=12000   KAPPA3=1000,1000
+        AT4=1.3,-1.3  STEP4=20000   KAPPA4=1000,1000
+        AT5=1.3,-1.3  STEP5=24000   KAPPA5=0,0
+...
+
+# Print output
+PRINT FILE=dihedrals_moving_restraint_v2.dat ARG=phi,psi,restraint.bias STRIDE=100
+{% endhighlight %}
+
+Notice in the input for this example, we have two arguments for the moving restraint (separated by comma, no spaces between arguments!) and correspondingly two KAPPA values - one for each variable.
+
+Run this example using:
+
+{% highlight git %}
+gmx mdrun -v -deffnm run1 -plumed plumed_example4.dat -nt 1
+{% endhighlight %}
+
+The output file here will be called `dihedrals_moving_restraint_v2.dat`. See if you can use the same plotting script to generate the 2-D Ramachandran plot:
+
+![2D figure version 2](../../images/Figure_pulling_v2.png)
+
+Congratulations, you have now learned how to perform Steered MD using a moving restraint. At this point you can move onto the [Biasing with Metadynamcics Tutorial](coming soon), or feel free to check out the optional extensions below.
+
+## (Optional extension) Targeted MD
+
+Targeted MD can be seen as a special case of steered MD where the RMSD from a reference structure is used as a collective variable. In this case, we use PLUMED to create a MOVINGRESTRAINT on the RMSD value to push the simulation to a target reference structure. It can be used for example if one wants to prepare the system so that the coordinates of selected atoms are as close as possible to a target pdb structure taken from an experimental structure.
+
+An example input is provided called `plumed_targetedMD.dat`: 
+
+{% highlight git %}
+# set up two variables for Phi and Psi dihedral angles
+# these variables will be just monitored to see what happens
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
+# define a variable that measures the RMSD from a reference pdb structure
+# the RMSD is measured after OPTIMAL alignment with the target structure
+rmsd: RMSD REFERENCE=c7ax.pdb TYPE=OPTIMAL
+# the movingrestraint
+restraint: ...
+        MOVINGRESTRAINT
+        ARG=rmsd
+        AT0=0.0 STEP0=0      KAPPA0=0
+        AT1=0.0 STEP1=__FILL__   KAPPA1=__FILL__
+...
+# monitor the two variables and various restraint outputs
+PRINT STRIDE=100 ARG=phi,psi,rmsd,restraint.bias FILE=targetedMD.dat
+{% endhighlight %}
+
+In this example, the RMSD is being calculated relative to a provided reference pdb file. Here, I have provided a pdb file called `c7ax.pdb` as a representative structure for the C7ax state. 
+
+Note that RMSD should be provided a reference structure in pdb format and can contain part of the system **but the second column (the index) must reflect the atom numbering within the full system** so that PLUMED knows specifically which atom to drag where. In this case the pdb file `c7ax.pdb` contains only the non-hydrogen, heavy atoms:
+
+{% highlight git %}
+ATOM      2  CH3 ACE     1      -3.200   1.510   1.150  1.00  1.00            
+ATOM      5  C   ALA     1      -1.930   1.410   0.410  1.00  1.00            
+ATOM      6  O   ALA     1      -1.530   2.340  -0.280  1.00  1.00            
+ATOM      7  N   ALA     1      -1.250   0.260   0.560  1.00  1.00            
+ATOM      9  CA  ALA     1       0.030  -0.060  -0.050  1.00  1.00            
+ATOM     10  HA  ALA     1       0.230  -1.090   0.200  1.00  1.00            
+ATOM     11  CB  ALA     1       0.000   0.010  -1.600  1.00  1.00            
+ATOM     15  C   ALA     1       1.210   0.710   0.560  1.00  1.00            
+ATOM     16  O   ALA     1       2.020   0.140   1.270  1.00  1.00            
+ATOM     17  N   NME     1       1.310   2.020   0.270  1.00  1.00            
+ATOM     19  CH3 NME     1       2.390   2.850   0.750  1.00  1.00            
+END
+{% endhighlight %}
+
+**Important**: Atom numbers in column 2 of the reference pdb file must match the atom numbers in column 3 of the GROMACS .gro file (alanine_dipeptide.gro) 
+
+The MOVINGRESTRAINT bias potential acts here on the rmsd, and the other two variables (phi and psi) are untouched. The RMSD action in PLUMED will perform an optimal alignment of the structure at each frame with reference structure when computing the RMSD value. 
+
+To run this example, change where it says `__FILL__` by setting the final tep to be `STEP1=5000` and `KAPPA1=10000`. When you have made these changes, run the targeted MD using:
+
+{% highlight git %}
+gmx mdrun -v -deffnm run1 -plumed plumed_targetedMD.dat -nt 1
+{% endhighlight %}
+
+The output file will be called `targetedMD.dat`. See if you can generate a 2-D Ramachandran plot such as the one shown here:
+
+![Figure_targetedMD](../../images/targeted_MD.png)
+
+Notice the moving restraint on the RMSD drove the system from the C7eq to the C7ax state. 
+
+## (Optional extension) Umbrella Sampling
