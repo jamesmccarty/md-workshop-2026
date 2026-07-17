@@ -173,4 +173,49 @@ Finally, let's look at a plot of the `fes.dat` file. This gives an estimate of t
 
 ## Assessing Convergence
 
+To give a preliminary assessment of the convergence of a metadynamics simulation, one can calculate the estimate of the free energy as a function of simulation time. At convergence, the reconstructed profiles should be similar. The `sum_hills` option --stride should be used to give an estimate of the free energy every N Gaussian kernels deposited, and the option --mintozero can be used to align the profiles by setting the global minimum to zero for each case. Use the following command line to generate a series of free energy estimates:
 
+{% highlight git %}
+plumed sum_hills --hills HILLS --stride 100 --mintozero
+{% endhighlight %}
+
+The above command will calculate a free energy estimate every 100 Gaussian kernels deposited, and the global minimum is set to zero in all profiles. 
+
+For easier file transfer, make an Archive of these fes.dat files:
+
+{% highlight git %}
+tar -czf fes_files.tar.gz fes*
+{% endhighlight %}
+
+Now transfer both the `HILLS` file and `fes_files.tar` from bigzam to your local machine using WinSCP. A Google Colab to analyze these files is provided here:
+
+[Analyze convergence](https://colab.research.google.com/drive/1R-afSE8EQxFaaGfpgUBkXXQEbuCTOh-h?usp=sharing)
+
+First, we will look at the contents of the `HILLS` file. Upload this file to the Google Colab document for plotting. The content of the `HILLS` file looks like:
+
+{% highlight git %}
+#! FIELDS time phi sigma_phi height biasf
+      1.000000047497451     -2.826761701208621                    0.1      1.371428571428571                      8
+      2.000000094994903     -2.544430577600947                    0.1      1.369678231037363                      8
+      3.000000142492354     -2.624871079432158                    0.1       1.29334497169472                      8
+      4.000000189989805     -1.306362263528052                    0.1      1.371428571428571                      8
+      5.000000237487257     -1.082306877531441                    0.1       1.36379033894263                      8
+{% endhighlight %}
+
+The line starting with FIELDS tells us what is displayed in the various columns of the HILLS file. We see that at each time frame we have a Gaussian kernel centered at a specific value of $$\phi$$ (second column) with a specified width (sigma, third column), and height (fourth column). 
+
+A plot of the Gaussian height over the similation time is as follows:
+
+![Figure_HILLS](../../images/Metad_hills.png)
+
+We see that the Gaussian height does indeed decrease during the simulation, according to the well-tempered recipe. The fact that the Gaussian height is decreasing to zero should not be used as a measure of convergence of your metadynamics simulation. It just means that the regions currently being visited have already accumulated substantial bias and the system is not evolving to any new, previously unvisited regions. 
+
+Because the free energy is estimated from the sampled probability, early estimates will be skewed by limited data. To get an idea if the metadynamics simulation has converged, you can monitor if the estimated free energies no longer change significantly as a function of the Gaussian kernels added. Here we plot an overlay of the fes files and color by number of Gaussians deposited. 
+
+![Figure_fes_convergence](../../images/fes_convergence.png)
+
+We see in the above, that the free energy estimate is rapidly changing at the beginning of the simulation, but is not changing significantly after about 4100 Gaussians have been added. Combined with our earlier obseration that the $$\phi$$ angle is diffusing rapidly across all angle values, we can be reasonably confident that the simulation has converged. 
+
+## Missing slow degrees of freedom 
+
+  
