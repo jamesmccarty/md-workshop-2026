@@ -266,7 +266,7 @@ The output file here will be called `dihedrals_moving_restraint_v2.dat`. See if 
 
 ![2D figure version 2](../../images/Figure_pulling_v2.png)
 
-Congratulations, you have now learned how to perform Steered MD using a moving restraint. At this point you can move onto the [Biasing with Metadynamcics Tutorial](coming soon), or feel free to check out the optional extensions below.
+Congratulations, you have now learned how to perform Steered MD using a moving restraint. At this point you can move onto the [Biasing with Metadynamcics Tutorial](../../day2/metadynamics/metadynamics.md), or feel free to check out the optional extensions below.
 
 ## (Optional extension) Targeted MD
 
@@ -481,4 +481,4 @@ The resulting free energy profile will be written to the output `fes.dat` file a
 
 ![FES_umbrella_sampling](../../images/FES_umbrella_sampling.png)
 
- 
+Congratulations, you have just performed a free energy calculation using umbrella sampling. When you have finished this section, you should move on to the [Metadynamics Tutorial](../../day2/metadynamics/metadynamics.md) 
