@@ -293,7 +293,21 @@ Additionally, in many cases you might decide that the variable you would like to
 
 Earlier, when we analyzed a standard MD simulation in GROMACS (without metadynamics) you simply calculated histograms of these variables directly from your trajectory. Now, however, the presence of the metadynamics bias potential has altered the statistical weight of each frame, so we can't just calculate the histogram from the MD trajectory as before. To remove the effect of this bias (and thus be able to calculate properties of the system in the unbiased ensemble), you must reweight (unbias) your simulation. 
 
+There are several ways to calculate the correct statistical weight of each frame in your metadynamics trajectory and thus to reweight your simulation. In this exercise we will use the standard "umbrella sampling" idead and calculate the weight of each frame using the metadynamics bias potential obtained at the end of the simulation as the sum of all the Gaussians deposed during the simulation, and assuming a constant bias during the entire course of the simulation. 
 
+In order to do this, we post-process our biased trajectory with a new PLUMED input file, called `plumed_reweight.dat`. This file is identical to the one used to run the metadynamics simulation except for a few modifications. First, we add the keyword `RESTART=YES` within the `METAD` action. This will tell PLUMED to read from the `HILLS` file to get the sum of Gaussians that have previously been accumulated. Second, we need to set the Gaussian HEIGHT to zero (now new Gaussians will be added) and the PACE to a large number. This will actually avoid adding new Gaussians (and even if they are added they will have zero height). Finally, we modify the `PRINT` statement so that the output file called `COLVAR_REWEIGHT` is written every frame. Here it is important that in addition to $$\phi$$ and $$\psi$$, you also print the metad.bias value. 
 
+The final version of the `plumed_reweight.dat` file looks like this:
 
+{% highlight git %}
+
+{% endhighlight %}
+
+We can run this using the PLUMED driver by typing:
+
+{% highlight git %}
+plumed driver --mf_xtc traj_comp.xtc --plumed plumed_reweight.dat --kt 2.494339 
+{% endhighlight %}
+
+Notice that you have to specify the value of RT in energy units. While running your simulation this information was communicated by the MD code
   

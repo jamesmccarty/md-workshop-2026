@@ -9,7 +9,7 @@ Once this tutorial is completed students will be able to:
 - Perform an out-of-equilibrium simulation with a moving restraint
 
  
-![restraint_figure](../../images/)
+![restraint_figure](../../images/Restraints_image.png)
 
 In the [previous introduction to PLUMED syntax tutorial](../../day1/intro_plumed_syntax/analysis.md), you used PLUMED as a post-processing tool to  calculate properties of the system on a previously generated MD simulation trajectory. In addition to being a post-processing tool, PLUMED can also interface with the MD code "on-the-fly" during a MD simulation. The atomic coordinates and atoms at a given instant can be passed to the PLUMED code to manipulate a simulation on-the-fly. This allows one to bias the simulation by adding extra constraints in addition to the standard force field terms. The additional energy terms are usually referred as **Bias**. 
 
