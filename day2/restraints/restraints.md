@@ -176,11 +176,38 @@ Next, look at the distribution of sampled $$\phi$$ values from the histogram.
 
 Here we see that the weaker biased simulation is not Gaussian distributed about the mean but has a pronounced tail toward more negative $$\phi$$ value. On the other hand, the strongly biased simulation shows a Gaussian distributed value of $$\phi$$ about the mean due to the strong harmonic restraint placed at this value. 
 
- 
+## Moving Restraint 
 
-## Adding a moving restraint 
+In PLUMED you can bring a system into a specific state using the collective variable by means of a `MOVINGRESTRAINT` directive. This directive is very flexible and allows for a programmed series of moving restraints. When you use a restraint to drag the system from an initial configuration to a final one by pulling one or more CVs, this is called **Steered MD (SMD)**. Moving restraints can be used to prepare the system in a particular state or produce nice snapshots for a cool movie. Keep in mind that the MD trajectory produced by a moving restraint will be out of equilibrium because of the irreversible driving force from the restraint.
 
+Suppose that you want to steer the Ace-Ala-Nme molecule from the C7eq conformational state to the C7ax state. We could accomplish this just by dragging along the $$\phi$$ dihedral angle from a value of -1.5 rad to a value 1.0 rad.  Additionally, it might be important not to stress the system too much, so we will first increase the $$\kappa$$ value to lock the system in at $$\phi=−1.5$$ radians, then gradually  move it gently to $$\phi=1.0$$ radians, and then finally release the spring constant so that we end up with an equilibrated and unconstrained state in the C7ax state. 
 
+The example PLUMED input file called `plumed_example3.dat` provided with the workshop materials will implement such a moving restraint. Look at the contents of this file with:
+
+{% highlight git %}
+cat plumed_example3.dat
+{% endhighlight %} 
+
+{% highlight git %}
+# set up two variables for Phi and Psi dihedral angles 
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
+
+# Here we set up a moving restraint 
+restraint: ...
+        MOVINGRESTRAINT
+        ARG=phi
+        AT0=-1.5  STEP0=0      KAPPA0=0
+        AT1=-1.5  STEP1=2000   KAPPA1=1000
+        AT2=1.0   STEP2=20000  KAPPA2=1000
+        AT3=1.0   STEP3=22000  KAPPA3=0
+...
+
+# Print output
+PRINT FILE=dihedrals_moving_restraint.dat ARG=phi,psi,restraint.bias STRIDE=100
+{% endhighlight %} 
+
+Notice in the above we define a MOVINGRESTRAINT on the `ARG=phi` variable starting at $$\phi=-1.5$$ radians at 0 ps and an initial $$\kappa=0$$  specified with `KAPPA0=0`. We then slowing increase $$\kappa$$ from 0 to 1000 kJ/mol over the first 2000 steps (4 ps). We then move the center of the harmonic restraint from $$\phi=-1.5$$ rad to $$\phi=1.0$$ rad between step 2000 and 20000 (40 ps). Finally we decress $$\kappa$$ from 1000 kJ/mol to 0 for 1000 steps (4 ps). After this the simulation will continue without any additional bias. 
 
 
 ## (Optional) Umbrella Sampling in PLUME
