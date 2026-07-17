@@ -329,3 +329,114 @@ The output file will be called `targetedMD.dat`. See if you can generate a 2-D R
 Notice the moving restraint on the RMSD drove the system from the C7eq to the C7ax state. 
 
 ## (Optional extension) Umbrella Sampling
+
+We have seen above how to use PLUMED to create a harmonic restraining potential  about a specific value of $$\phi$$. We can use the restraint to force the system to sample higher energy states along a reaction coordinate. In **umbrella sampling** we run many such simulations each with a unique strong harmonic restraint centered around specific values of $$\phi$$. Each simulation remains close to its specific value, allowing for overlap between neighbor simulations, i.e. simulations centered around consecutive $$\phi$$ values. By stitching these individually biased trajectories together, we cover all possible values of $$\phi$$ along a reaction coordinate. 
+
+The weighted histogram analysis method (WHAM) provides a scheme for obtaining the optimal estimate of the unbiased histogram of $$\phi$$ from each of the biased probability distributions by accounting for each of the restraining potentials.From this estimate of the unbiased histogram along the reaction coordinate, we can construct an estimate of the **free energy surface** along this coordinate. 
+
+Here I create a bash file called `run_us.sh` that will launch each separate restrained simulation from its own separate directory:
+
+{% highlight git %}
+for AT in -3.00 -2.75 -2.50 -2.25 -2.00 -1.75 -1.50 -1.25 -1.00 \
+          -0.75 -0.50 -0.25 0.00 0.25 0.50 0.75 1.00 1.25 \
+          1.50 1.75 2.00 2.25 2.50 2.75 3.00
+do
+
+WINDOW="window_${AT}"
+mkdir -p "${WINDOW}"
+
+cat > "${WINDOW}/plumed.dat" << EOF
+MOLINFO STRUCTURE=../diala.pdb
+
+phi: TORSION ATOMS=@phi-2
+psi: TORSION ATOMS=@psi-2
+
+restraint-phi: RESTRAINT ARG=phi KAPPA=250.0 AT=${AT}
+
+PRINT STRIDE=10 ARG=phi,psi,restraint-phi.bias FILE=COLVAR
+EOF
+
+cd "${WINDOW}"
+
+gmx mdrun \
+    -s ../topol.tpr \
+    -plumed plumed.dat \
+    -nsteps 500000 \
+    -deffnm umbrella \
+    -nb cpu -nt 1 
+
+cd ..
+
+done
+{% endhighlight %}
+
+
+{% highlight git %}
+bash run_us_v2.sh
+{% endhighlight %}
+
+This will take a few minutes to run since you are running 25 MD trajectories in serial. When this finishes you will see each trajectory has run from its own directory each with prefix `window_` followed by the restraint center value.   
+
+To perform the WHAM merging of the windows we need to collect and merge all the simulation frames into a single trajectory. The bash script `concat_all.sh` will merge all the trajectories together. 
+
+{% highlight git %}
+files=""
+
+for AT in -3.00 -2.75 -2.50 -2.25 -2.00 -1.75 -1.50 -1.25 -1.00 \
+          -0.75 -0.50 -0.25 0.00 0.25 0.50 0.75 1.00 1.25 \
+          1.50 1.75 2.00 2.25 2.50 2.75 3.00
+do
+    AT=$(printf "%.2f" "$AT")
+    files="$files window_${AT}/umbrella.trr"
+done
+
+gmx trjcat -f $files -cat -o concatenated.xtc
+{% endhighlight %} 
+
+Run this script by typing:
+
+{% highlight git %}
+bash concat_all.sh
+{% endhighlight %}
+
+Running this script will concatenate (stitch together) the separte trajectory files. The stiched together trajectory file is called `concatenated.xtc`. 
+
+Next we need to run another PLUMED input to calculate the values for all the employed restraints applied on each frame. For this we can write a `plumed-wham.dat` file including all the biases used in the former simulations:
+
+{% highlight git %}
+MOLINFO STRUCTURE=diala.pdb 
+phi: TORSION ATOMS=@phi-2 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-3.00 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-2.75 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-2.50 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-2.25 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-2.00 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-1.75 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-1.50 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-1.25 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-1.00 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-0.75 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-0.50 
+RESTRAINT ARG=phi KAPPA=250.0 AT=-0.25 
+RESTRAINT ARG=phi KAPPA=250.0 AT=0.00 
+RESTRAINT ARG=phi KAPPA=250.0 AT=0.25 
+RESTRAINT ARG=phi KAPPA=250.0 AT=0.50 
+RESTRAINT ARG=phi KAPPA=250.0 AT=0.75 
+RESTRAINT ARG=phi KAPPA=250.0 AT=1.00 
+RESTRAINT ARG=phi KAPPA=250.0 AT=1.25 
+RESTRAINT ARG=phi KAPPA=250.0 AT=1.50 
+RESTRAINT ARG=phi KAPPA=250.0 AT=1.75 
+RESTRAINT ARG=phi KAPPA=250.0 AT=2.00 
+RESTRAINT ARG=phi KAPPA=250.0 AT=2.25 
+RESTRAINT ARG=phi KAPPA=250.0 AT=2.50 
+RESTRAINT ARG=phi KAPPA=250.0 AT=2.75 
+RESTRAINT ARG=phi KAPPA=250.0 AT=3.00 
+PRINT ARG=*.bias FILE=biases.dat STRIDE=10 
+PRINT ARG=phi FILE=allphi.dat STRIDE=10
+{% endhighlight %} 
+
+Run this using the PLUMED driver on the concatenated trajectory by typing:
+
+{% highlight git %}
+plumed driver --mf_xtc concatenated.xtc --plumed plumed-wham.dat
+{% endhighlight %} 
