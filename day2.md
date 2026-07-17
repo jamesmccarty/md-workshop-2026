@@ -44,7 +44,7 @@ Once this tutorial is completed students will be able to:
 
 **Tutorial**
 
-[Metadynamics Tutorial](coming soon)
+[Metadynamics Tutorial](day2/metadynamics/metadynamics.md)
 
 ## Session 4: Path Collective Variables Tutorial
 
