@@ -209,6 +209,19 @@ PRINT FILE=dihedrals_moving_restraint.dat ARG=phi,psi,restraint.bias STRIDE=100
 
 Notice in the above we define a MOVINGRESTRAINT on the `ARG=phi` variable starting at $$\phi=-1.5$$ radians at 0 ps and an initial $$\kappa=0$$  specified with `KAPPA0=0`. We then slowing increase $$\kappa$$ from 0 to 1000 kJ/mol over the first 2000 steps (4 ps). We then move the center of the harmonic restraint from $$\phi=-1.5$$ rad to $$\phi=1.0$$ rad between step 2000 and 20000 (40 ps). Finally we decress $$\kappa$$ from 1000 kJ/mol to 0 for 1000 steps (4 ps). After this the simulation will continue without any additional bias. 
 
+Once you have read and understand this PLUMED input file, run the biased simulation (Steered MD) as follows:
+
+{% highlight git %}
+gmx mdrun -v -deffnm run1 -plumed plumed_example3.dat -nt 1
+{% endhighlight %}
+
+The resulting output file will be called `dihedrals_moving_restraint.dat`. Copy this file to your Windows machine using WinSCP and plot the results using the following Colab link:
+
+[plot moving restraint](https://colab.research.google.com/drive/1BmO4rDPViurIlLt3GC0WC7n2IgjDoA98?usp=sharing)
+
+The plot of the $$\phi$$ value over the first 200 ps shows the result of our out-of-equilibrium simulation. The region where $$\phi$$ is increasing linearly corresponds to the pulling along the $$\phi$$ coordinate from -1.5 radians to 1.0 radians over the course of about 40 ps. 
+
+![Figure_pulling](../../images/Figure_pulling_phi.png)
 
 ## (Optional) Umbrella Sampling in PLUME
 
