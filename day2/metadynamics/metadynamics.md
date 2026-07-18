@@ -59,9 +59,31 @@ In the previous tutorial on [using restraints](../restraints/restraints.md), you
 
 In metadynamics, a history-dependent bias potential is constructed on-the-fly acting on a few selected degrees of freedom $$s$$, generally called collective variables (CVs). This bias potential is built as a sum of Gaussian kernels deposited along the trajectory in the CVs space:
 
-$$V(s,t)=\sum_{k\tau <t} W(k\tau) \text{exp}\left(-\sum_{i} \frac{(s_i-s_i(k\tau))^2}{2\sigma_i^2} \right)$$
+$$V(s,t)=\sum_{t' <t} W(t') \text{exp}\left[-\frac{(s-s(t'))^2}{2\sigma^2} \right]$$
 
-where $$\tau$$ is the Gaussian deposition stride, $$\sigma_i$$ the width of the Gaussian for the $$i^{th}$$ CV, and $W(k\tau)$ is the the height of the Gaussian. As the metadynamics bias grows, the effect is to push the system away from local minima into visiting new regions of the phase space. 
+where $$s$$ is the collective variable being biased, $$W$ is the Gaussian height and $$\sigma$$ the Gaussian width. As the metadynamics bias grows, the effect is to push the system away from local minima into visiting new regions of the phase space. 
+
+In the well-tempered version of metadynamics, the hill height $$W(t)$$ decreases as the bias accumulates:
+
+$$W(t) = w_0 \text{exp}\left[ -\frac{V(s,t)}{k_B \Delta T}\right]$$
+
+where $$w_0$$ is the initial hill height, $$V(s,t)$$ is the accumulated bias, and $$\Delta T$$ is a temperature parameter that is specified to regulate the extent of free-energy exploration. Rather than specifying $$\Delta T$$, metadynamics in PLUMED asks for the so-called **biasfactor**: 
+
+$$ \gamma = \frac{T+\Delta T}{T} $$ 
+
+or equivalently:
+
+$$ \Delta T = (\gamma - 1)T$$. 
+
+The idea is that setting $$\gamma = 1$$ is equivalent to no bias (standarnd MD), and increasing the value of $$\gamma$$ leads to stronger exploration of the CV space. 
+
+As the Gaussian kernels continue to be deposited the rugged free energy landscape is filled, and the deposited bias approaches a scaled version of the free-energy surface: 
+
+$$ V(s) \rightarrow -\frac{\gamma -1}{\gamma}F(s) +C $$ 
+
+where $$C$$ is an arbitrary (time-dependent) constant. Rearranging gives a theoretical estimate for the free energy surface, related to the negative of the accumulated bias:
+
+$$ F(s) \approx -\frac{\gamma }{\gamma -1 }V(s) + C$$  
 
 
 ## Bias along a single coordinate
