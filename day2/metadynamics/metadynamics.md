@@ -63,7 +63,7 @@ $$V(s,t)=\sum_{t' <t} W(t') \text{exp}\left[-\frac{(s-s(t'))^2}{2\sigma^2} \righ
 
 where $$s$$ is the collective variable being biased, $$W$$ is the Gaussian height, and $$\sigma$$ the Gaussian width. As the metadynamics bias grows, the effect is to push the system away from local minima into visiting new regions of the phase space. 
 
-![Metad_theory](../../images/metadynamics_theory.png){width=150px}
+![Metad_theory](../../images/metadynamics_theory.png)
 
 In the well-tempered version of metadynamics, the hill height $$W(t)$$ decreases as the bias accumulates:
 
