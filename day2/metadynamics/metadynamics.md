@@ -8,8 +8,9 @@ Once this tutorial is completed students will be able to:
 - Define and assess collective variables for enhanced sampling
 - Run a metadynamics simulation using PLUMED
 - Calculate free energies from a metadynamics simulation
+- Perform reweighting of biased frames to construct unbiased histograms
 
-![figure_goes_here](../../images/)
+![figure_goes_here](../../images/metadynamics_tutorial_figure.png)
 
 **Files**
 Files to complete this tutorial can be accessed here:
