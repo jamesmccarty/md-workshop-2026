@@ -75,9 +75,9 @@ $$ \gamma = \frac{T+\Delta T}{T} $$
 
 or equivalently:
 
-$$ \Delta T = (\gamma - 1)T$$. 
+$$ \Delta T = (\gamma - 1)T $$ 
 
-The idea is that setting $$\gamma = 1$$ is equivalent to no bias (standarnd MD), and increasing the value of $$\gamma$$ leads to stronger exploration of the CV space. 
+Setting $$\gamma = 1$$ is equivalent to no bias (standarnd MD), and increasing the value of $$\gamma$$ leads to stronger exploration of the CV space. 
 
 As the Gaussian kernels continue to be deposited the rugged free energy landscape is filled, and the deposited bias approaches a scaled version of the free-energy surface: 
 
