@@ -253,7 +253,9 @@ Let's investigate what would happen if we had choosen to bias the $$\psi$$ angle
 Once your `plumed_metad_psi.dat` file is complete, run a metadynamics simulation with the following command:
 
 {% highlight git %}
-gmx mdrun -v -deffnm metad_run1 -plumed plumed_metad_psi.dat
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o metad_run2.tpr
+
+gmx mdrun -v -deffnm metad_run2 -plumed plumed_metad_psi.dat
 {% endhighlight %}  
 
 When the job finishes, the output file will be `COLVAR_psi`. As you did earlier, transfer this file to your local Windows machine using WinSCP and plot the behavior of the CV during the simulation using the [Colab here](https://colab.research.google.com/drive/1zA_lNQPlknAXWwefqT6jc9Nm9-GoZTJv?usp=sharing). Here we will plot at the same time the evolution of the metadynamics CV $$\psi$$ and of the other dihedral $$\psi$$. 
@@ -266,7 +268,9 @@ Notice that something different happened compared to the previous metadynamics s
 
 ## Metadyanmics on two CVs and Reweighting
 
-The PLUMED input example, `plumed_metad_phi_psi.dat` will run a metadynamics simulation on both the $$\phi$$ and $$\psi$$ angles simultaneously. Biasing both $$\phi$$ and $$\psi$$ should allow us to exhaustively sample all possible configurations in the Ramachandran space. First, have a look at the `plumed_metad_phi_psi.dat` file and make sure you understand each section:
+The PLUMED input example, `plumed_metad_phi_psi.dat` will run a metadynamics simulation on both the $$\phi$$ and $$\psi$$ angles simultaneously. Including both angles as collective variables should promote transitions between the major conformational basins and allow the simulation to explore the Ramachandran free energy landscape more completely than when either angle is biased alone.
+
+First, have a look at the `plumed_metad_phi_psi.dat` file and make sure you understand each section:
 
 {% highlight git %}
 cat plumed_metad_phi_psi.dat
@@ -295,19 +299,28 @@ metad: METAD ...
     BIASFACTOR=8 
    # Gaussians will be written to HILLS file and stored on grid 
    FILE=HILLS GRID_MIN=-pi,-pi GRID_MAX=pi,pi
+   CALC_RCT # Added reweighting factor calculation here!!
+   TEMP=300
 ...
 
 # Print both collective variables on COLVAR file every 10 steps
-PRINT ARG=phi,psi,metad.bias FILE=COLVAR STRIDE=100
+PRINT ARG=phi,psi,metad.bias,metad.rbias FILE=COLVAR STRIDE=100
 {% endhighlight %}
 
-This file looks very similar to our previous ones except that in the METAD section we include both phi and psi as arguments with `ARG=phi,psi` (no spaces between commas in PLUMED), and we include a SIGMA value for each and the HILLS file will be on a 2D grid. 
+This file looks very similar to our previous ones except that in the METAD section we include both phi and psi as arguments with `ARG=phi,psi` (no spaces between commas in PLUMED), and we include a SIGMA value for each and the HILLS file will be on a 2D grid.  
+
+
+**Important**: Notice that the METAD action includes the `CALC_RCT` flag. This instructs PLUMED to calculate a weight factor that can be used for reweighting a well-tempered metadynamics trajectory by accounting for the added bias in our probability distrubtions. With this option enabled, PLUMED stores the weight as `metad.rbias`, which must also be printed to the output `COLVAR` file using the `PRINT` action. This quantity `metad.rbias` will be used for post-processing our biased trajectory to reconstruct unbiased histograms and free energy surfaces.
 
 After inspecting the input file, run the metadynamics simulation as:
 
 {% highlight git %}
-gmx mdrun -v -deffnm run1 -plumed plumed_metad_phi_psi.dat
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o metad_run3.tpr
+
+gmx mdrun -v -deffnm metad_run3 -plumed plumed_metad_phi_psi.dat -nsteps 7500000
 {% endhighlight %}
+
+Here I have extended the number of MD steps to run to 7500000. Because both the $$\phi$$ and $$\psi$$ dihedral angles are biased simultaneously, the simulation must explore a larger conformational space than in the one-dimensional example, and therefore requires more sampling to approach convergence. This simulation should take a few minutes to complete.   
 
 The output files will be called `COLVAR` containing the information about the $$\phi$$ and $$\psi$$ values and `HILLS` containing information about the Gaussian hills deposited. 
 
@@ -317,27 +330,70 @@ Let's assess the sampling by looking at a 2D-Ramachandran plot. Transfer the `CO
 
 Here we see that we have sampled extensively the C7eq and C7ax states but relatively infrequently the transition states between them. 
 
-In the previous exercise where we biased only $$\phi$$, we computed the free energy as a function of the same variable directly from the sum of Gaussian kernels using the sum_hills utility. Now, when we bias both $$\phi$$ and $$\psi$$ simultaneously, the bias is a sum of two-dimensional Gaussians centered on pairs of $$\phi$$,$$\psi$$ values. 
+### Reweighting
+
+In the previous exercise where we biased only $$\phi$$, we computed the free energy as a function of the same variable directly from the sum of Gaussian kernels using the `sum_hills` utility. Now, when we run metadynamics on both $$\phi$$ and $$\psi$$ simultaneously, the total bias is a sum of two-dimensional Gaussians centered on pairs of $$\phi$$,$$\psi$$ values. 
   
-Additionally, in many cases you might decide that the variable you would like to analyze after having performed a metadynamics simulation is not the same variable that was biased. For example, you might want to calculate the free energy as a function of some collective variable other than those biased during the metadynamics simulation. 
+Additionally, in many cases you might decide that the variable you would like to analyze after having performed a metadynamics simulation is not the same variable as the one that was biased. 
 
 Earlier, when we analyzed a standard MD simulation in GROMACS (without metadynamics) you simply calculated histograms of these variables directly from your trajectory. Now, however, the presence of the metadynamics bias potential has altered the statistical weight of each frame, so we can't just calculate the histogram from the MD trajectory as before. To remove the effect of this bias (and thus be able to calculate properties of the system in the unbiased ensemble), you must reweight (unbias) your simulation. 
 
-There are several ways to calculate the correct statistical weight of each frame in your metadynamics trajectory and thus to reweight your simulation. In this exercise we will use the standard "umbrella sampling" idead and calculate the weight of each frame using the metadynamics bias potential obtained at the end of the simulation as the sum of all the Gaussians deposed during the simulation, and assuming a constant bias during the entire course of the simulation. 
+There are several ways to calculate the correct statistical weight of each frame in your metadynamics trajectory and thus to reweight your simulation. In this exercise we will use the time-dependent estimator of [Tiwary](https://pubs.acs.org/doi/10.1021/jp504920s) by using the `metad.rbias` column in the output `COLVAR` file. 
 
-In order to do this, we post-process our biased trajectory with a new PLUMED input file, called `plumed_reweight.dat`. This file is identical to the one used to run the metadynamics simulation except for a few modifications. First, we add the keyword `RESTART=YES` within the `METAD` action. This will tell PLUMED to read from the `HILLS` file to get the sum of Gaussians that have previously been accumulated. Second, we need to set the Gaussian HEIGHT to zero (now new Gaussians will be added) and the PACE to a large number. This will actually avoid adding new Gaussians (and even if they are added they will have zero height). Finally, we modify the `PRINT` statement so that the output file called `COLVAR_REWEIGHT` is written every frame. Here it is important that in addition to $$\phi$$ and $$\psi$$, you also print the metad.bias value. 
+Instead of using Python, we will calculate the histogram and corresponding free energy surface directly in PLUMED. To do this, we will use a new PLUMED input file, called `plumed_reweight.dat`. 
 
-The final version of the `plumed_reweight.dat` file looks like this:
+The `plumed_reweight.dat` file looks like this:
 
 {% highlight git %}
+# Read the variable we want to reweight from the COLVAR file
+rphi: READ FILE=COLVAR VALUES=phi IGNORE_TIME 
+rpsi: READ FILE=COLVAR VALUES=psi IGNORE_TIME
 
+# Also read the metad.bias and metad.rbias column from the COLVAR file
+metad: READ FILE=COLVAR VALUES=metad.* IGNORE_TIME
+
+# Use the rbias reweighting factor to get the weights for each frame
+weights: REWEIGHT_METAD ARG=metad.rbias TEMP=300
+
+# Now we can use PLUMED to build a histogram of the phi variable, and using the logweight for accounting for the effect of the bias. 
+
+phi_histo: HISTOGRAM ... 
+   ARG=rphi 
+   GRID_MIN=-pi GRID_MAX=pi GRID_BIN=50 
+   BANDWIDTH=0.05 
+   LOGWEIGHTS=weights 
+... 
+
+# Here is a histogram of the psi variable: 
+psi_histo: HISTOGRAM ...
+   ARG=rpsi 
+   GRID_MIN=-pi GRID_MAX=pi GRID_BIN=50 
+   BANDWIDTH=0.05 
+   LOGWEIGHTS=weights
+...
+
+# We could write the histogram directly, but first let's convert to a free energy surface using the CONVERT_TO_FES action:
+ 
+phi_fes: CONVERT_TO_FES GRID=phi_histo TEMP=300
+
+psi_fes: CONVERT_TO_FES GRID=psi_histo TEMP=300
+
+
+# Print out the reweighted free energies surfaces. Here caled fes-rw-phi.dat and fes-rw-psi.dat  
+
+DUMPGRID GRID=phi_fes FILE=fes-rw-phi.dat 
+
+DUMPGRID GRID=psi_fes FILE=fes-rw-psi.dat
 {% endhighlight %}
 
+In the above PLUMED input we are reading columns from the output COLVAR file, constructing a reweighted histogram accounting for the metadynamics bias, and outputing a one-dimensional free energy surface along each of the $$\phi$$ and $$\psi$$ angles. 
+  
 We can run this using the PLUMED driver by typing:
 
 {% highlight git %}
-plumed driver --mf_xtc traj_comp.xtc --plumed plumed_reweight.dat --kt 2.494339 
+plumed driver --plumed plumed_reweight.dat --noatoms  
 {% endhighlight %}
 
-Notice that you have to specify the value of RT in energy units. While running your simulation this information was communicated by the MD code
+The --noatoms flag is needed because we are not reading a trajectory file. Finally, tranfer the output free energy files: `fes-rw-phi.dat` and `fes-rw-psi.dat` to your local Windows computer using WinSCP.  
+
   
