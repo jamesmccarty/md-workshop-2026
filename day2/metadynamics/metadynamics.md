@@ -59,7 +59,7 @@ In the previous tutorial on [using restraints](../restraints/restraints.md), you
 
 In metadynamics, a history-dependent bias potential is constructed on-the-fly acting on a few selected degrees of freedom $$s$$, generally called collective variables (CVs). This bias potential is built as a sum of Gaussian kernels deposited along the trajectory in the CVs space:
 
-$$V(s,t)=\sum_{k\tau <t} W(k\tau) \text{exp}\left(\right)$$
+$$V(s,t)=\sum_{k\tau <t} W(k\tau) \text{exp}\left(-\sum_{i} \frac{(s_i-s_i(k\tau))^2}{2\sigma_i^2} \right)$$
 
 where $$\tau$$ is the Gaussian deposition stride, $$\sigma_i$$ the width of the Gaussian for the $$i^{th}$$ CV, and $W(k\tau)$ is the the height of the Gaussian. As the metadynamics bias grows, the effect is to push the system away from local minima into visiting new regions of the phase space. 
 
