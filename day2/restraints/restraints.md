@@ -153,7 +153,9 @@ Replace where it says `__FILL__` with a KAPPA values of 250 kJ/mol. Then save by
 After you have saved changes to the `plumed_example2.dat` file, rerun the biased simulation using the new restraint by typing:
 
 {% highlight git %}
-gmx mdrun -v -deffnm run1 -plumed plumed_example2.dat -nt 1
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o run2.tpr
+
+gmx mdrun -v -deffnm run2 -plumed plumed_example2.dat -nt 1
 {% endhighlight %}
 
 The resulting output file will be called `dihedrals_strong_restraint.dat`. 
@@ -212,7 +214,9 @@ Notice in the above we define a MOVINGRESTRAINT on the `ARG=phi` variable starti
 Once you have read and understand this PLUMED input file, run the biased simulation (Steered MD) as follows:
 
 {% highlight git %}
-gmx mdrun -v -deffnm run1 -plumed plumed_example3.dat -nt 1
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o run3.tpr
+
+gmx mdrun -v -deffnm run3 -plumed plumed_example3.dat -nt 1
 {% endhighlight %}
 
 The resulting output file will be called `dihedrals_moving_restraint.dat`. Copy this file to your Windows machine using WinSCP and plot the results using the following Colab link:
@@ -259,7 +263,9 @@ Notice in the input for this example, we have two arguments for the moving restr
 Run this example using:
 
 {% highlight git %}
-gmx mdrun -v -deffnm run1 -plumed plumed_example4.dat -nt 1
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o run4.tpr
+
+gmx mdrun -v -deffnm run4 -plumed plumed_example4.dat -nt 1
 {% endhighlight %}
 
 The output file here will be called `dihedrals_moving_restraint_v2.dat`. See if you can use the same plotting script to generate the 2-D Ramachandran plot:
@@ -319,7 +325,10 @@ The MOVINGRESTRAINT bias potential acts here on the rmsd, and the other two vari
 To run this example, change where it says `__FILL__` by setting the final tep to be `STEP1=5000` and `KAPPA1=10000`. When you have made these changes, run the targeted MD using:
 
 {% highlight git %}
-gmx mdrun -v -deffnm run1 -plumed plumed_targetedMD.dat -nt 1
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o targeted_run.tpr
+
+
+gmx mdrun -v -deffnm targeted_run -plumed plumed_targetedMD.dat -nt 1
 {% endhighlight %}
 
 The output file will be called `targetedMD.dat`. See if you can generate a 2-D Ramachandran plot such as the one shown here:
@@ -336,7 +345,26 @@ We have seen above how to use PLUMED to create a harmonic restraining potential 
 
 The weighted histogram analysis method (WHAM) provides a scheme for obtaining the optimal estimate of the unbiased histogram of $$\phi$$ from each of the biased probability distributions by accounting for each of the restraining potentials.From this estimate of the unbiased histogram along the reaction coordinate, we can construct an estimate of the **free energy surface** along this coordinate. 
 
-Here I create a bash file called `run_us.sh` that will launch each separate restrained simulation from its own separate directory:
+For this tutorial you will work in new directory. Copy the tutorial files by typing in the terminal:
+
+In the terminal type:
+{% highlight git %}
+cp -r /opt/workshop/umbrella_sampling/ ~/
+{% endhighlight %}
+
+Then change directory to the umbrella_sampling directory: 
+
+{% highlight git %}
+cd ~/umbrella_sampling/
+{% endhighlight %}
+
+Begin by preparing a GROMACS mdrun file by typing:
+
+{% highlight git %}
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o run_us.tpr
+{% endhighlight %}
+
+In the workshop tutorial files I have included a bash file called `run_us.sh` that will launch each separate restrained simulation from its own separate directory:
 
 {% highlight git %}
 for AT in -3.00 -2.75 -2.50 -2.25 -2.00 -1.75 -1.50 -1.25 -1.00 \
@@ -361,7 +389,7 @@ EOF
 cd "${WINDOW}"
 
 gmx mdrun \
-    -s ../topol.tpr \
+    -s ../run_us.tpr \
     -plumed plumed.dat \
     -nsteps 500000 \
     -deffnm umbrella \
@@ -372,9 +400,9 @@ cd ..
 done
 {% endhighlight %}
 
-
+Launch all simulations by typing:
 {% highlight git %}
-bash run_us_v2.sh
+bash run_us.sh
 {% endhighlight %}
 
 This will take a few minutes to run since you are running 25 MD trajectories in serial. When this finishes you will see each trajectory has run from its own directory each with prefix `window_` followed by the restraint center value.   
@@ -477,7 +505,7 @@ The first column is the frame number, the second column is the $$\phi$$ value an
 python do_fes.py allphi-w.dat 1 -3.1415 3.1415 50 2.49 fes.dat
 {% endhighlight %}
 
-The resulting free energy profile will be written to the output `fes.dat` file and produces a free energy surface that can be plotted and looks like:
+The resulting free energy profile will be written to the output `fes.dat` file and produces a free energy surface that can be [plotted](https://colab.research.google.com/drive/1FSxQAO2pisEbRQzDytkxfOKfXR3LvHEn?usp=sharing) and looks like:
 
 ![FES_umbrella_sampling](../../images/FES_umbrella_sampling.png)
 
