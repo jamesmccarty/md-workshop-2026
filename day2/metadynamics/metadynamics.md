@@ -57,7 +57,12 @@ Within this directory you will find the following files:
 
 In the previous tutorial on [using restraints](../restraints/restraints.md), you learned how to use PLUMED to bias an MD simulation on-the-fly. In this tutorial we will use metadynamics to accelerate the sampling and reconstruct the unbiased free energy surface. Here you can find a brief recap of the metadynamics theory. 
 
-[Coming soon]
+In metadynamics, a history-dependent bias potential is constructed on-the-fly acting on a few selected degrees of freedom $$s$$, generally called collective variables (CVs). This bias potential is built as a sum of Gaussian kernels deposited along the trajectory in the CVs space:
+
+$$V(s,t)=\sum_{k\tau <t} W(k\tau) \text{exp}\left(\right)$$
+
+where $$\tau$$ is the Gaussian deposition stride, $$\sigma_i$$ the width of the Gaussian for the $$i^{th}$$ CV, and $W(k\tau)$ is the the height of the Gaussian. As the metadynamics bias grows, the effect is to push the system away from local minima into visiting new regions of the phase space. 
+
 
 ## Bias along a single coordinate
 
