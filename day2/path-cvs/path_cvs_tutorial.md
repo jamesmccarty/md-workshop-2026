@@ -43,7 +43,7 @@ At this point, we should be more specific about what we mean by the "distance" b
 
 As described above, $$s$$ measures the progress along the path from state A to state B. Another useful variable is the distance away from the closest point along the path, which is denoted with the $$z$$. This is defined as 
 
-$$z = -\frac{1}{\lambda} \ln \left[\sum_{i=1}^N \exp \left(-\lambda \|X-X_i\| \right]$$
+$$z = -\frac{1}{\lambda} \ln \left[\sum_{i=1}^N \exp \left(-\lambda \|X-X_i\|\right) \right]$$
 
 
 ## Generating a path 
