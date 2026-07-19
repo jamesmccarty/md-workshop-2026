@@ -33,9 +33,11 @@ Path collective variables are the extension of this concept to the case where yo
 
 Mathematically, the progress along the path is calculated with the following equation:
 
-$$s = \frac{\sum_{i=1}^N i \exp \left(-\lambda |X-X_i| \right)}{\sum_{i=1}^N \exp \left(-\lambda |X-X_i| \right)}$$
+$$s = \frac{\sum_{i=1}^N i \exp \left(-\lambda \|X-X_i\| \right)}{\sum_{i=1}^N \exp \left(-\lambda \|X-X_i\| \right)}$$
 
-where $$\|X−X_i\|$$ represents a distance between any instantaneous configuration $$X$$ tp be analyzed and another reference configuration $$X_i$$ from a set that compose the path made of $$N$$ configurations. The parameter $$\lambda$$ is a positive value that is tuned in a way explained later. here are a number of things to note to make you think that this is exactly what you want.
+where $$|X−X_i|$$ represents a distance between any instantaneous configuration $$X$$ tp be analyzed and another reference configuration $$X_i$$ from a set that compose the path made of $$N$$ configurations. The parameter $$\lambda$$ is a positive value that is tuned in a way explained later. .
+
+The negative exponential function is something that is 1 whenever the value of the exponent is zero, and gets progressively smaller when the value is larger than zero. (Trivially, the value of the exponential function can never be larger than 1 since lambda is a positive quantity and the distance $$\|X-X_i\\$$ is by definition positive). Whenever you sit exactly on a specific images $$X_j$$ then all the other terms in the sum disappear (if $$\lambda$$ is large enough) and only the value $$j$$ survives, returning exactely $$s=j$$.
 
 
 ## Generating a path 
