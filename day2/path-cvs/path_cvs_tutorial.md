@@ -33,7 +33,7 @@ Path collective variables are the extension of this concept to the case where yo
 
 Mathematically, the progress along the path is calculated with the following equation:
 
-$$s = \frac{\sum_{i=1^N} i \exp \left(-\lambda |X-X_i| \right)}{\sum_{i=1^N} \exp \left(-\lambda |X-X_i| \right)} $$
+$$s = \frac{\sum_{i=1}^N i \exp \left(-\lambda |X-X_i| \right)}{\sum_{i=1}^N \exp \left(-\lambda |X-X_i| \right)} $$
 
 where $$|X−X_i|$$ represents a distance between any instantaneous configuration $$X$$ tp be analyzed and another reference configuration $$X_i$$ from a set that compose the path made of $$N$$ configurations. The parameter $$\lambda$$ is a positive value that is tuned in a way explained later. here are a number of things to note to make you think that this is exactly what you want.
 
