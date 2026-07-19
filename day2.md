@@ -52,10 +52,12 @@ The primary goals of this tutorial are to show you how you might use path collec
 
 Once this tutorial is completed students will be able to:
 
-- Build a Path-CV from a series of MD simulation snapshots.
-- Write a PLUMED input file to run a path-metadynamics simulation.
+- Generate a putative reaction path using `pathtools`.
+- Prepare a PLUMED input file implementing a path collective variable (Path CV).
+- Perform a metadynamics simulation biasing the progress along the path and assess the sampling efficiency.
+- Improve the sampling by performing two-dimensional metadynamics biasing both the progress along the path and the distance from the path.
 
-[Path CVs Tutorial](coming soon)
+[Path CVs Tutorial](day2/path-cvs/path_cvs_tutorial.md)
 
 ## Session 5: Error Analysis of Free Energy Surfaces Tutorial 
 
