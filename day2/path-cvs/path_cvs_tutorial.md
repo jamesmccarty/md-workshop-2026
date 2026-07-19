@@ -52,8 +52,56 @@ In the above equation, we see that in case of perfect match of $$X=X_i$$ this eq
 In the above figure, the $$s$$ variable can be thought as the length of the red segment, while the $$z$$ variable is the length of the green segment. 
 
 Monitoring the $$z$$ variable in addition to $$s$$ is important because whenever your simulation is running close to the path (low Z values), then you know that you are reproducing reliably the path you provided, but if by chance you find some other path that goes from $$s=1$$ to $$s=N$$ via large $$z$$ values, then it might well be that you have just discovered a good alternative pathway. 
+
+## Getting started
+
+In this tutorial you will again study the C7eq to C7ax transition of the so-called alanine dipeptide molecule (N-acetyl-L-alanine-N'-methylamide):
+
+![Alanine_dipeptide2](../../images/belfast-2-transition_ala.png)
+
+Unlike the previous metadynamics tutorial, here we will demonstrate the use of path CVs to accomplish this transition. The example is particularly useful because we know that the Ramachandran space defined by the $$\phi$$ and $$\psi$$ angles will be a good descriptor of the conformational landscape. Therefore, we can assess how well are path is able to go from state A to state B by monitoring the $$\phi$$ and $$\psi$$ angles even though we will not be directly biasing them. 
+
+**Files**
+Files to complete this tutorial can be accessed here:
+[tutorial files](coming soon)
+
+These files are already located on bigzam:
+/opt/workshop/path-CVs/ 
+
+Use PuTTY to connect to bigzam as you did in previous [tutorials](../../day1/lj_fluid/lj_fluid_tutorial.md). Open PuTTY from the Window Start menu and enter `bigzam.local` for the Host Name. Login using the terminal using your username and password.
+
+**Important**: Once connected to the workshop computer, set your environment variables by typing:
+
+{% highlight git %}
+source setup.sh
+{% endhighlight %}
+
+Copy the tutorial files by typing in the terminal:
+
+In the terminal type:
+{% highlight git %}
+cp -r /opt/workshop/path-CVs/ ~/
+{% endhighlight %}
+
+This will copy the necessary tutorial files to your home directory on bigzam.
+
+**Tip**: You can press the Tab key to automatically complete file and directory names. This can save time and help avoid typing errors.
+
+Move into the path-CVs directory:
+
+{% highlight git %}
+cd ~/path-CVs
+{% endhighlight %}
+
+Within this directory you will find the following files:
+
+- dialaA.pdb: A reference PDB structure file of the molecule
+- alanine_dipeptide.gro: A GROMACS structure file (.gro)
+- topol.top: A GROMACS topology file (.top)
+- vacuum.mdp: A GROMACS parameter file (.mdp)
+
+
+## Generating a path collective variable
+
  
-## Generating a path 
-
-
 
