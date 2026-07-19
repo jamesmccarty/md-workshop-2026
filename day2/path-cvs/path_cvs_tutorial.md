@@ -29,7 +29,13 @@ In a nutshell, your reaction might be very complex and involving many simultaneo
 
 For example, in the above figure, you see a typical chemical reaction (hydrolysis of methyl phosphate) with the two end-points denoted by A and B. If you are given a third point, just by looking at it, you might find that this resembles the reactant more than the product. Hypothetically, if we create a parameter that describes progress along the reaction coordinate, $$\xi$$, and set $$\xi=1$$ for a configuration in the A state and $$\xi=2$$ for a configuration in the B state, then the third point along the path, $$\xi$$, would probably be something like $$\xi=1.3$$.
 
+Path collective variables are the extension of this concept to the case where you have multiple conformations that describe a path, starting from the reactant state A and moving to the product state B. Therefore, instead of an index that goes from 1 to 2 you have an index that goes from 1 to N , where N is the number of conformations that you use to describe your path.
 
+Mathematically, the progress along the path is calculated with the following equation:
+
+$$s = \frac{\sum_{i=1^N} i \exp \left(-\lambda |X-X_i| \right)}{\sum_{i=1^N} \exp \left(-\lambda |X-X_i| \right)} $$
+
+where $$|X−X_i|$$ represents a distance between any instantaneous configuration $$X$$ tp be analyzed and another reference configuration $$X_i$$ from a set that compose the path made of $$N$$ configurations. The parameter $$\lambda$$ is a positive value that is tuned in a way explained later. here are a number of things to note to make you think that this is exactly what you want.
 
 
 ## Generating a path 
