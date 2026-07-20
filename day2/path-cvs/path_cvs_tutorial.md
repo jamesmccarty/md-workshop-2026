@@ -47,7 +47,7 @@ $$z = -\frac{1}{\lambda} \ln \left[\sum_{i=1}^N \exp \left(-\lambda \|X-X_i\|\ri
 
 In the above equation, we see that in case of perfect match of $$X=X_i$$ this equation gives a value of $$z=0$$. The two variables $$s$$ and $$z$$, put together can be visualized as:
 
-![Figure path CV2](../../images/PathCV_reaction_coord2.png) 
+![PathCV_version2](../../images/PathCV_reaction_coord2.png) 
 
 In the above figure, the $$s$$ variable can be thought as the length of the red segment, while the $$z$$ variable is the length of the green segment. 
 
