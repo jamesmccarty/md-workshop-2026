@@ -111,12 +111,95 @@ In this case we might consider creating a path that starts at one basin and goes
 
 In this example, you will use the `pathtools` feature in PLUMED to generate an initial linear path connecting two structure (pdb) frames representing the initial reactant and final product states. The path itself is an ordered set of equally-spaced, frames that interpolate between the reactant and product states.
 
-In this case, I have provided a reference structure (pdb) file for the reactant state, `c7eq.pdb`, and product state `c7ax.pdb`.
+In this case, I have provided a reference structure (pdb) file for the reactant state, `c7eq.pdb`, and product state `c7ax.pdb`. Pay careful attention to the format of these pdb files:
 
+{% highlight git %}
+ATOM      2  CH3 ACE     1      -3.220   0.160   1.920  1.00  1.00
+ATOM      5  C   ACE     1      -1.800  -0.210   1.630  1.00  1.00
+ATOM      6  O   ACE     1      -1.100  -0.890   2.410  1.00  1.00
+ATOM      7  N   ALA     2      -1.400   0.350   0.520  1.00  1.00
+ATOM      8  H   ALA     2      -1.940   0.980  -0.030  1.00  1.00
+ATOM      9  CA  ALA     2      -0.060   0.000   0.060  1.00  1.00
+ATOM     10  HA  ALA     2       0.060  -1.060   0.230  1.00  1.00
+ATOM     11  CB  ALA     2      -0.020   0.050  -1.500  1.00  1.00
+ATOM     15  C   ALA     2       1.160   0.770   0.730  1.00  1.00
+ATOM     16  O   ALA     2       1.790   1.670   0.150  1.00  1.00
+ATOM     17  N   NME     3       1.470   0.480   1.990  1.00  1.00
+ATOM     18  H   NME     3       0.910  -0.190   2.480  1.00  1.00
+ATOM     19  CH3 NME     3       2.650   1.120   2.570  1.00  1.00
+END
+{% endhighlight %}
+
+You do not need to include every atom in the pdb file to define the path, but the atom number *must match the full structure** for your simulation. Notice here I am not including hydrogen atoms on the ACE group or NME group, so the atom numbers run from 2,5,6,7,8,9,10,11,15,16,17,18,19. Confirm that these match the atom numbers for the whole molecule we will use from the simulation:
+
+{% highlight git %}
+cat alanine_dipeptide.gro 
+{% endhighlight %}
+
+The atom numbers in the third column of the `alanine_dipeptide.gro` file.
+
+**Important**: In your reference structure (pdb) file the last column is the occupancy number and this must be all 1.00 to be included in the optimal alignment. If these occupancy numbers are zero, then PLUMED cannot do the alignment. Therefore, always check to make sure the last column is all 1.00's. 
+  
 In the following example, we will generate a linear path by typing in the terminal:
 
 {% highlight git %}
 plumed pathtools --start c7eq.pdb --end c7ax.pdb --nframes 10 --metric OPTIMAL --out linear_path.pdb
 {% endhighlight %} 
 
-  
+Here we are telling PLUMED to extrapolate a path of 10 equally-spaced frames between the c7eq.pdb structure and c7ax.pdb structure. The output file, `linear_path.pdb`, will be a pdb file with 12 total frames (one for each the start and the end state and 10 frames in between). 
+
+If you want to visualize the path, I have included a python code, `convert_path2_pymol.py` that will write the path frames to a format that can be read by PyMOL. In the terminal type:
+
+{% highlight git %}
+python convert_path2_pymol.py linear_path.pdb c7ax.pdb linear_path_4pymol.pdb
+{% endhighlight %}   
+
+Then transfer the output `linear_path_4pymol.pdb` to your local Windows machine using the WinSCP app and load your structure in PyMOL.
+
+After loading the `linear_path_4pymol.pdb` file into PyMOL, type the following into the consol to align the frames:
+
+{% highlight git %}
+intra_fit linear_path_4pymol, 1
+{% endhighlight %}  
+
+![figure_pymol_consol](../../images/pymol_consol.png)
+
+You can then play through the frames by clicking on the play button on the bottom right. To see the movie slower you can set in the PyMOL toolbar: Movie –> Frame Rate –> 5 FPS.
+
+![figure_pymol_linear_path](../../images/pymol_linear_path.png)
+
+You should observe that our path smoothly rotates about the dihedral angles. Next, we need to determine the suitable choice for the $$\lambda$$ parameter in our path collective variable definition. A general rule of thumb is to use the following formula:
+
+$$\lambda = \frac{2.3 N}{\sum_{i=1}^N \| X_i - X_{i+1}\|}$$ 
+
+which implies that one should calculate the average distance between consecutive frames composing the path. Also, the distance between successive frames should be more or less similar between all frames. I have included a python code called `get-lambda-est.py` to assist in estimated the $$\lambda$$ paramter by evaluating the above equation. In the terminal, type the following:
+
+{% highlight git %}
+ python get-lambda-est.py linear_path.pdb 
+{% endhighlight %} 
+
+The output should be something like:
+
+{% highlight git %}
+Number of path frames: 12
+Number of neighboring pairs: 11
+
+Pair       RMSD (Å)       RMSD (nm)
+01-02       0.125693       0.012569
+02-03       0.125609       0.012561
+03-04       0.125721       0.012572
+04-05       0.125519       0.012552
+05-06       0.125851       0.012585
+06-07       0.125592       0.012559
+07-08       0.125727       0.012573
+08-09       0.125598       0.012560
+09-10       0.125616       0.012562
+10-11       0.125511       0.012551
+11-12       0.125884       0.012588
+
+Mean neighboring RMSD = 0.012567 nm
+Suggested LAMBDA      = 183.03
+Relative variation    = 0.1%
+{% endhighlight %}
+
+Here we see the frames are evenly spaced (similar RMSD between frames, and the suggested $$\lambda$$ based on these distances is $$\lambda=183$$. We are now ready to define our path CV in PLUMED.   
