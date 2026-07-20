@@ -262,18 +262,23 @@ The first column is the simulation time (ps), the second and third column are th
 
 First we plot the path $$s$$ variable vs. time to examine how the system moves along the chosen reaction path.
 
-![Figure_linear_spath](../../images/)
+![Figure_linear_spath](../../images/linear_path_spath_progress.png)
 
 The trajectory clearly transitions between low values of $$s$$ (approximately 3–4) and high values (approximately 9–10), demonstrating that metadynamics successfully drives the system between the two endpoint states. Long periods where $$s$$ fluctuates within a narrow range correspond to the system residing in one metastable basin, while the sharp transitions indicate barrier crossings promoted by the increasing metadynamics bias.
 
 Next, we can compare this with the $$\phi$$ vs. time plot:
 
-![Figure_linear_spath_phi](../../images)
+![Figure_linear_spath_phi](../../images/linear_path_phi_angle.png)
 
 Notice that transitions in the $$s$$ variable occur at the same time as jumps in the $$\phi$$ angle, which also indicates that the system is changing from the C7eq state to the C7ax state. This is confirmed by plotting the 2D Ramachandran plot where we see two sampled regions corresponding to the two metastable states. 
 
-![Figure_linear_spath_2D](../../images)
+![Figure_linear_spath_2D](../../images/linear_path_Ramachandran.png)
 
 Notice, that although we biased along a linear path from the C7eq to the C7ax state, the actual transition pathway does not appear to be a straight line in $$\phi$$ and $$\psi$$ space. Our linear extrapolated path captures the overall transition but is only an approximation to the underlying transition path. 
 
-Finally, the plot here.  
+Finally, it is instructive to examine the 2D plot of the distance from the path ($$z$$) vs. the progress along the path ($$s$$). Here we see a broad loop in the $$z$$ coordinate near the middle of the path and the spread in $$z$$ is larger in the middle of the path than near the endpoints. This means the system is going through paths betwen A and B that are different from our putative path, $$s$$.  
+
+![Figure_linear_2D_s_z](../../images/linear_path_2D.png)
+
+This is an important point that because of the way metadynamics builds the bias to encourage exploration of previously unvisited configurations, the system may sample other paths different from the chosen path 
+
