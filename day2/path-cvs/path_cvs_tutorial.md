@@ -286,16 +286,22 @@ This is an important point: although metadynamics successfully drives transition
 
 ## Constructing a better path: Nonlinear path
 
-A better path would follow the lowest free energy path connecting the reactant to product. To construct such a path, I have selected frames from our previous metadynamics simulation (biasing both the $$\phi$ and $$\psi$$ angle, choosing representative frames based on their $$\phi$$, $$\psi$$ values along the minimum free energy. This trajectory is called `path_raw.pdb`. 
+A better path can be constructed by selecting representative structures from a MD simulation that has already sampled the transition. Here, I have chosen representative frames from our previous metadynamics simulation where we biased both the $$\phi$$ and $$\psi$$ dihedral angles. These frames were selected according to their $$\phi$$ and $$\psi$$ values along the approximate minimum free energy pathway connecting the C7eq and C7ax states. These series of frames are combined to make a path called `path_raw.pdb` provided with the workshop files. 
 
-However, because these frames were selected based on their $$\phi$$, $$\psi$$ values alone, the frames are not equally spaced, and therefore, this series of frames cannot be used in its current form as a path CV. Fortunately, the `pathtools` feature in PLUMED is able to take an input trajectory of unequally spaced frames and output a path of equally spaced frames. To do this, type the following in the terminal:
+Because the structures used to construct the `path_raw.pdb`  were selected based on their $$\phi$$, $$\psi$$ values alone, consecutive frames in this path are not equally spaced. Therefore, the file `path_raw.pdb` cannot be used directly in its current form as a path CV for metadyanmics. Fortunately, the `pathtools` utility in PLUMED is able to take an input trajectory of unequally spaced frames and output a path of evenly spaced frames. To do this, type the following in the terminal:
 
 {% highlight git %}
 plumed pathtools --path path_raw.pdb --metric OPTIMAL --out right_path.pdb
 {% endhighlight %}  
 
-This will generate a path file called `right_path.pdb` with equally spaced frames. In the figure below, I have plotted the path in $$\phi$$-$$\psi$$ space in comparison to the linear path from above overlayed onto the two dimensional free energy surface from a previous metadynamics run. As you can see, the new path is non-linear in the $$\phi$$-$$\psi$$ space, but represents the lowest free energy path between the C7eq and C7ax states. This path will be a much better representation of the true reaction coordinate.
+This will generate a new path file called `right_path.pdb` containting approximately equally spaced reference structures. 
 
-![Figure_overlay_path_fes](../../images/overlay_2D_fes_path.png) 
+In the figure below, I have plotted our optimized path in $$\phi$$-$$\psi$$ space (yellow squares) in comparison with our original linear path from above (white circles), overlaid on the two-dimensional free energy surface obtained from the previous metadynamics simulation. 
+
+![Figure_overlay_path_fes](../../images/overlay_2D_fes_path.png)
+
+As you can see, the new optimal path is non-linear in the $$\phi$$-$$\psi$$ space, but closely follows the pathway of lowest free energy connecting the C7eq and C7ax states, whereas the linear path cuts directly across regions of higher free energy. This path provides a better desription of the transition and should serve as a more effective collective variable for metadynamics simulations.
+
+
 
 
