@@ -260,25 +260,42 @@ When this job finishes, the output file will be `COLVAR_linear_path.dat`. Transf
 
 The first column is the simulation time (ps), the second and third column are the $$\phi$$ and $$\psi$$ angles (used for monitoring the progress of the reaction, but not directly biased), and the fourth and fifth column are the $$s$$ and $$z$$ path variables. Finally, the sixth column is the metadynamics bias. Upload your `COLVAR_linear_path.dat` file to the following [Google Colab link](https://colab.research.google.com/drive/1N4rXPjY5-O4Hhe7dbcL2sH7SRZbHU7eq?usp=sharing).
 
-First we plot the path $$s$$ variable vs. time to examine how the system moves along the chosen reaction path.
+First we plot the progress along the path variable $$s$$ as a function of time to examine how the system moves along the chosen reaction path.
 
 ![Figure_linear_spath](../../images/linear_path_spath_progress.png)
 
-The trajectory clearly transitions between low values of $$s$$ (approximately 3–4) and high values (approximately 9–10), demonstrating that metadynamics successfully drives the system between the two endpoint states. Long periods where $$s$$ fluctuates within a narrow range correspond to the system residing in one metastable basin, while the sharp transitions indicate barrier crossings promoted by the increasing metadynamics bias.
+The trajectory clearly transitions between low and high values of $$s$$ demonstrating that metadynamics successfully drives the system between the two endpoint states. Long periods where $$s$$ fluctuates within a narrow range correspond to the system residing in one metastable basin, while the sharp transitions indicate barrier crossings promoted by the increasing metadynamics bias.
 
-Next, we can compare this with the $$\phi$$ vs. time plot:
+Next, we can compare this with the time evolution of the $$\phi$$ angle:
 
 ![Figure_linear_spath_phi](../../images/linear_path_phi_angle.png)
 
-Notice that transitions in the $$s$$ variable occur at the same time as jumps in the $$\phi$$ angle, which also indicates that the system is changing from the C7eq state to the C7ax state. This is confirmed by plotting the 2D Ramachandran plot where we see two sampled regions corresponding to the two metastable states. 
+Notice that transitions in the path progress variable $$s$$ occur at the same time as jumps in the $$\phi$$ angle, indicating that the system is moving between the C7eq and C7ax conformational states. This is confirmed by plotting the two-dimensional Ramachandran plot, which clearly shows that the simulation samples two regions corresponding to the two metastable states. 
 
 ![Figure_linear_spath_2D](../../images/linear_path_Ramachandran.png)
 
-Notice, that although we biased along a linear path from the C7eq to the C7ax state, the actual transition pathway does not appear to be a straight line in $$\phi$$ and $$\psi$$ space. Our linear extrapolated path captures the overall transition but is only an approximation to the underlying transition path. 
+Although the metadynamics bias is applied along a linear path connecting the C7eq state to the C7ax state, the actual sampled transition does not appear to follow a straight line in $$\phi$$-$$\psi$$ space. Our linearly extrapolated path captures the overall transition but is only an approximation to the underlying transition path. 
 
-Finally, it is instructive to examine the 2D plot of the distance from the path ($$z$$) vs. the progress along the path ($$s$$). Here we see a broad loop in the $$z$$ coordinate near the middle of the path and the spread in $$z$$ is larger in the middle of the path than near the endpoints. This means the system is going through paths betwen A and B that are different from our putative path, $$s$$.  
+Finally, it is instructive to examine the two-dimensional plot of the distance from the path $$z$$ and the progress along the path $$s$$. 
 
 ![Figure_linear_2D_s_z](../../images/linear_path_2D.png)
 
-This is an important point that because of the way metadynamics builds the bias to encourage exploration of previously unvisited configurations, the system may sample other paths different from the chosen path 
+If the path CV were an ideal description of the transitin path, the sampled configuratoins would remain tightly clustered near small values of $$z$$. Instead, we see a broad loop in the $$z$$ coordinate with the spread in distance from the pat $$z$$ increasing near the middle of the $$s$$ path progress. This indicates that the system is going through pathways connecting the reactant state A and product state B that are different from our putative path. In other words, the system explores multiple transition routes that are not well described by the linear interpolation between the endpoint structures.
+
+This is an important point: although metadynamics successfully drives transitions between the two metastable states, the system naturally explores configurations away from the chosen path. This suggests two possible improvements. First, the reference path can be refined by constructing a nonlinear path from representative structures sampled along an actual transition. Second, the sampling can be further enhanced by biasing both the progress along the path $$s$$ **and** the distance from the path $$z$$, allowing the simulation to explore alternative transition pathways more efficiently. We will explore each of these improvements below.
+
+## Constructing a better path: Nonlinear path
+
+A better path would follow the lowest free energy path connecting the reactant to product. To construct such a path, I have selected frames from our previous metadynamics simulation (biasing both the $$\phi$ and $$\psi$$ angle, choosing representative frames based on their $$\phi$$, $$\psi$$ values along the minimum free energy. This trajectory is called `path_raw.pdb`. 
+
+However, because these frames were selected based on their $$\phi$$, $$\psi$$ values alone, the frames are not equally spaced, and therefore, this series of frames cannot be used in its current form as a path CV. Fortunately, the `pathtools` feature in PLUMED is able to take an input trajectory of unequally spaced frames and output a path of equally spaced frames. To do this, type the following in the terminal:
+
+{% highlight git %}
+plumed pathtools --path path_raw.pdb --metric OPTIMAL --out right_path.pdb
+{% endhighlight %}  
+
+This will generate a path file called `right_path.pdb` with equally spaced frames. In the figure below, I have plotted the path in $$\phi$$-$$\psi$$ space in comparison to the linear path from above overlayed onto the two dimensional free energy surface from a previous metadynamics run. As you can see, the new path is non-linear in the $$\phi$$-$$\psi$$ space, but represents the lowest free energy path between the C7eq and C7ax states. This path will be a much better representation of the true reaction coordinate.
+
+![Figure_overlay_path_fes](../../images/overlay_2D_fes_path.png) 
+
 
