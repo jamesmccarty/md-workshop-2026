@@ -202,4 +202,78 @@ Suggested LAMBDA      = 183.03
 Relative variation    = 0.1%
 {% endhighlight %}
 
-Here we see the frames are evenly spaced (similar RMSD between frames, and the suggested $$\lambda$$ based on these distances is $$\lambda=183$$. We are now ready to define our path CV in PLUMED.   
+Here we see the frames are evenly spaced (similar RMSD between frames, and the suggested $$\lambda$$ based on these distances is $$\lambda=183$$. We are now ready to define our path CV in PLUMED. 
+
+In PLUMED it is straightforward to implement a path CV with the following line:
+
+{% highlight git %}
+path: PATH REFERENCE=linear_path.pdb TYPE=OPTIMAL LAMBDA=183
+{% endhighlight %}    
+
+This defines a variable called `path` that takes as input a reference PDB file that containts the path frames. The path variable will have two components: `path.spath` - the distance along the path and `path.zpath` - the distance from the path.
+
+## Metadynamics using a path CV 
+
+I have provided a template PLUMED input file called `plumed-linear-path.dat` that will perform metadynamics on the $$s$$ path variable. Have a look at this file by typing:
+
+{% highlight git %}
+cat plumed-linear-path.dat
+{% endhighlight %}  
+
+{% highlight git %}
+# set up two variables for Phi and Psi dihedral angles 
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
+
+path: PATH REFERENCE=linear_path.pdb TYPE=OPTIMAL LAMBDA=183.0
+
+metad: METAD ...
+  ARG=path.spath
+  SIGMA=0.05 
+  HEIGHT=1.5 
+  TEMP=300 
+  BIASFACTOR=12 
+  PACE=500
+  FILE=HILLS GRID_MIN=0 GRID_MAX=12.5
+...
+
+PRINT ARG=phi,psi,path.spath,path.zpath,metad.bias STRIDE=100 FILE=COLVAR_linear_path.dat
+{% endhighlight %}  
+
+The first lines define the usual $$\phi$$ and $$\psi$$ dihedral angles that we can use to assess the transition from reactant to product state. 
+
+The next line defines the path CV with the variable name `path`. We then setup a metadynamics bias similar to the previous [metadynamics tutorial](../metadynamics/metadynamics.md). Here, the `ARG=path.spath` specifies that we will perform metadynamics on the $$s$$ component of the path (distance along the path). Finally, we print the output to a file called `COLVAR_linear_path.dat`. 
+
+To run this metadynamics simulation type:
+
+{% highlight git %}
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o path-mdrun1.tpr
+
+gmx mdrun -v -deffnm path-mdrun1 -plumed plumed-linear-path.dat
+{% endhighlight %}
+
+When this job finishes, the output file will be `COLVAR_linear_path.dat`. Transfer this file from bigzam to your local Windows machine using WinSCP. The columns of this file are specified by the `#! FIELDS` line:
+
+{% highlight git %}
+#! FIELDS time phi psi path.spath path.zpath metad.bias
+{% endhighlight %} 
+
+The first column is the simulation time (ps), the second and third column are the $$\phi$$ and $$\psi$$ angles (used for monitoring the progress of the reaction, but not directly biased), and the fourth and fifth column are the $$s$$ and $$z$$ path variables. Finally, the sixth column is the metadynamics bias. Upload your `COLVAR_linear_path.dat` file to the following [Google Colab link](https://colab.research.google.com/drive/1N4rXPjY5-O4Hhe7dbcL2sH7SRZbHU7eq?usp=sharing).
+
+First we plot the path $$s$$ variable vs. time to examine how the system moves along the chosen reaction path.
+
+![Figure_linear_spath](../../images/)
+
+The trajectory clearly transitions between low values of $$s$$ (approximately 3–4) and high values (approximately 9–10), demonstrating that metadynamics successfully drives the system between the two endpoint states. Long periods where $$s$$ fluctuates within a narrow range correspond to the system residing in one metastable basin, while the sharp transitions indicate barrier crossings promoted by the increasing metadynamics bias.
+
+Next, we can compare this with the $$\phi$$ vs. time plot:
+
+![Figure_linear_spath_phi](../../images)
+
+Notice that transitions in the $$s$$ variable occur at the same time as jumps in the $$\phi$$ angle, which also indicates that the system is changing from the C7eq state to the C7ax state. This is confirmed by plotting the 2D Ramachandran plot where we see two sampled regions corresponding to the two metastable states. 
+
+![Figure_linear_spath_2D](../../images)
+
+Notice, that although we biased along a linear path from the C7eq to the C7ax state, the actual transition pathway does not appear to be a straight line in $$\phi$$ and $$\psi$$ space. Our linear extrapolated path captures the overall transition but is only an approximation to the underlying transition path. 
+
+Finally, the plot here.  
