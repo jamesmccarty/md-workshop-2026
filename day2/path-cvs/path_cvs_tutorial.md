@@ -304,4 +304,12 @@ As you can see, the new optimal path is non-linear in the $$\phi$$-$$\psi$$ spac
 
 
 
+## Two-dimensional metadynamics in path CV space
 
+Run 2D metad on spath and zpath
+
+Show Ramachandran plot
+
+Show 2D s vs. z plot
+
+Reweight FES along phi. 
