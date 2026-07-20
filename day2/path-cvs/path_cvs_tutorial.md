@@ -105,7 +105,7 @@ Within this directory you will find the following files:
 
 Suppose we have limited information about the transition state or reaction path, but we know the starting and ending configuration. In our example molecule, this corresponds to the C7eq state and the C7ax state that we can visualize on a 2D Ramachandran plot:
 
-![Ramachandran_plot](../../images/Ramachandran_4PathCV.png)
+![Ramachandran_plot_pathCV](../../images/Ramachandran_4PathCV.png)
 
 In this case we might consider creating a path that starts at one basin and goes to the other along a straight line. To do this we need to generate equally spaced configurations that extrapolate between the two basins. A reasonable question to ask is how many frames do we need? The answer depends on the limiting scale in your reaction. For example, if in your process you have a torsion rotation as the smallest event that you want to capture with a path collective variable, then it is important that you mimic that torsion in the path and that this does not contain simply the initial and final point but also some intermediate. Similarly, if you have a concerted bond breaking, it might be that this takes place in the range of an Angstrom or so. In this case you should have intermediate frames that cover the sub-Angstrom scale. If you have both in the same path, then the smallest scale motion dominates.
 
