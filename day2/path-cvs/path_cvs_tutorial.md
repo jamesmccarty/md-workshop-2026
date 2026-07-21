@@ -300,7 +300,7 @@ Here we now see that the progress along the spath becomes much more diffusive af
 
 ![nonliner_spath](../../images/nonlinear_spath_progress.png) 
 
-We also see improved sampling of the $$\phi$$ angle with transitions between the C7eq ($$\phi \approx -80^{\circ}$$) and C7ax ($$\phi$$ \approx 50^{\circ}$$) states. 
+We also see improved sampling of the $$\phi$$ angle with transitions between the C7eq ($$\phi \approx -80^{\circ}$$) and C7ax ($$\phi \approx 50^{\circ}$$) states. 
 
 ![nonlinear_phi](../../images/nonlinear_path_phi.png)
 
