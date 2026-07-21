@@ -396,4 +396,16 @@ plumed driver --plumed plumed_reweight.dat --noatoms
 
 The --noatoms flag is needed because we are not reading a trajectory file. Finally, tranfer the output free energy files: `fes-rw-phi.dat` and `fes-rw-psi.dat` to your local Windows computer using WinSCP.  
 
-  
+Here I provide a Colab that will plot your reweighed `fes-rw-phi.dat` file and (optionally) compare it with the `fes.dat` file that you obtained from `sum_hills` for your earlier metadynamics simulation biasing only the $$\phi$$ angle.
+
+[Plot your reweighted fes](https://colab.research.google.com/drive/1i1fDG4VHOuzoWHl8J3Jiu_xvvVsLcrId?usp=sharing)
+
+You should obtain something that looks like the following for the free energy along the $$\phi$$ angle:
+
+![Figue_reweight_phi](../../images/fig_reweight_phi_metad.png)
+
+Notice in that the reweighted free energy (in blue) is in overall good agreement with the `sum_hills` (negative sum of all the accumulated Gaussian bias). In genral, the reweighted free energy is a more rigorous free energy estimate since the `sum_hills` result assumes you have reached the long-time limit results:
+
+$$F(s) = -\left(\frac{\gamma}{\gamma-1}\right)V(s)$$
+
+Whereas, the reweighting uses the time-dependent estimate that is valid at shorter times. Notice the agreement between the reweighted free energy and Gaussian sum (sum_hills) is better in the metastable basins and not as good at the transition states (high free energy regions). This reflects the sampling from the MD simulation. We sample much fewer configurations in the transition state region, so the free energy estimate will have larger error bars near the peaks. In fact, we don't sample many values of $$\phi$$ in the vicinity of $$\phi=140^{\circ}$$, so the reweighted free energy not  
