@@ -2,6 +2,8 @@
 
 The aim of this tutorial is provide an introduction to the PLUMED syntax. You will learn how to calculate some simple collective variables for analyzing existing trajectories.
 
+![Figure_plumed](../../images/image_intro2plumed1.png)
+
 Once this tutorial is completed students will be able to:
 
 - Write a simple PLUMED input file and use it to analyze a trajectory
