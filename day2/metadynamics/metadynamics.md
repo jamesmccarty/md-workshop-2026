@@ -412,11 +412,11 @@ whereas, the reweighting uses a [time-dependent estimate](https://pubs.acs.org/d
 
 Notice that the agreement between the reweighted free energy (blue) and Gaussian sum hills (red) is better in the low free-energy basins and not as good near transition state regions (high free-energy regions). This reflects the sampling from the MD simulation. We sample much fewer configurations in the transition state region, so the free energy estimate will have larger error bars near the peaks. You will learn how to compute error bars for a reweighted free energy in a later tutorial. In fact, we don't sample many values of $$\phi$$ in the vicinity of $$\phi=140^{\circ}$$, so the reweighted free energy cannot give an estimate of the largest barrier height. The C7eq to C7ax transition occurs near $$\phi=0^{\circ}$$ with a barrier of about $$\Delta G^{\dagger}=36$$ kJ/mol. 
 
-The shape of the free energy surface will depend on the order parameter (or variable) we are plotting. Mathematically, the probability distribution is a **histogram** of any observable $$s$$ is 
+The shape of the free energy surface will depend on the order parameter (or variable) we are plotting. Mathematically, the probability distribution is a **histogram** of any observable $$s$$: 
 
 $$ P(s) = \left< \delta[s - s(\textbf{R})]\right> $$ 
 
-where the brackets $$\< ...\>$$ represent the equilibrium average (Boltzmann distribution) and the delta function $$\delta[s - s(\textbf{R})]$$ picks out and counts atomic configurations $$\textbf{R}=\{R_1,R_2,...,R_N\}$$ that map to a specfic value of $$s$$. The free energy surface (FES) is defined as the logarithm of this probability distribution up to an additive constant:
+where the brackets $$\langle ...\rangle$$ represent the equilibrium average (Boltzmann distribution) and the delta function $$\delta[s - s(\textbf{R})]$$ picks out and counts atomic configurations $$\textbf{R}=\{R_1,R_2,...,R_N\}$$ that map to a specfic value of $$s$$. The free energy surface (FES) is defined as the logarithm of this probability distribution up to an additive constant:
 
 $$ F(s) = -RT \ln P(s) $$ 
 
