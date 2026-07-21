@@ -27,4 +27,4 @@
 | 1:15 - 2:45 | Tutorial: Statistical Analysis of Simulation Data | Error bars, block averaging, bootstrap analysis, and statistical uncertainty | 
 | 2:45 - 3:00 | Break | 
 | 3:00 - 3:50 | Collaboration time, wrap-up | Applying computational methods to research projects, discussion, and future directions | 
-| 3:50 - 4:00 | Complete survey |
+| 3:50 - 4:00 | [Complete survey]([Survey link for Day 2](https://docs.google.com/forms/d/e/1FAIpQLScWYUcQbla0HmsK8llRMX1ZMzaF_hQmBO0YbTnJrsyR5S2UIg/viewform?usp=header)) |

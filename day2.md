@@ -75,4 +75,6 @@ Once this tutorial is completed students will be able to:
 
 [Error Analysis and Quantifying Uncertainty from MD simulations](day2/error_analysis/error_analysis_plumed.md) 
 
+Before you leave at the end of the day, please fill out the survey for today:
 
+[Survey link for Day 2](https://docs.google.com/forms/d/e/1FAIpQLScWYUcQbla0HmsK8llRMX1ZMzaF_hQmBO0YbTnJrsyR5S2UIg/viewform?usp=header)
