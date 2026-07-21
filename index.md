@@ -20,10 +20,9 @@ Western Washington University
  - [Day 1](day1.md)
  - [Day 2](day2.md)
 
-## Day 1 Survey:
+## Surveys:
 [Day 1 survey link](https://docs.google.com/forms/d/e/1FAIpQLScH6MRnbQChhyn6GYnCdgO2id4NUze8XfFhegePmuT6LlPZbg/viewform?usp=publish-editor) 
 
-## Day 2 Survey:
 [Day 2 survey link](https://docs.google.com/forms/d/e/1FAIpQLScWYUcQbla0HmsK8llRMX1ZMzaF_hQmBO0YbTnJrsyR5S2UIg/viewform?usp=header)
  
  **Location**: CB 385  
