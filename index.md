@@ -24,7 +24,7 @@ Western Washington University
 [Day 1 survey link](https://docs.google.com/forms/d/e/1FAIpQLScH6MRnbQChhyn6GYnCdgO2id4NUze8XfFhegePmuT6LlPZbg/viewform?usp=publish-editor) 
 
 ## Day 2 Survey:
-[Day 2 survey line]([Survey link for Day 2](https://docs.google.com/forms/d/e/1FAIpQLScWYUcQbla0HmsK8llRMX1ZMzaF_hQmBO0YbTnJrsyR5S2UIg/viewform?usp=header))
+[Day 2 survey link](https://docs.google.com/forms/d/e/1FAIpQLScWYUcQbla0HmsK8llRMX1ZMzaF_hQmBO0YbTnJrsyR5S2UIg/viewform?usp=header)
  
  **Location**: CB 385  
  **Time**:  
