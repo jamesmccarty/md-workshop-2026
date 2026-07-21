@@ -396,7 +396,7 @@ plumed driver --plumed plumed_reweight.dat --noatoms
 
 The --noatoms flag is needed because we are not reading a trajectory file. Finally, tranfer the output free energy files: `fes-rw-phi.dat` and `fes-rw-psi.dat` to your local Windows computer using WinSCP.  
 
-Here I provide a Colab that will plot your reweighed `fes-rw-phi.dat` file and (optionally) compare it with the `fes.dat` file that you obtained from `sum_hills` for your earlier metadynamics simulation biasing only the $$\phi$$ angle.
+Here I provide a Colab that will plot your reweighed `fes-rw-phi.dat` file and (optionally) compare it with the `fes.dat` file that you obtained from `sum_hills` for your earlier metadynamics simulation biasing only the $$\phi$$ angle (Bias along a single coordinate)
 
 [Plot your reweighted fes](https://colab.research.google.com/drive/1i1fDG4VHOuzoWHl8J3Jiu_xvvVsLcrId?usp=sharing)
 
@@ -404,8 +404,32 @@ You should obtain something that looks like the following for the free energy al
 
 ![Figue_reweight_phi](../../images/fig_reweight_phi_metad.png)
 
-Notice in that the reweighted free energy (in blue) is in overall good agreement with the `sum_hills` (negative sum of all the accumulated Gaussian bias). In genral, the reweighted free energy is a more rigorous free energy estimate since the `sum_hills` result assumes you have reached the long-time limit results:
+Notice in that the reweighted free energy (in blue) is in overall good agreement with the `sum_hills` (negative sum of all the accumulated Gaussian hills). In genral, the reweighted free energy is a more rigorous free energy estimate since the `sum_hills` result assumes you have reached the long-time limit:
 
 $$F(s) = -\left(\frac{\gamma}{\gamma-1}\right)V(s)$$
 
-Whereas, the reweighting uses the time-dependent estimate that is valid at shorter times. Notice the agreement between the reweighted free energy and Gaussian sum (sum_hills) is better in the metastable basins and not as good at the transition states (high free energy regions). This reflects the sampling from the MD simulation. We sample much fewer configurations in the transition state region, so the free energy estimate will have larger error bars near the peaks. In fact, we don't sample many values of $$\phi$$ in the vicinity of $$\phi=140^{\circ}$$, so the reweighted free energy not  
+whereas, the reweighting uses a [time-dependent estimate](https://pubs.acs.org/doi/10.1021/jp504920s) that is valid at shorter times. 
+
+Notice that the agreement between the reweighted free energy (blue) and Gaussian sum hills (red) is better in the low free-energy basins and not as good near transition state regions (high free-energy regions). This reflects the sampling from the MD simulation. We sample much fewer configurations in the transition state region, so the free energy estimate will have larger error bars near the peaks. You will learn how to compute error bars for a reweighted free energy in a later tutorial. In fact, we don't sample many values of $$\phi$$ in the vicinity of $$\phi=140^{\circ}$$, so the reweighted free energy cannot give an estimate of the largest barrier height. The C7eq to C7ax transition occurs near $$\phi=0^{\circ}$$ with a barrier of about $$\Delta G^{\dagger}=36 kJ/mol$$. 
+
+The shape of the free energy surface will depend on the order parameter (or variable) we are plotting. Mathematically, the probability distribution is a **histogram** of any observable $$s$$ is 
+
+$$ P(s) = \left< \delta[s - s(\textbf{R})]\right> $$ 
+
+where the brackets $$\< ...\>$$ represent the equilibrium average (Boltzmann distribution) and the delta function $$\delta[s - s(\textbf{R})]$$ picks out and counts atomic configurations $$\textbf{R}=\{R_1,R_2,...,R_N\}$$ that map to a specfic value of $$s$$. The free energy surface (FES) is defined as the logarithm of this probability distribution up to an additive constant:
+
+$$ F(s) = -RT \ln P(s) $$ 
+
+or rearranging, the histogram that we calculate from MD simulation, given sufficient sampling of the configuration space, is related to the free energy $$F(s)$$ as the Boltzmann factor:
+
+$$ P(s) \propto e^{-F(s)/RT}$$. 
+
+As a second example, we can also plot the free energy along the $$\psi$$ axis: 
+
+![Figure_reweight_psi](../../images/fig_reweight_psi_metad.png)
+
+A good takeaway here is that the conformational landscape of this molecule depends on both $$\phi$$ and $$\psi$$ values. When we plot the free energy along a single axis, we are projecting a two-dimensional free energy surface along a single coordinate. This one-dimensional projection along a single coordinate can be useful for identifying metastable states and barriers but does capture the coupling between the two backbone dihedral angles.  
+
+Congratulations, you have now completed the metadynamics tutorial. If you are interested in learning about more advanced collective variables that can be used to drive reactions or complex conformational transitions, you can move on to the [Path CVs Tutorial](../path-cvs/path_cvs_tutorial.md). If you are interested in learning about calculating error bars on histograms and reweighted free energy surfaces, you can skip to [Error Analysis and Quantifying Uncertainty from MD simulations](../error_analysis/error_analysis_plumed.md)
+
+[Return to Day 2 homepage](../../day2.md)
