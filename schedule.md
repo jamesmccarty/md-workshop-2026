@@ -13,7 +13,7 @@
 | 1:15 - 2:45 | Tutorial: Analyzing trajectories and introduction to PLUMED syntax | Brief guide to PLUMED syntax, making histograms | 
 | 2:45 - 3:00 | Break | 
 | 3:00 - 3:50 | Collaboration time | Discussion, troubleshooting, and brainstorming research applications | 
-| 3:50 - 4:00 | Complete survey | 
+| 3:50 - 4:00 | [Complete survey](https://docs.google.com/forms/d/e/1FAIpQLScH6MRnbQChhyn6GYnCdgO2id4NUze8XfFhegePmuT6LlPZbg/viewform?usp=publish-editor) | 
 
 ## Day 2 - Enhanced Sampling and Statistical Analysis
 

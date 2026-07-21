@@ -68,4 +68,10 @@ Once this tutorial is completed students will be able to:
 
 **Tutorial**
 
-[Analyzing Trajectories Using PLUMED Tutorial](day1/intro_plumed_syntax/analysis.md)   
+[Analyzing Trajectories Using PLUMED Tutorial](day1/intro_plumed_syntax/analysis.md)  
+
+## Fill out the Survey 
+
+Before you leave at the end of the day, please fill out the survey for today:
+
+[Survey link for Day 1](https://docs.google.com/forms/d/e/1FAIpQLScH6MRnbQChhyn6GYnCdgO2id4NUze8XfFhegePmuT6LlPZbg/viewform?usp=publish-editor) 

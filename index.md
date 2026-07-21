@@ -20,9 +20,8 @@ Western Washington University
  - [Day 1](day1.md)
  - [Day 2](day2.md)
 
-## Application 
- 
- [Apply here](https://docs.google.com/forms/d/e/1FAIpQLSe6wiQBp8TRDA_zDYHhQHi9elrNPFrWgTqwdM1tvNrDB8PgIg/viewform?usp=header)
+## Day 1 Survey:
+[Day 1](https://docs.google.com/forms/d/e/1FAIpQLScH6MRnbQChhyn6GYnCdgO2id4NUze8XfFhegePmuT6LlPZbg/viewform?usp=publish-editor) 
  
  **Location**: CB 385  
  **Time**:  
