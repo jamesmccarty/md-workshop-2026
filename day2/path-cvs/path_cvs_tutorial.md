@@ -433,7 +433,7 @@ DUMPGRID GRID=psi_fes FILE=fes-rw-psi.dat
 
 {% endhighlight %}
 
-In the above script we are reading the values of $$\phi$$ and $$\psi$$ and $$metad.rbias$$ from the output of our metadynamics simulations, `COLVAR_path2D.dat`. We are then computing the reweighted histogram and output the free energy along the $$\phi$$ and $$\psi$$ variables.  
+In the above script we are reading the values of $$\phi$$ and $$\psi$$ and `metad.rbias` from the output of our metadynamics simulations, `COLVAR_path2D.dat`. We are then computing the reweighted histogram and output the free energy along the $$\phi$$ and $$\psi$$ variables.  
 
 Run the reweighting script using the PLUMED driver as you did in the metadynamics tutorial:
 
