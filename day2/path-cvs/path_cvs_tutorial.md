@@ -168,46 +168,18 @@ You can then play through the frames by clicking on the play button on the botto
 
 ![figure_pymol_linear_path](../../images/pymol_linear_path.png)
 
-You should observe that our path smoothly rotates about the dihedral angles. Next, we need to determine the suitable choice for the $$\lambda$$ parameter in our path collective variable definition. A general rule of thumb is to use the following formula:
+You should observe that our path smoothly rotates about the dihedral angles. 
+
+In the path CV formula, the smooting parameter $$\lambda$$ controls how strongly the path CV is localized around the nearest reference structure. A general rule of thumb is to use the following formula:
 
 $$\lambda = \frac{2.3 N}{\sum_{i=1}^N \| X_i - X_{i+1}\|}$$ 
 
-which implies that one should calculate the average distance between consecutive frames composing the path. Also, the distance between successive frames should be more or less similar between all frames. I have included a python code called `get-lambda-est.py` to assist in estimated the $$\lambda$$ paramter by evaluating the above equation. In the terminal, type the following:
-
-{% highlight git %}
- python get-lambda-est.py linear_path.pdb 
-{% endhighlight %} 
-
-The output should be something like:
-
-{% highlight git %}
-Number of path frames: 12
-Number of neighboring pairs: 11
-
-Pair       RMSD (Å)       RMSD (nm)
-01-02       0.125693       0.012569
-02-03       0.125609       0.012561
-03-04       0.125721       0.012572
-04-05       0.125519       0.012552
-05-06       0.125851       0.012585
-06-07       0.125592       0.012559
-07-08       0.125727       0.012573
-08-09       0.125598       0.012560
-09-10       0.125616       0.012562
-10-11       0.125511       0.012551
-11-12       0.125884       0.012588
-
-Mean neighboring RMSD = 0.012567 nm
-Suggested LAMBDA      = 183.03
-Relative variation    = 0.1%
-{% endhighlight %}
-
-Here we see the frames are evenly spaced (similar RMSD between frames, and the suggested $$\lambda$$ based on these distances is $$\lambda=183$$. We are now ready to define our path CV in PLUMED. 
+which implies that one should calculate the average distance between consecutive frames composing the path. This heuristic is just a starting guess, and practically, $$\lambda$$ can be tuned so that the path equation gives a smooth and continuous function. 
 
 In PLUMED it is straightforward to implement a path CV with the following line:
 
 {% highlight git %}
-path: PATH REFERENCE=linear_path.pdb TYPE=OPTIMAL LAMBDA=183
+path: PATH REFERENCE=linear_path.pdb TYPE=OPTIMAL LAMBDA=1200
 {% endhighlight %}    
 
 This defines a variable called `path` that takes as input a reference PDB file that containts the path frames. The path variable will have two components: `path.spath` - the distance along the path and `path.zpath` - the distance from the path.
@@ -225,7 +197,7 @@ cat plumed-linear-path.dat
 phi: TORSION ATOMS=5,7,9,15
 psi: TORSION ATOMS=7,9,15,17
 
-path: PATH REFERENCE=linear_path.pdb TYPE=OPTIMAL LAMBDA=183.0
+path: PATH REFERENCE=linear_path.pdb TYPE=OPTIMAL LAMBDA=1200
 
 metad: METAD ...
   ARG=path.spath
