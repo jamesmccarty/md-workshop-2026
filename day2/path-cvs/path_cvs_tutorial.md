@@ -298,7 +298,7 @@ Be sure to upload the file `COLVAR_right_path.dat` and don't forget to change th
 
 Here we now see that the progress along the spath becomes much more diffusive after the first few inital crossing events. Rather than spending a long time trapped in one state, the system repeatedly explores the entire range of the $$s$$ variable, with frequent back-and-forth transitions. 
 
-![nonliner_spath](../../images/nonliner_spath_progress.png) 
+![nonliner_spath](../../images/nonlinear_spath_progress.png) 
 
 We also see improved sampling of the $$\phi$$ angle with transitions between the C7eq ($$\phi \approx -80^{\circ}$$) and C7ax ($$\phi$$ \approx 50^{\circ}$$) states. 
 
@@ -306,7 +306,7 @@ We also see improved sampling of the $$\phi$$ angle with transitions between the
 
 Another interesting feature about this metadynamics simulation is that the sampling as seen in the two-dimensional Ramachandran plot reflects the nonlinear path that was biased. 
 
-![nonlinear_2D_Ramachandran](../../images/nonliner_path_Ramachandran.png)
+![nonlinear_2D_Ramachandran](../../images/nonlinear_path_Ramachandran.png)
 
 This is confirmed by looking at the distance from the path $$z$$ as a function of the path progress $$s$$. Notice that in between the two end points in $$s$$, the system stays at low values of $$z$$. This means that states between the two end points remained close to the reference path.
 
