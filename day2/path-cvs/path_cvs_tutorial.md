@@ -451,12 +451,18 @@ mv fes-rw-phi.dat fes-pathCV-rw-phi.dat
 mv fes-rw-psi.dat fes-pathCV-rw-psi.dat
 {% endhighlight %}
 
-Then, transfer these files `fes-pathCV-rw-phi.dat` and `fes-pathCV-rw-psi.dat` to your local machine uing WinSCP. You can compare the `fes-pathCV-rw-phi.dat` from this tutorial with your earlier `fes-rew-phi.dat` from metadynamics on the $$\phi$$ and $$\psi$$ angle from the previous [metadynamics tutorial](../metadynamics/metadynamics.md)
+Then, transfer these files `fes-pathCV-rw-phi.dat` and `fes-pathCV-rw-psi.dat` to your local machine uing WinSCP. See if you can compare the `fes-pathCV-rw-phi.dat` from this tutorial with your earlier reweighted free energy, `fes-rew-phi.dat`, from metadynamics on the $$\phi$$ and $$\psi$$ angle from the previous [metadynamics tutorial](../metadynamics/metadynamics.md)
 
 A Colab for constructing these plots is [here](https://colab.research.google.com/drive/1xSKnQq8sHnuSB5uCuRVjICaFZg3hvmCm?usp=sharing)
 
 Comparing the free energy between the path reweighted metadyanmics (blue) and a previous metadyamics run biasing the $$\phi$$ and $$\psi$$ angles directly (red) should give identical results after reweighting because we have removed the effect of the bias from the sampled histogram distribution! 
 
 ![Figure_fesreweight_path](../../images/FES_1D_reweight_path.png)
+
+Congratulations, you have now competed this tutorial on Path CVs. The `PATH` action in PLUMED is very flexible and a path can be constructed using any set of observables. 
+
+You should now go to the next Tutorial: [Error Analysis and Quantifying Uncertainty from MD simulations](../error_analysis/error_analysis_plumed.md)
+
+[Return to Day 2 homepage](../../day2.md)
 
 
