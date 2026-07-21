@@ -252,7 +252,7 @@ Finally, it is instructive to examine the two-dimensional plot of the distance f
 
 ![Figure_linear_2D_s_z](../../images/linear_path_2D.png)
 
-If the path CV were an ideal description of the transitin path, the sampled configuratoins would remain tightly clustered near small values of $$z$$. Instead, we see a broad loop in the $$z$$ coordinate with the spread in distance from the pat $$z$$ increasing near the middle of the $$s$$ path progress. This indicates that the system is going through pathways connecting the reactant state A and product state B that are different from our putative path. In other words, the system explores multiple transition routes that are not well described by the linear interpolation between the endpoint structures.
+If the path CV were an ideal description of the transitin path, the sampled configurations between the end points would remain tightly clustered near small values of $$z$$. Instead, we see an arch-shaped distribution in the $$z$$ coordinate near the middle of the $$s$$ path progress. This indicates that the system is going through pathways connecting the reactant state A and product state B that are different from our putative path. In other words, the system explores multiple transition routes that are not well described by the linear interpolation between the endpoint structures.
 
 This is an important point: although metadynamics successfully drives transitions between the two metastable states, the system naturally explores configurations away from the chosen path. This suggests two possible improvements. First, the reference path can be refined by constructing a nonlinear path from representative structures sampled along an actual transition. Second, the sampling can be further enhanced by biasing both the progress along the path $$s$$ **and** the distance from the path $$z$$, allowing the simulation to explore alternative transition pathways more efficiently. We will explore each of these improvements below.
 
@@ -273,6 +273,24 @@ In the figure below, I have plotted our optimized path in $$\phi$$-$$\psi$$ spac
 ![Figure_overlay_path_fes](../../images/overlay_2D_fes_path.png)
 
 As you can see, the new optimal path is non-linear in the $$\phi$$-$$\psi$$ space, but closely follows the pathway of lowest free energy connecting the C7eq and C7ax states, whereas the linear path cuts directly across regions of higher free energy. This path provides a better desription of the transition and should serve as a more effective collective variable for metadynamics simulations.
+
+The template PLUMED input file `plumed-right-path.dat` is provided with the tutorial files. Edit the `plumed-right-path.dat` by typing: 
+
+{% highlight git %}
+nano plumed-right-path.dat
+{% endhighlight %}
+
+And replace the `__FILL__` with the correct input text. Then save by typing `Ctrl+O` followed by the `Enter` key. Then `Ctrl+X` to exit the text editor.
+
+Run metadynamics on the more optimal path CV by typing:
+
+{% highlight git %}
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o path-mdrun2.tpr
+
+gmx mdrun -v -deffnm path-mdrun2 -plumed plumed-right-path.dat
+{% endhighlight %}
+
+When this job finishes, transfer the output file `` to your local Windows machine and view with the same [Colab as before](https://colab.research.google.com/drive/1N4rXPjY5-O4Hhe7dbcL2sH7SRZbHU7eq?usp=sharing). 
 
 
 
