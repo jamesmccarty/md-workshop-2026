@@ -290,13 +290,75 @@ gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o path-mdrun2.tp
 gmx mdrun -v -deffnm path-mdrun2 -plumed plumed-right-path.dat
 {% endhighlight %}
 
-When this job finishes, transfer the output file `` to your local Windows machine and view with the same [Colab as before](https://colab.research.google.com/drive/1N4rXPjY5-O4Hhe7dbcL2sH7SRZbHU7eq?usp=sharing). 
+When this job finishes, transfer the output file `COLVAR_right_path.dat` to your local Windows machine and view with the same [Colab as before](https://colab.research.google.com/drive/1N4rXPjY5-O4Hhe7dbcL2sH7SRZbHU7eq?usp=sharing). 
 
+Be sure to upload the file `COLVAR_right_path.dat` and don't forget to change the `filename` cell:
 
+![filename_cell](../../images/filenamecell.png)
+
+Here we now see that the progress along the spath becomes much more diffusive after the first few inital crossing events. Rather than spending a long time trapped in one state, the system repeatedly explores the entire range of the $$s$$ variable, with frequent back-and-forth transitions. 
+
+![nonliner_spath](../../images/nonliner_spath_progress.png) 
+
+We also see improved sampling of the $$\phi$$ angle with transitions between the C7eq ($$\phi \approx -80^{\circ}$$) and C7ax ($$\phi$$ \approx 50^{\circ}$$) states. 
+
+![nonlinear_phi](../../images/nonlinear_path_phi.png)
+
+Another interesting feature about this metadynamics simulation is that the sampling as seen in the two-dimensional Ramachandran plot reflects the nonlinear path that was biased. 
+
+![nonlinear_2D_Ramachandran](../../images/nonliner_path_Ramachandran.png)
+
+This is confirmed by looking at the distance from the path $$z$$ as a function of the path progress $$s$$. Notice that in between the two end points in $$s$$, the system stays at low values of $$z$$. This means that states between the two end points remained close to the reference path.
+
+![nonlinear_2D_s_z](../../images/nonlinear_path_2D.png)
+
+Overall, we can conclude that the nonlinear path that outlines the lowest free energy transition between state A and B is more suited for metadynamics, as it allows the simulation to sample transitions more efficiently. 
 
 ## Two-dimensional metadynamics in path CV space
 
-Run 2D metad on spath and zpath
+Now that we have seen that biasing along the path progress collective variable can efficiently sample transitions between states A and B, let's perform metadynamics on both the $$s$$ and $$z$$ variables to try and find additional paths. 
+
+The idea is that by biasing an additional orthogonal coordinate, we can enhance the exploration of states that are farther from the reference path. The goal is to more completely sample the possible transitions between reactant and product states. 
+
+The PLUMED input file `plumed-2DmetaD.dat` can be use to run metadynamics on both the spath and zpath variables. Have a look at this file with:
+
+{% highlight git %}
+cat plumed-2DmetaD.dat
+{% endhighlight %}
+   
+{% highlight git %}
+# set up two variables for Phi and Psi dihedral angles 
+phi: TORSION ATOMS=5,7,9,15
+psi: TORSION ATOMS=7,9,15,17
+
+path: PATH REFERENCE=right_path.pdb TYPE=OPTIMAL LAMBDA=1200 
+
+# Metadynamics on both s and z variables.
+metad: METAD ...
+  ARG=path.spath,path.zpath
+  ADAPTIVE=DIFF SIGMA=125 SIGMA_MIN=0.01,0.001 
+  HEIGHT=1.5 
+  TEMP=300 
+  BIASFACTOR=12 
+  PACE=500
+  GRID_MIN=0.5,-0.005
+  GRID_MAX=12.5,0.03
+  GRID_SPACING=0.02,0.0002
+...
+
+PRINT ARG=phi,psi,path.spath,path.zpath,metad.bias STRIDE=100 FILE=COLVAR_path2D.dat
+{% endhighlight %}
+
+This input is nearly identical to the previous metadynamics input except that the argument `ARG` is now both the spath and zpath variable: `ARG=path.spath,path.zpath`. Also, I am using a dynamically adaptive SIGMA for the Gaussian widths to allow the hill width to adapt over time. You can find more details about this [here](https://pubs.acs.org/doi/10.1021/ct3002464). Within this scheme, the CV fluctuations over a time window are used to set the Gaussian width. This approach is recommended for Path CVs because the free energy surface in this representation is nonuniform, meaning that one value of SIGMA may not work well along the path. 
+
+Finally, run the metadyanics simulation of two CVs by typing:
+
+{% highlight git %}
+gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o path-run3.tpr 
+
+gmx mdrun -v -deffnm path-run3 -plumed plumed-2DmetaD.dat
+{% endhighlight %}
+
 
 Show Ramachandran plot
 
