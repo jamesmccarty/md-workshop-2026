@@ -57,17 +57,22 @@ Once this tutorial is completed students will be able to:
 - Perform a metadynamics simulation biasing the progress along the path and assess the sampling efficiency.
 - Improve the sampling by performing two-dimensional metadynamics biasing both the progress along the path and the distance from the path.
 
+**Tutorial**
+
 [Path CVs Tutorial](day2/path-cvs/path_cvs_tutorial.md)
 
-## Session 5: Error Analysis of Free Energy Surfaces Tutorial 
+## Session 5: Error Analysis and Quantifying Uncertainty from MD simulations 
 
-The goals of this tutorial are to The aim of this tutorial are for you to understand how to analyze free energy surfaces, compute error bars, and understand statistical uncertainties from MD simulation results. 
+The goals of this tutorial are to The aim of this tutorial are for you to understand how to analyze statistical uncertainties in measured quanties from MD simulations.
 
 Once this tutorial is completed students will be able to:
 
-- Assess sampling and convergence of a metadynamics simulation
-- Be able to use PLUMED to perform block analysis of trajectory data
-- Be able to use PLUMED to calculate unbiased ensemble averages and histograms from biased trajectories
-- Be able to perform bootstrap resampling to obtain error bars
+- Use bootstrapping to estimate the uncertainty and confidence intervals from computed histograms from an MD simulation.
+- Compare distributions measured from separate independent MD simulations to see if the two trajectories are sampling the same distribution.
+- Perform a block-analysis to calculate error bars on the free energy surface claculated from a metadynamics trajectory.
 
-[Analysis of Free Energy Surfaces Tutorial](coming soon) 
+**Tutorial**
+
+[Error Analysis and Quantifying Uncertainty from MD simulations](day2/error_analysis/error_analysis_plumed.md) 
+
+
