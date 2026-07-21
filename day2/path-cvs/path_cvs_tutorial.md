@@ -344,12 +344,15 @@ metad: METAD ...
   GRID_MIN=0.5,-0.005
   GRID_MAX=12.5,0.03
   GRID_SPACING=0.02,0.0002
+  CALC_RCT
 ...
 
-PRINT ARG=phi,psi,path.spath,path.zpath,metad.bias STRIDE=100 FILE=COLVAR_path2D.dat
+PRINT ARG=phi,psi,path.spath,path.zpath,metad.bias,metad.rbias STRIDE=100 FILE=COLVAR_path2D.dat
 {% endhighlight %}
 
-This input is nearly identical to the previous metadynamics input except that the argument `ARG` is now both the spath and zpath variable: `ARG=path.spath,path.zpath`. Also, I am using a dynamically adaptive SIGMA for the Gaussian widths to allow the hill width to adapt over time. You can find more details about this [here](https://pubs.acs.org/doi/10.1021/ct3002464). Within this scheme, the CV fluctuations over a time window are used to set the Gaussian width. This approach is recommended for Path CVs because the free energy surface in this representation is nonuniform, meaning that one value of SIGMA may not work well along the path. 
+This input is nearly identical to the previous metadynamics input except that the argument `ARG` is now both the spath and zpath variable: `ARG=path.spath,path.zpath`. I have also included the `CALC_RCT` flag for calculating the time-dependent reweighting factor.  
+
+Also, I am using a dynamically adaptive SIGMA for the Gaussian widths to allow the hill width to adapt over time. You can find more details about this [here](https://pubs.acs.org/doi/10.1021/ct3002464). Within this scheme, the CV fluctuations over a time window are used to set the Gaussian width. This approach is recommended for Path CVs because the free energy surface in this representation is nonuniform, meaning that one value of SIGMA may not work well along the path. 
 
 Finally, run the metadyanics simulation of two CVs by typing:
 
@@ -359,9 +362,83 @@ gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o path-run3.tpr
 gmx mdrun -v -deffnm path-run3 -plumed plumed-2DmetaD.dat
 {% endhighlight %}
 
+When this run finishes, transfer the file `COLVAR_path2D.dat` to your local Windows machine and plot the results using the [same Colab as before](https://colab.research.google.com/drive/1N4rXPjY5-O4Hhe7dbcL2sH7SRZbHU7eq?usp=sharing).
 
-Show Ramachandran plot
+Be sure to upload the file `COLVAR_path2D.dat` and don't forget to change the `filename` cell:
 
-Show 2D s vs. z plot
+![filename_cell2](../../images/filenamecell2.png)
 
-Reweight FES along phi. 
+Plotting the progress along the $$s$$ path, we see that introducing a second collective variable improves the sampling. The trajectory now shows almost continuous diffusive motion over the entire range of $$s$$ and is not getting trapped in any long-lived states. 
+
+![2Dpath_spath](../../images/2Dpath_spath.png)
+
+Simiarly, we see extensive sampling the $$\phi$$ angle, transitioning many times between conformational basins over the metadynamics trajectory:
+
+![2Dpath_phi](../../images/2Dpath_phi.png)
+
+The two-dimensional Ramachandran plot also shows improved coverage, meaning the simulation sampled more of the available configuration space. This is because we chose to bias configurations not just along the path, but also configurations that are far from the path. 
+
+![2Dpath_Ramachandran](../../images/2Dpath_Ramachandran_plot.png)
+
+Finally, a plot of the progress along the path and the distance from the path shows that the trajectory has sample almost uniformly accross the entire accessible $$s$$,$$z$$ region. **Important point**: When you bias both coordinates, the simulation is no longer confined to the reference path, but can explore all conformations to produce much more complete sampling. 
+
+![2Dpath_phase_space](../../images/2Dpath_phasespace.png)
+
+## Reweighting the Free Energy surface 
+
+Now that we have performed a metadynamics simulation along the spath and zpath variables, we might want to compute the free energy surface along the $$\phi$$ coordinate. (Note we can reweight any observable even if we didn't bias this variable directly). 
+
+The plumed input file `plumed_reweight.dat` is very similar to the one from the [metadynamics tutorial](../metadynamics/metadynamics.md).
+
+{% highlight git %}
+# Read the variable we want to reweight from the COLVAR file
+rphi: READ FILE=COLVAR_path2D.dat VALUES=phi IGNORE_TIME 
+rpsi: READ FILE=COLVAR_path2D.dat VALUES=psi IGNORE_TIME
+
+# Also read the metad.bias and metad.rbias column from the COLVAR file
+metad: READ FILE=COLVAR_path2D.dat VALUES=metad.* IGNORE_TIME
+
+# Use the rbias reweighting factor to get the weights for each frame
+weights: REWEIGHT_METAD ARG=metad.rbias TEMP=300
+
+# Now we can use PLUMED to build a histogram of the phi variable, and using the logweight for accounting for the effect of the bias. 
+
+phi_histo: HISTOGRAM ... 
+   ARG=rphi 
+   GRID_MIN=-pi GRID_MAX=pi GRID_BIN=50 
+   BANDWIDTH=0.05 
+   LOGWEIGHTS=weights 
+... 
+
+# Here is a histogram of the psi variable: 
+psi_histo: HISTOGRAM ...
+   ARG=rpsi 
+   GRID_MIN=-pi GRID_MAX=pi GRID_BIN=50 
+   BANDWIDTH=0.05 
+   LOGWEIGHTS=weights
+...
+
+# We could write the histogram directly, but first let's convert to a free energy surface using the CONVERT_TO_FES action:
+ 
+phi_fes: CONVERT_TO_FES GRID=phi_histo TEMP=300
+
+psi_fes: CONVERT_TO_FES GRID=psi_histo TEMP=300
+
+
+# Print out the reweighted free energies surfaces. Here caled fes-rw-phi.dat and fes-rw-psi.dat  
+
+DUMPGRID GRID=phi_fes FILE=fes-rw-phi.dat 
+
+DUMPGRID GRID=psi_fes FILE=fes-rw-psi.dat
+
+{% endhighlight %}
+
+In the above script we are reading the values of $$\phi$$ and $$\psi$$ and $$metad.rbias$$ from the output of our metadynamics simulations, `COLVAR_path2D.dat`. We are then computing the reweighted histogram and output the free energy along the $$\phi$$ and $$\psi$$ variables.  
+
+Run the reweighting script using the PLUMED driver as you did in the metadynamics tutorial:
+
+{% highlight git %}
+plumed driver --plumed plumed_reweight.dat --noatoms
+{% endhighlight %}
+
+Plot the output reweighted fes files `fes-rw-phi.dat` and `fes-rw-psi.dat` and compare to your previous metadynamics results. 
