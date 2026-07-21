@@ -13,7 +13,7 @@ Once this tutorial is completed students will be able to:
 
 ## Background 
 
-In the previous [metadynamics tutorial](../metadynamics/metadynamics.md), we described the conformation of alanine dipeptide using the two backbone dihedral angles ($$\phi$$) and ($$\psi$$). Although these two variables provide a useful description of the conformational free-energy landscape for this simple molecule, many molecular transitions involve coordinated changes in a much larger number of atomic coordinates. When you deal with a complex conformational transition that you want to analyze (or bias), very often you cannot just describe it with a single order parameter (or collective variable).
+In the previous [metadynamics tutorial](../metadynamics/metadynamics.md), we described the conformation of alanine dipeptide using the two backbone dihedral angles ($$\phi$$) and ($$\psi$$). We also noticed that these two degrees of freedom are coupled. Although these two variables provide a useful description of the conformational free-energy landscape for this simple molecule, many molecular transitions involve coordinated changes in a much larger number of atomic coordinates. When you deal with a complex conformational transition that you want to analyze (or bias), very often you cannot just describe it with a single order parameter (or collective variable).
 
 As an example, consider a large conformational transition like the activatation of a kinase via an open-close transition of the activation loop. In the sticks representation, you see the part of the molecule involved in the large conformational change, whereas the structure of the rest of molecule (shown only in backbone cartoon) remains mostly unchanged between the X-ray structures (PDB: 2C5X and 2C5Y). This is a complex transition and it is hard to tell which is the collective variable (or order parameter) that best describes the transition.
 
@@ -441,4 +441,22 @@ Run the reweighting script using the PLUMED driver as you did in the metadynamic
 plumed driver --plumed plumed_reweight.dat --noatoms
 {% endhighlight %}
 
-Plot the output reweighted fes files `fes-rw-phi.dat` and `fes-rw-psi.dat` and compare to your previous metadynamics results. 
+Plot the output reweighted fes files `fes-rw-phi.dat` and `fes-rw-psi.dat` and compare to your previous metadynamics results. For example, I might rename these output files before transfering to my Windows machine:
+
+{% highlight git %}
+mv fes-rw-phi.dat fes-pathCV-rw-phi.dat
+{% endhighlight %} 
+
+{% highlight git %}
+mv fes-rw-psi.dat fes-pathCV-rw-psi.dat
+{% endhighlight %}
+
+Then, transfer these files `fes-pathCV-rw-phi.dat` and `fes-pathCV-rw-psi.dat` to your local machine uing WinSCP. You can compare the `fes-pathCV-rw-phi.dat` from this tutorial with your earlier `fes-rew-phi.dat` from metadynamics on the $$\phi$$ and $$\psi$$ angle from the previous [metadynamics tutorial](../metadynamics/metadynamics.md)
+
+A Colab for constructing these plots is [here](https://colab.research.google.com/drive/1xSKnQq8sHnuSB5uCuRVjICaFZg3hvmCm?usp=sharing)
+
+Comparing the free energy between the path reweighted metadyanmics (blue) and a previous metadyamics run biasing the $$\phi$$ and $$\psi$$ angles directly (red) should give identical results after reweighting because we have removed the effect of the bias from the sampled histogram distribution! 
+
+![Figure_fesreweight_path](../../images/FES_1D_reweight_path.png)
+
+
