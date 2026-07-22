@@ -123,7 +123,7 @@ In this case, we will use a structure file in pdb format: [Ar_864.pdb](https://g
 head Ar_864.pdb 
 {% endhighlight %}
 
-Looking at the file we see that each atom has a number, an atom name Ar and a x,y,z position. You can read more about the pdb file format [here](https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html)
+Looking at the file we see that each atom has a number, an atom name Ar and a x,y,z position. You can read more about the pdb file format [here](https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html).
 
 {% highlight git %}
 HEADER    simple PDB file with 864 atoms
