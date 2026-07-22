@@ -90,6 +90,12 @@ A second common application is to **compare simulations performed under differen
 
 In this tutorial, we will use the **Kolmogorov-Smirnov (KS) test** to compare distance distributions from three independent simulations. The KS test provides an objective measure of whether the two datasets are consistent with having been drawn from the same underlying probability distribution. 
 
+We will again use the RC9 peptide from the previous example as our model system. I have performed three independent 1 $$\mu$$s MD simulations of the peptide. Two of the simulations were run under identical conditions, and therefore should produce statistically indistinguishable distance distributions. However, in the the third MD simulation, I implemented a harmonic restraint applied to the peptide end-to-end distance, altering the conformational sampling. 
 
+Our goal is to determine whether we can identify the restrained simulation based solely on the distance distributions. Rather than visualzing the histograms, we will use the KS test to determine whether the observed differences are statistically significant. 
+
+[Link to files](https://drive.google.com/file/d/18J2AnzSspJBqxU-M5GfqNxeIYNOp2xyQ/view?usp=sharing)
+
+[Link to Colab](https://colab.research.google.com/drive/1GUF6SWx2ibZVbENVv-pmxqOzApnDeAUz?usp=sharing) 
 
 ## Error bars on free energy surfaces from metadynamics  
