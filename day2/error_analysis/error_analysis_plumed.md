@@ -30,8 +30,56 @@ PRINT ARG=d1 STRIDE=80 FILE=distance.dat
 
 This data is provided for download [here](https://drive.google.com/file/d/1j48wvCrlDujbNO4fM-r1iEl4w4065Agx/view?usp=sharing). Use this link to download the data file to your Windows machine. 
 
+Next, we will use Python to generate a histogram with error bars. Upload your data file `distance.dat` to the [Colab code here](https://colab.research.google.com/drive/10qtu-z5JoIigB5oEkyZfaieOSw37oupp?usp=sharing)
 
+The beginning of this document is similar to what you have done before in earlier tutorials. First you upload your data file and store each column as an array:
 
-## Comparing histograms from two independent MD simulations 
+![Figure_bootstrap_notebook1](../../images/Figure_bootstrap_notebook1.png)
+
+Then we calculate the mean and standard deviation as follows:
+
+{% highlight git %}
+d_mean_value = np.mean(d)
+d_std_value = np.std(d)
+{% endhighlight %}
+
+What is the value of the mean distance between HA1 and HN in our simulation?
+
+As before we plot the distance as a function of time across the 1-$$\mu$s MD simulation (left) and the histogram of that distance (right):
+
+![Figure_distance_hist_bootstrap2](../../images/Figure_distance_hist_bootstrap2.png)
+
+The histogram gives an estimate of the underlying **probability distribution** of the distance. However, becauese the MD simulation contains only a finite number of frames, the histogram itself is subject to statistical uncertainty. Suppose we wanted to quantify the uncertainty of the height of each bar in the above histogram. How could we do this? 
+
+One way to answer this question is through **bootstrap analysis**. [Bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics) is a technique widely used in statistics for estimating the uncertainty of a distribution. Bootstrapping estimates the uncertainty by repeatedly generating new datasets from the original trajectory. The basic idea is simple:
+
+- Randomly select frames from our original trajectory **with replacement** until a new dataset containing the same number of frames has been created.
+- Compute the histogram for this new dataset
+- Repeat this process many times (typicaly hundreds or thousands of times).
+- Use the variation among these histograms to estimate a confidence interval for the probability distribution. 
+
+The advantage of this approach is that we do not make any assumptions about the probabily distribution that generated our original data set. 
+
+A simple four lines of Python code will perform the bootstrapping analysis:
+
+{% highlight git %}
+for i in range(n_bootstrap):
+    sample = rng.choice(d, size=n, replace=True) # sampling with replacement
+    boot_hist[i], _ = np.histogram(sample, bins=bins, density=False) # generating new histogram 
+    boot_hist[i] = boot_hist[i] / np.sum(boot_hist[i]) # normalize 
+
+# confidence intervals (95% interval lies between the 2.5th percentile and 97.5th percentile)
+lower, upper = np.percentile(boot_hist, [2.5, 97.5], axis=0)
+{% endhighlight %}
+
+In the Colab notebook provided, we choose 1000 bootstrap samples. Note that because each bootstrap sample is drawn from the original trajectory with replacement, some frames will randomly be chosen multiple times, while others may not be chosen at all. Repeating the resampling proceedure many times allows us to estimate how much the histogram would vary if we repeated the MD simulation under similar conditions. 
+
+Use the Colab notebook to plot the distance distribution with a 95% confidence interval for the distance distribution as a shaded region:
+
+![Figure_histogram_bootstrap](../../images/Figure_histgram_bootstrap.png)
+
+**Main idea**: If you were to repeat the MD simulation 100 times under the same conditions, generating 100 similar distance distributions. The shaded region shows the range where you would expect the histogram from 95 of those simulations to lie.  
+ 
+# Comparing histograms from two independent MD simulations 
 
 ## Error bars on free energy surfaces from metadynamics  
