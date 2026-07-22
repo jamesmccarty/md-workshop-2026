@@ -16,7 +16,7 @@ Because we are analyzing trajectories, you not need bigzam for this tutorial. Th
 
 ## Estimating uncertainty from a MD trajectory
 
-In this first example, I have run a 1-$$\mu$s MD simulation trajectory of the RC9 peptide, GGKGMGFGL, shown here:
+In this first example, I have run a 1-$$\mu$$s MD simulation trajectory of the RC9 peptide, GGKGMGFGL, shown here:
 
 ![Figure_RC9](Figure_RC9.png)
 
@@ -45,7 +45,7 @@ d_std_value = np.std(d)
 
 What is the value of the mean distance between HA1 and HN in our simulation?
 
-As before we plot the distance as a function of time across the 1-$$\mu$s MD simulation (left) and the histogram of that distance (right):
+As before we plot the distance as a function of time across the 1-$$\mu$$s MD simulation (left) and the histogram of that distance (right):
 
 ![Figure_distance_hist_bootstrap2](../../images/Figure_distance_hist_bootstrap2.png)
 
