@@ -161,5 +161,106 @@ In fact we can readily see this just by looking at the histograms of the three t
 
 ![Figure_histogram_overlay](../../images/Figure_histogram_overlay.png)
 
+**Key Idea**: The KS test provides an objective way to compare two simulations. Rather than relying on visual inspection of histograms, it quantifies the largest vertical difference between the cumulative distributions and determines whether that difference is statistically significant based on the p-value.
  
 ## Error bars on free energy surfaces from metadynamics  
+
+In previous tutorials, you calculated reweighted free energy surfaces from metadynamics (or umbrella sampling) simulations. Recall that the free energy surface is estimated from the logarithm of the probability distribution:
+
+$$ F(s) = -RT \ln P(s) $$ 
+
+But the probability distribution (and hence also the free energy) is only an estimate based on the histogram calculated for a finite simulation. Because the histogram is calcualted from finite sampled data there will always be a level of statistical uncertainty that is propagated to free energy profile.  
+
+**Block analysis** provides a simple way to estimate the statistical uncertainty in the calculated free energy profile arising from the finite length of the simulation. Larger statistical uncertainties indicate that additional sampling (loger simulation or enhanced sampling such as metadynamics)  may be required before the free energy profile can be considered well converged.
+
+In the previous [metadynamics tutorial](../metadynamics/metadynamics.md), we introduced the time-dependent reweighting factor (`metad.rbias`), and we used this quantity to calculate the correct statistical weight of each frame that enables us to reweight the biased histogram and obtain the free energy profile. In this exercise, we will see how this information can be used to calculate the error in the reconstructed free energy profile and assess whether our simulation is converged or not.
+
+For this tutorial, I have run a long metadynamics simulation of alanine dipeptide ( N-acetyl-L-alanine-N'-methylamide) biasing both the $$\phi$$ and $$\psi$$ angle, just as you did in the previous [metadynamics tutorial](../metadynamics/metadynamics.md). 
+
+**Note: Feel free to try using your own MD simulation data that you generated from the previous metadynamics tutorial. The data you will need is in the COLVAR file we generated and then analyzed with `plumed_reweight.dat`. You may also choose to use the `COLVAR` file that I have provided here.
+
+The output from the metadynamics simulation is written to the file called [COLVAR](https://drive.google.com/file/d/1-o5N4ePfjtAliITh7hcpBxCL89VKU7Ec/view?usp=sharing). Download this file to your local Windows machine for this tutorial. The contents of this file have the form:
+
+{% highlight git %}
+#! FIELDS time phi psi metad.bias metad.rbias
+#! SET min_phi -pi
+#! SET max_phi pi
+#! SET min_psi -pi
+#! SET max_psi pi
+ 0.000000 -1.498385 0.273949 0.000000 0.000000
+ 0.500000 -1.284020 1.868616 0.000000 0.000000
+ 1.000000 -2.074010 2.646855 0.000000 0.000000
+ 1.500000 -2.215670 2.421693 0.034877 0.032636
+ 2.000000 -2.412214 -3.134460 0.000000 -0.002241
+{% endhighlight %} 
+
+where the first line tells us the the first column is the time (ps), the second column $$\phi$$ (rad), the third column is $$\psi$$ (rad), the fourth column is the metadyanmics bias, $$V(t)$$ (kJ/mol), and the final column is the time-dependent reweighting factor which is $$V(t) - C(t)$$ where $$C(t)$$ is a time-dependent constant that does not depend on the collective variable. To assign a weight to any frame, $$i$$, in our biased simulation, we simply compute the weight as:
+
+$$w_i = \exp \left(\frac{V_i -C(t_i)}{RT}\right)$$ 
+
+In Python this can be done with the line:
+
+{% highlight git %}
+weights = np.exp(rbias/RT)
+{% endhighlight %}   
+
+Upload your `COLVAR` file to the following Colab notebook that can be used to perform a block analysis:
+
+[Link to Block Analysis Notebook](https://colab.research.google.com/drive/1dqVtUXJHNLynpOjFruLKxJs0Z7Bo-0Es?usp=sharing)
+
+After loading the file, the script will calculate the weight for each frame. If we print the $$\phi$$ value with its corresponding weight, we can inspect the first 10 frames: 
+{% highlight git %}
+for i in range(10):
+  print(phi[i],weights[i])
+{% endhighlight %}  
+
+Each line contains the value of the dihedral $$\phi$$ along with the corresponding (un-normalized) weight $$w$$ for each frame of the metadynamics trajectory:
+
+{% highlight git %}
+-1.498385 0.029356663080163204
+-1.28402 0.029356663080163204
+-2.07401 0.029356663080163204
+-2.21567 0.029743290271178422
+-2.412214 0.029330299888318426
+-2.18812 0.02930398386781861
+-2.03323 0.04282380424195966
+-2.484923 0.04218933745045227
+-1.485115 0.02927095481982935
+-1.266694 0.029244762392134548
+{% endhighlight %}
+
+At this point we can apply the block-analysis technique to calculate the average free energy across the blocks and the error as a function of block size. The idea is that instead of treating the entire trajectory data as one long simulation, we divide it into chunck or **blocks** of equal pieces. Each block is treated as though it were an independent simulation and gives an independent estimate of the free energy. 
+
+Finally, we calculate the average error along each free-energy profile as a function of the block size. For your convenience, I have defined a function called `do_block_fes_1d()` that will perform the block analysis. 
+
+We create an array to test block sizes ranging from 1 to 1000:
+
+{% highlight git %}
+block_sizes = np.arange(1, 1001, 10)
+{% endhighlight %}
+
+After running the block analysis, we can plot the average error along each free-energy profile as a function of the block size:
+
+![Figure_block_error](../../images/figure_block_error.png)
+
+In the plot of the average error as a function of block size we see an initial rapid increase in the estimated error between block sizes of 0 to 201 frames. This is the regime where block sizes are too small, and correlations within the trajectory are leading to and underestimate of the uncertainty. Ideally, the true uncertainty would be the regime where the error reaches a plateau.
+
+Here, we don't see a true plateau, but the average error begins to increase more slowly at block sizes of approximately 500 frames, while fluctuations in the average error become noticeably larger beyond block sizes of about 700 frames. We therefor want to choose a block size between 500 and 700 frames as a reasonable compromise. 
+
+At small block sizes, the blocks are too short relative to the correlation time so the uncertainty is underestimated. As the block size increases, the block estimates become less correlated and the calculated error approaches a more reliable value. However, at the same time, increasing the block size reduces the total number of blocks available for analysis. With fewer blocks, the error estimate itself becomes noisier. 
+
+Based on this plot, I chose to divide the trajectory into blocks of 650 frames, resulting in 46 approximately independent blocks, to estimate the uncertainty in the free-energy profile. This block size retains a reasonable number of blocks for the statistical analysis and lies within the regime where the average uncertainty is beginning to stabilize.
+
+The free energy profile with error bars from block analysis using block sizes of 650 frames is shown here:
+
+![Figure_fes_errorbars](../../images/fes_errorbars.png)
+
+The error bars may appear small here due to the scale of energies on the y axis. A separate uncertainty plot would make this clearer:
+
+![Figure_fes_uncertainty](../../images/fes_uncertainties.png)
+
+Here we see that the low free energy metastable basins have uncertainties below 0.5 kJ/mol. These states have been sampled extensively during the metadynamics simulation, resulting in well-converged free-energy estimates. On the other hand, the uncertainty increases in the higher free energy transition-state regions, reaching values up to 2.5 kJ/mol. These regions are not sampled as frequently in the simulation or are contributing less to the equilibrium ensembe after reweighting, leading to larger statistical uncertainties.
+
+Overall, we can conclude that the major features in the free energy landsacpe are well converged. 
+
+In conclusion, error analysis and assessment of the free energy convergence is an essential part of enhanced sampling calculations, as it provides a measure of confidence in the calculated free-energy surface. 
