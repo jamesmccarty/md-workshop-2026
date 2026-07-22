@@ -94,8 +94,72 @@ We will again use the RC9 peptide from the previous example as our model system.
 
 Our goal is to determine whether we can identify the restrained simulation based solely on the distance distributions. Rather than visualzing the histograms, we will use the KS test to determine whether the observed differences are statistically significant. 
 
-[Link to files](https://drive.google.com/file/d/18J2AnzSspJBqxU-M5GfqNxeIYNOp2xyQ/view?usp=sharing)
+## The KS test
 
-[Link to Colab](https://colab.research.google.com/drive/1GUF6SWx2ibZVbENVv-pmxqOzApnDeAUz?usp=sharing) 
+Instead of comparing two histograms directly, the KS test compares the **cumulative distribution functions (CDFs)** of two datasets. The cumulative distribution is the probability that an observable is less than or equal to a given value. The KS statistic, $$D$$, is simply the **largest vertical distance** between two cumulative distribution functions as shown in the figure below:
 
+![Figure_CDF_KS](../../images/figure_KS_CDF_example.png)
+
+Conceptually, we can understand that if two distrivutions are identical, their CDFs will overlap and $$D$$ will be small. Very different distributions will have larger separation in the CDF, giving larger values of $$D$$. 
+
+After computing the KS statistic, the test calculates a $$p-value$$. The p-value tells you how likely it would be to observe a distance at least this large by random chance if the two datasets were actually sampled for the same underlying probability distribution. A general rule is that a p-value $$>$$ 0.05 means that we cannot reject the hypothesis that the two simulations sample the same distribution. On the othe hand, a p-value $$ <$$ 0.05 means that the two simulations sample different distributions. 
+
+Performing the KS test is quite easy in Python using the `scipy.stats` library. Here we should use the two-sample Kolmogorov-Smirnov test, [ks_2samp](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ks_2samp.html) since we are comparing two different data sets. If we have two sets of data, `trialA` and `trialB`, we can run the KS test in Python with the lines:
+
+{% highlight git %}
+from scipy.stats import ks_2samp
+
+result = ks_2samp(trialA, trialB)
+
+{% endhighlight %} 
+
+The result will have two components that we can print, the KS statistic ($$D$$) and the p-value:
+
+
+{% highlight git %}
+print(result.statistic)
+print(result.pvalue)
+{% endhighlight %}
+
+We can perform this test on any pair of trials to decide if they sample the same distribution or are statistically different. 
+
+In this tutorial, you can find a link to download the three trial datasets here:
+
+[distance_trials.tar.gz](https://drive.google.com/file/d/18J2AnzSspJBqxU-M5GfqNxeIYNOp2xyQ/view?usp=sharing)
+
+Download the compressed archive containing the three trials to your local Windows machine. Then upload your files to the Colab notebook here for running the KS test:
+
+[KS test notebook](https://colab.research.google.com/drive/1GUF6SWx2ibZVbENVv-pmxqOzApnDeAUz?usp=sharing) 
+
+We unzip the archived data files with the line: 
+{% highlight git %}
+!tar -xzf distance_trials.tar.gz
+{% endhighlight %}
+
+Then store the three datasets as `trialA`, `trialB`, and `trialC`. 
+
+Performing the KS test on `trialA` and `trialB` gives the following:
+
+{% highlight git %}
+KS statistic = 0.7463
+p-value = 3.6019e-272
+{% endhighlight %}
+
+Here we see the p-value is much smaller that 0.05 indicating the distributions are statistically different. We can confirm this by plotting the CDFs for the two datasets. Notice that the CDFs hardly overlap and the vertical difference between them is large. 
+
+![Figure_CDF_AB](../../images/Figure_CDF_AB.png)
+
+For comparison, perform the KS test on `trialB` and `trialC` gives a small KS statistic $$D=0.0265$$ and a p-value = 0.8 which is well above 0.05. We conclude that data from `trialB` and data from `trialC` are drawn from the same underlying distribution. This means that averages obtained from these two independent MD simulations should be statistically equivalent. 
+
+Plotting the CDFs for the two trials, we see a large degree of overlap as expected for such a large p-value:
+
+![Figure_CDF_BC](../../images/Figure_CDF_BC.png)
+
+Based on the KS test analysis we should conclude the following: trial B and trial C represent samples drawn from the same underlying distribution; therefore, these trials must be the two identical unrestrained MD simulation samples. On the other hand, trial A is drawn from a different underlying distribution and must correspond to the restrained MD simulation. We conclude that the restraint shifted the underlying distribution of sampled distances.      
+
+In fact we can readily see this just by looking at the histograms of the three trials, where we see that the restraint has shifted the sampled distances to much lower values:
+
+![Figure_histogram_overlay](../../images/Figure_histogram_overlay.png)
+
+ 
 ## Error bars on free energy surfaces from metadynamics  
