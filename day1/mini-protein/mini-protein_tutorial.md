@@ -356,10 +356,6 @@ Congratulations! You have completed this tutorial. You have now set up a protein
 ![Rg_plot](../../images/Rg_plot_miniprotein.png)
 
 
-## Optional Extensions
-
-Coming Soon! 
-
 ## Where to go from here
 Optional: If you are interesting in learning about characterizing protein dynamics and performing principal component analysis (PCA), check out the tutorial on Trp-Cage protein [here](../trp-cage/trp-cage_tutorial.md)
 
