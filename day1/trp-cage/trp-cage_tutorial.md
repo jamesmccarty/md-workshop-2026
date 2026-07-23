@@ -172,6 +172,8 @@ This will generate a porcupine plot such as the one shown here:
 
 Congratulations you have now completed this tutorial. It is suggested now to move on to the [Brief Introduction to PLUMED Syntax and Making Histograms tutorial](../intro_plumed_syntax/analysis.md)
 
+[Return to Day 1 homepage](../../day1.md)
+
 ## Optional Extension
 
 Coming soon ... 
