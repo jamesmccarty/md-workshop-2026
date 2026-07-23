@@ -365,3 +365,8 @@ Optional: If you are interesting in learning about characterizing protein dynami
 
 If you are pressed for time, it is suggested that you skip ahead to the [Brief Introduction to PLUMED Syntax and Making Histograms tutorial](../intro_plumed_syntax/analysis.md). Here you will learn how to compute many other properties of interest using the PLUMED plug-in and how to calculate ensemble averages.  
 
+References:
+
+- [Efrem, B., Justin, G., Heather, B. M., David, L. M., Jacob, I. M., Samarjeet, P., & Daniel, M. Z. (2019). Best Practices for Foundations in Molecular Simulations [Article v1. 0]. Living Journal of Computational Molecular Science, 1, 5957.](https://livecomsjournal.org/index.php/livecoms/article/view/v1i1e5957)
+
+[Return to Day 1 homepage](../../day1.md)
