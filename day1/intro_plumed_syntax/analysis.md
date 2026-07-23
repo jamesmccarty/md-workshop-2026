@@ -414,8 +414,21 @@ Again we see the histogram of the CA coordination is bimodal representing the un
 
 ![Co_histo](../../images/GB1_Co_histo.png)
 
+Congratulations! In this tutorial you have learned the basic syntax of PLUMED and used it to analyze an existing molecular dynamics trajectory.
 
+An important idea from this tutorial is that collective variables (CVs) reduce a complex molecular trajectory into a small number of physically meaningful quantities (sometimes called order parameters). Rather than tracking thousands of atomic coordinates, we monitor quantities such as distances, torsion angles, or protein compactness that describe the behavior we care about.
 
+These same collective variables will become important in the next sessions. Instead of simply measuring the collective variable, we can use PLUMED to bias along one or more of these variables during the simulation. This will be the main idea of Day 2. 
+
+Before leaving, remember to complete the survey for Day 1:
+
+[Day 1 Survey](https://docs.google.com/forms/d/e/1FAIpQLScH6MRnbQChhyn6GYnCdgO2id4NUze8XfFhegePmuT6LlPZbg/viewform?usp=header).
+
+References:
+
+- [Tribello, G. A., Bonomi, M., Branduardi, D., Camilloni, C., & Bussi, G. (2014). PLUMED 2: New feathers for an old bird. Computer physics communications, 185(2), 604-613.](https://www.sciencedirect.com/science/article/abs/pii/S0010465513003196)
+
+- ["Promoting transparency and reproducibility in enhanced molecular simulations." Nature methods 16, no. 8 (2019): 670-673.](https://www.nature.com/articles/s41592-019-0506-8)
 
 
 
