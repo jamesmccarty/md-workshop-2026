@@ -365,4 +365,8 @@ See if you can make a plot of the temperature as a function of the simulation ti
 
 Run a longer trajectory of argon at 10 K and compare the radial distribution with that at 94.4 K. What can you infer about the structure at 10 K? 
 
+References: 
+
+- [A. Rahman, “Correlations in the Motion of Atoms in Liquid Argon”, Phys. Rev. Lett. 136, A405, 1964.](https://journals.aps.org/pr/abstract/10.1103/PhysRev.136.A405)
+
 [Return to Day 1 homepage](../../day1.md)
