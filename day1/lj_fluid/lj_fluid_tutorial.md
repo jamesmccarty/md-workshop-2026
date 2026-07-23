@@ -4,7 +4,7 @@ In this tutorial you will learn how to perform a molecular dynamics (MD) of liqu
 
 ![LJ_fluid](../../images/lennard_jones_fluid_fig1.png)
 
-The total interaction energy between a pair of Argon atoms is the sum of the attractive induced dipole (van der Waals interaction) and the short-ranged repulsive interaction between electron clouds. This short-ranged repulsive interaction acts as a barrier preventing the two atomic nuclei from sitting closer than their combined van der Waals radii. You can see an interactive PhET simulation of this interaction [here](https://phet.colorado.edu/sims/html/atomic-interactions/latest/atomic-interactions_all.html)
+The total interaction energy between a pair of Argon atoms is the sum of the attractive induced dipole (van der Waals interaction) and the short-ranged repulsive interaction between electron clouds. This short-ranged repulsive interaction acts as a barrier preventing the two atomic nuclei from sitting closer than their combined van der Waals radii. You can see an interactive PhET simulation of this interaction [here](https://phet.colorado.edu/sims/html/atomic-interactions/latest/atomic-interactions_all.html).
 
 The interaction between atoms is modeled by two parameters: $$\sigma$$ which determines the van der Waals radius (in distance units), and $$\epsilon$$ which determines the depth of the attractive potential energy minimum (in energy units).
 
@@ -120,7 +120,7 @@ For argon, the atomic nuclei are treated as point particles and there are no bon
 In this case, we will use a structure file in pdb format: [Ar_864.pdb](https://github.com/jamesmccarty/LiquidArgon/blob/main/Ar_864.pdb). You can view the first ten lines of this file by typing in the terminal:
 
 {% highlight git %}
-head Ar_864.pdb 
+head -n 10 Ar_864.pdb 
 {% endhighlight %}
 
 Looking at the file we see that each atom has a number, an atom name Ar and a x,y,z position. You can read more about the pdb file format [here](https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html).
@@ -174,7 +174,7 @@ The `atomtypes` section contains information about the force field parameters fo
 AR  39.948    0.0   A     0.006165     9.523537e-06
 {% endhighlight %}
 
-The first column defines the atom type parameters for the Argon atom. The second column is the mass in a.m.u. The third column is the charge. The last two columns are the parameters for the potential energy function that determines the van der Waals radius and attractive well depth. You can find more information about these parameters [here](https://manual.gromacs.org/documentation/2019/reference-manual/topologies/parameter-files.html)
+The first column defines the atom type parameters for the Argon atom. The second column is the mass in a.m.u. The third column is the charge. The last two columns are the parameters for the potential energy function that determines the van der Waals radius and attractive well depth. You can find more information about these parameters ... [here](https://manual.gromacs.org/documentation/2019/reference-manual/topologies/parameter-files.html).
 
 **Key idea**: In order to run any MD simulation, we will always need a structure file that specifies the atomic positions (such as the .pdb file) and a topology file (.top) that specifies how the interactions between atoms should be treated. 
 
@@ -183,8 +183,10 @@ The first column defines the atom type parameters for the Argon atom. The second
 In addition to a structure file (.pdb) and topology file (.top), we also need a MD simulation parameter file that includes the instructions on how to run the MD simulation. All of this information is contained in the MD parameter file [md_run1.mdp](https://github.com/jamesmccarty/LiquidArgon/blob/main/md_run1.mdp). Have a look at this file by typing:
 
 {% highlight git %}
-cat md_run.mdp
+cat md_run1.mdp
 {% endhighlight %}
+
+Note: `cat` prints the entire file content to the screen, whereas `head` prints the first 10 lines and  `tail` prints the last 10 lines.
 
 The beginning section defines the MD simulation run parameters. Here we use the leap-frog integrator with a time step of 0.002 ps for 50000 steps.
 
