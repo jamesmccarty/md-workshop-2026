@@ -12,7 +12,7 @@ Once this tutorial is completed students will be able to:
 
 **Files**
 Files to complete this tutorial can be accessed here:
-[tutorial files](coming soon)
+[tutorial files](https://github.com/jamesmccarty/miniprotein-workshop-files.git)
 
 These files are already located on bigzam:
 /opt/workshop/miniprotein/
