@@ -15,7 +15,7 @@ By the end of today, participants should be able to:
 
 ## Session 1: Introduction to Molecular Dynamics
 
-Slides coming soon!
+[Slides for Day 1](https://docs.google.com/presentation/d/169dciS1ubvuqvcbhtVmsd_8AmxOHaDID/edit?usp=sharing&ouid=115154865126355193567&rtpof=true&sd=true)
 
 ## Session 2: Tutorial Simulating a Simple Fluid 
 
