@@ -17,7 +17,7 @@ Once this tutorial is completed students will be able to:
 
 **Files**
 Files to complete this tutorial can be accessed here:
-[tutorial files](coming soon)
+[tutorial files](https://github.com/jamesmccarty/lj_fluid_tutorial_2026.git)
 
 These files are already located on bigzam:
 /opt/workshop/lj-fluid/
