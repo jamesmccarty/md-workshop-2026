@@ -1,6 +1,10 @@
 ## Analysis of Trp-Cage protein with Principal Component Analysis (PCA)
 
-In this tutorial you will learn how to analyze the dyanamics of a small protein: [trp-cage](https://www.rcsb.org/structure/1L2Y). Although a protein's function is often linked to its conformational dynamics, it is not always obvious how to extract relevant motions from a simulated trajectory. One reason for this is that all the atoms are wiggling and jiggling at the same time and it is not straightforward to distinguish between slow, collective motions and fast, local fluctuations. A princial component analysis (PCA) can help to filter global, collective (often slow) motions from local, fast motions. Once this tutorial is completed students will be able to:
+In this tutorial you will learn how to analyze the dyanamics of a small protein: [trp-cage](https://www.rcsb.org/structure/1L2Y). Although a protein's function is often linked to its conformational dynamics, it is not always obvious how to extract relevant motions from a simulated trajectory. One reason for this is that all the atoms are wiggling and jiggling at the same time and it is not straightforward to distinguish between slow, collective motions and fast, local fluctuations. A princial component analysis (PCA) can help to filter global, collective (often slow) motions from local, fast motions. 
+
+![Figure_trp_cage_tutorial](../../images/Figure_trp-cage_tutorial.png)
+
+Once this tutorial is completed students will be able to:
 
 - Perform PCA analysis using GROMACS post-processing tools.
 - Filter the trajectory along one of the slow, collective modes. 
