@@ -244,7 +244,7 @@ Here the -f flag indicates the input MD parameter file, the -c flag indicates th
 gmx mdrun -v -s md_run1.tpr -deffnm md_run1 -nt 1
 {% endhighlight %}
 
-The -s flag signals the input binary run input file. The -deffnm flag signals the prefix for all of the output files that will be produced as the simulation runs. These output files include the trajectory file (.xtc), a checkpoint file for restarting (.cpo), the final coordinates (.gro), the output energy file (.edr), and the output simulation log file (.log). All these files will be created during the simulation run. 
+The -s flag signals the input binary run input file. The -deffnm flag signals the prefix for all of the output files that will be produced as the simulation runs. These output files include the trajectory file (.xtc), a checkpoint file for restarting (.cpt), the final coordinates (.gro), the output energy file (.edr), and the output simulation log file (.log). All these files will be created during the simulation run. 
 
 During this 100 ps simulation, the argon atoms will melt from the lattice structure and become a liquid. The temperature should equilibrate to 94.4 K and the potential energy should reach a stable equilibrium. To check the temperature and energy, we can look at the instantaneous quantities in the md_run1.edr file. To check the temperature:
 
