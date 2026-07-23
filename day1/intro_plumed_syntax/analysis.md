@@ -430,6 +430,6 @@ References:
 
 - ["Promoting transparency and reproducibility in enhanced molecular simulations." Nature methods 16, no. 8 (2019): 670-673.](https://www.nature.com/articles/s41592-019-0506-8)
 
-
+[Return to Day 1 homepage](../../day1.md)
 
 
