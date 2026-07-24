@@ -95,10 +95,12 @@ cd ~/path-CVs
 
 Within this directory you will find the following files:
 
-- dialaA.pdb: A reference PDB structure file of the molecule
+- c7eq.pdb and c7ax.pdb: structure files representing the two end-points on the path
 - alanine_dipeptide.gro: A GROMACS structure file (.gro)
 - topol.top: A GROMACS topology file (.top)
 - vacuum.mdp: A GROMACS parameter file (.mdp)
+- path_raw.pdb: A path with unequally spaced frames
+- convert_path2_pymol.py: A python script to convert a path pdb file to a format that can be loaded into PyMOL.
 
 
 ## Generating a path collective variable
@@ -113,7 +115,9 @@ In this example, you will use the `pathtools` feature in PLUMED to generate an i
 
 In this case, I have provided a reference structure (pdb) file for the reactant state, `c7eq.pdb`, and product state `c7ax.pdb`. Pay careful attention to the format of these pdb files:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>c7eq.pdb</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 ATOM      2  CH3 ACE     1      -3.220   0.160   1.920  1.00  1.00
 ATOM      5  C   ACE     1      -1.800  -0.210   1.630  1.00  1.00
 ATOM      6  O   ACE     1      -1.100  -0.890   2.410  1.00  1.00
@@ -128,7 +132,8 @@ ATOM     17  N   NME     3       1.470   0.480   1.990  1.00  1.00
 ATOM     18  H   NME     3       0.910  -0.190   2.480  1.00  1.00
 ATOM     19  CH3 NME     3       2.650   1.120   2.570  1.00  1.00
 END
-{% endhighlight %}
+</code></pre>
+</div>  
 
 You do not need to include every atom in the pdb file to define the path, but the atom number *must match the full structure** for your simulation. Notice here I am not including hydrogen atoms on the ACE group or NME group, so the atom numbers run from 2,5,6,7,8,9,10,11,15,16,17,18,19. Confirm that these match the atom numbers for the whole molecule we will use from the simulation:
 
@@ -158,9 +163,12 @@ Then transfer the output `linear_path_4pymol.pdb` to your local Windows machine 
 
 After loading the `linear_path_4pymol.pdb` file into PyMOL, type the following into the consol to align the frames:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>enter into PyMOL consol <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 intra_fit linear_path_4pymol, 1
-{% endhighlight %}  
+</code></pre>
+</div> 
 
 ![figure_pymol_consol](../../images/pymol_consol.png)
 
@@ -178,9 +186,12 @@ which implies that one should calculate the average distance between consecutive
 
 In PLUMED it is straightforward to implement a path CV with the following line:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Example PLUMED syntax for defining a path variable <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 path: PATH REFERENCE=linear_path.pdb TYPE=OPTIMAL LAMBDA=1200
-{% endhighlight %}    
+</code></pre>
+</div>     
 
 This defines a variable called `path` that takes as input a reference PDB file that containts the path frames. The path variable will have two components: `path.spath` - the distance along the path and `path.zpath` - the distance from the path.
 
@@ -192,7 +203,9 @@ I have provided a template PLUMED input file called `plumed-linear-path.dat` tha
 cat plumed-linear-path.dat
 {% endhighlight %}  
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of  <code> plumed-linear-path.dat </code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # set up two variables for Phi and Psi dihedral angles 
 phi: TORSION ATOMS=5,7,9,15
 psi: TORSION ATOMS=7,9,15,17
@@ -210,7 +223,8 @@ metad: METAD ...
 ...
 
 PRINT ARG=phi,psi,path.spath,path.zpath,metad.bias STRIDE=100 FILE=COLVAR_linear_path.dat
-{% endhighlight %}  
+</code></pre>
+</div>   
 
 The first lines define the usual $$\phi$$ and $$\psi$$ dihedral angles that we can use to assess the transition from reactant to product state. 
 
@@ -226,9 +240,12 @@ gmx mdrun -v -deffnm path-mdrun1 -plumed plumed-linear-path.dat
 
 When this job finishes, the output file will be `COLVAR_linear_path.dat`. Transfer this file from bigzam to your local Windows machine using WinSCP. The columns of this file are specified by the `#! FIELDS` line:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of  <code> COLVAR_linear_path.dat </code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 #! FIELDS time phi psi path.spath path.zpath metad.bias
-{% endhighlight %} 
+</code></pre>
+</div>  
 
 The first column is the simulation time (ps), the second and third column are the $$\phi$$ and $$\psi$$ angles (used for monitoring the progress of the reaction, but not directly biased), and the fourth and fifth column are the $$s$$ and $$z$$ path variables. Finally, the sixth column is the metadynamics bias. Upload your `COLVAR_linear_path.dat` file to the following [Google Colab link](https://colab.research.google.com/drive/1N4rXPjY5-O4Hhe7dbcL2sH7SRZbHU7eq?usp=sharing).
 
@@ -326,7 +343,9 @@ The PLUMED input file `plumed-2DmetaD.dat` can be use to run metadynamics on bot
 cat plumed-2DmetaD.dat
 {% endhighlight %}
    
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of  <code> plumed-2DmetaD.dat </code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # set up two variables for Phi and Psi dihedral angles 
 phi: TORSION ATOMS=5,7,9,15
 psi: TORSION ATOMS=7,9,15,17
@@ -348,7 +367,9 @@ metad: METAD ...
 ...
 
 PRINT ARG=phi,psi,path.spath,path.zpath,metad.bias,metad.rbias STRIDE=100 FILE=COLVAR_path2D.dat
-{% endhighlight %}
+</code></pre>
+</div>  
+
 
 This input is nearly identical to the previous metadynamics input except that the argument `ARG` is now both the spath and zpath variable: `ARG=path.spath,path.zpath`. I have also included the `CALC_RCT` flag for calculating the time-dependent reweighting factor.  
 
@@ -390,7 +411,9 @@ Now that we have performed a metadynamics simulation along the spath and zpath v
 
 The plumed input file `plumed_reweight.dat` is very similar to the one from the [metadynamics tutorial](../metadynamics/metadynamics.md).
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of  <code> plumed_reweight.dat </code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # Read the variable we want to reweight from the COLVAR file
 rphi: READ FILE=COLVAR_path2D.dat VALUES=phi IGNORE_TIME 
 rpsi: READ FILE=COLVAR_path2D.dat VALUES=psi IGNORE_TIME
@@ -431,7 +454,8 @@ DUMPGRID GRID=phi_fes FILE=fes-rw-phi.dat
 
 DUMPGRID GRID=psi_fes FILE=fes-rw-psi.dat
 
-{% endhighlight %}
+</code></pre>
+</div>  
 
 In the above script we are reading the values of $$\phi$$ and $$\psi$$ and `metad.rbias` from the output of our metadynamics simulations, `COLVAR_path2D.dat`. We are then computing the reweighted histogram and output the free energy along the $$\phi$$ and $$\psi$$ variables.  
 
