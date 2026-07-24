@@ -81,8 +81,7 @@ Here we see the plumed_example1.dat file contents:
 
 <div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
 <p style="margin-top:0;"><strong>Contents of <code>plumed_example1.dat</code></strong></p>
-<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>MOLINFO STRUCTURE=dialaA.pdb
-
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # set up two variables for Phi and Psi dihedral angles 
 phi: TORSION ATOMS=5,7,9,15
 psi: TORSION ATOMS=7,9,15,17
@@ -118,7 +117,9 @@ head dihedrals_weak_restraint.dat
 
 we see that we have written to the file the time (in ps), the $\phi$ and $\psi$ angles (in radians) and the value of the bias potential (in kJ/mol). 
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>dihedrals_weak_restraint.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 #! FIELDS time phi psi restraint.bias
 #! SET min_phi -pi
 #! SET max_phi pi
@@ -129,7 +130,8 @@ we see that we have written to the file the time (in ps), the $\phi$ and $\psi$ 
  0.400000 -1.381729 1.547420 0.069940
  0.600000 -1.224698 1.245825 0.378956
  0.800000 -1.523365 0.695065 0.002730
-{% endhighlight %}
+</code></pre>
+</div>
 
 The restraint is only one contribution to the potential energy. The molecule also experiences its own torsional potential, and the observed $$\phi$$ distribution  will reflect both the effect of the bias and the underlying free energy landscape of the molecule. Here the bias we are adding is fairly weak (10 kJ/mol). 
 
@@ -139,7 +141,9 @@ Investigate what happens when you increase the force constant (KAPPA) in the har
 nano plumed_example2.dat
 {% endhighlight %}
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_example2.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # set up two variables for Phi and Psi dihedral angles 
 phi: TORSION ATOMS=5,7,9,15
 psi: TORSION ATOMS=7,9,15,17
@@ -149,7 +153,8 @@ restraint: RESTRAINT ARG=phi KAPPA=__FILL__ AT=-1.5
 
 # Print output
 PRINT FILE=dihedrals_strong_restraint.dat ARG=phi,psi,restraint.bias STRIDE=100
-{% endhighlight %}
+</code></pre>
+</div>
 
 Replace where it says `__FILL__` with a KAPPA values of 250 kJ/mol. Then save by typing `Ctrl+O` followed by the `Enter` key. Then `Ctrl+X` to exit the text editor. 
 
@@ -193,7 +198,9 @@ The example PLUMED input file called `plumed_example3.dat` provided with the wor
 cat plumed_example3.dat
 {% endhighlight %} 
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_example3.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # set up two variables for Phi and Psi dihedral angles 
 phi: TORSION ATOMS=5,7,9,15
 psi: TORSION ATOMS=7,9,15,17
@@ -210,7 +217,8 @@ restraint: ...
 
 # Print output
 PRINT FILE=dihedrals_moving_restraint.dat ARG=phi,psi,restraint.bias STRIDE=100
-{% endhighlight %} 
+</code></pre>
+</div> 
 
 Notice in the above we define a MOVINGRESTRAINT on the `ARG=phi` variable starting at $$\phi=-1.5$$ radians at 0 ps and an initial $$\kappa=0$$  specified with `KAPPA0=0`. We then slowing increase $$\kappa$$ from 0 to 1000 kJ/mol over the first 2000 steps (4 ps). We then move the center of the harmonic restraint from $$\phi=-1.5$$ rad to $$\phi=1.0$$ rad between step 2000 and 20000 (40 ps). Finally we decress $$\kappa$$ from 1000 kJ/mol to 0 for 1000 steps (4 ps). After this the simulation will continue without any additional bias. 
 
@@ -240,7 +248,9 @@ Sometimes it is useful to use a moving restraint to schedule a sequence of event
 
 In `plumed_example4.dat` we set up a MOVINGRESTRAINT to go from the C7eq state vertically toward $$\phi=−1.5$$ rad;$$\psi=−1.3$$ rad. We then stop at this intermediate state for a while, then move toward $$\phi=1.3$$;$$\psi=−1.3$$ rad which corresponds to C7ax.
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_example4.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # set up two variables for Phi and Psi dihedral angles 
 phi: TORSION ATOMS=5,7,9,15
 psi: TORSION ATOMS=7,9,15,17
@@ -259,7 +269,8 @@ restraint: ...
 
 # Print output
 PRINT FILE=dihedrals_moving_restraint_v2.dat ARG=phi,psi,restraint.bias STRIDE=100
-{% endhighlight %}
+</code></pre>
+</div> 
 
 Notice in the input for this example, we have two arguments for the moving restraint (separated by comma, no spaces between arguments!) and correspondingly two KAPPA values - one for each variable.
 
