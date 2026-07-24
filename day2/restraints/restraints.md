@@ -294,7 +294,9 @@ Targeted MD can be seen as a special case of steered MD where the RMSD from a re
 
 An example input is provided called `plumed_targetedMD.dat`: 
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_targetedMD.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # set up two variables for Phi and Psi dihedral angles
 # these variables will be just monitored to see what happens
 phi: TORSION ATOMS=5,7,9,15
@@ -311,13 +313,16 @@ restraint: ...
 ...
 # monitor the two variables and various restraint outputs
 PRINT STRIDE=100 ARG=phi,psi,rmsd,restraint.bias FILE=targetedMD.dat
-{% endhighlight %}
+</code></pre>
+</div> 
 
 In this example, the RMSD is being calculated relative to a provided reference pdb file. Here, I have provided a pdb file called `c7ax.pdb` as a representative structure for the C7ax state. 
 
 Note that RMSD should be provided a reference structure in pdb format and can contain part of the system **but the second column (the index) must reflect the atom numbering within the full system** so that PLUMED knows specifically which atom to drag where. In this case the pdb file `c7ax.pdb` contains only the non-hydrogen, heavy atoms:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>c7ax.pdb</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 ATOM      2  CH3 ACE     1      -3.200   1.510   1.150  1.00  1.00            
 ATOM      5  C   ALA     1      -1.930   1.410   0.410  1.00  1.00            
 ATOM      6  O   ALA     1      -1.530   2.340  -0.280  1.00  1.00            
@@ -330,7 +335,8 @@ ATOM     16  O   ALA     1       2.020   0.140   1.270  1.00  1.00
 ATOM     17  N   NME     1       1.310   2.020   0.270  1.00  1.00            
 ATOM     19  CH3 NME     1       2.390   2.850   0.750  1.00  1.00            
 END
-{% endhighlight %}
+</code></pre>
+</div> 
 
 **Important**: Atom numbers in column 2 of the reference pdb file must match the atom numbers in column 3 of the GROMACS .gro file (alanine_dipeptide.gro) 
 
@@ -380,7 +386,9 @@ gmx grompp -f vacuum.mdp -c alanine_dipeptide.gro -p topol.top -o run_us.tpr
 
 In the workshop tutorial files I have included a bash file called `run_us.sh` that will launch each separate restrained simulation from its own separate directory:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>run_us.sh</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 for AT in -3.00 -2.75 -2.50 -2.25 -2.00 -1.75 -1.50 -1.25 -1.00 \
           -0.75 -0.50 -0.25 0.00 0.25 0.50 0.75 1.00 1.25 \
           1.50 1.75 2.00 2.25 2.50 2.75 3.00
@@ -412,7 +420,8 @@ gmx mdrun \
 cd ..
 
 done
-{% endhighlight %}
+</code></pre>
+</div> 
 
 Launch all simulations by typing:
 {% highlight git %}
@@ -423,7 +432,9 @@ This will take a few minutes to run since you are running 25 MD trajectories in 
 
 To perform the WHAM merging of the windows we need to collect and merge all the simulation frames into a single trajectory. The bash script `concat_all.sh` will merge all the trajectories together. 
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>concat_all.sh</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 files=""
 
 for AT in -3.00 -2.75 -2.50 -2.25 -2.00 -1.75 -1.50 -1.25 -1.00 \
@@ -435,7 +446,8 @@ do
 done
 
 gmx trjcat -f $files -cat -o concatenated.xtc
-{% endhighlight %} 
+</code></pre>
+</div> 
 
 Run this script by typing:
 
@@ -447,7 +459,9 @@ Running this script will concatenate (stitch together) the separte trajectory fi
 
 Next we need to run another PLUMED input to calculate the values for all the employed restraints applied on each frame. For this we can write a `plumed-wham.dat` file including all the biases used in the former simulations:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed-wham.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 MOLINFO STRUCTURE=diala.pdb 
 phi: TORSION ATOMS=@phi-2 
 RESTRAINT ARG=phi KAPPA=250.0 AT=-3.00 
@@ -477,7 +491,8 @@ RESTRAINT ARG=phi KAPPA=250.0 AT=2.75
 RESTRAINT ARG=phi KAPPA=250.0 AT=3.00 
 PRINT ARG=*.bias FILE=biases.dat STRIDE=10 
 PRINT ARG=phi FILE=allphi.dat STRIDE=10
-{% endhighlight %} 
+</code></pre>
+</div>  
 
 Run this using the PLUMED driver on the concatenated trajectory by typing:
 
@@ -500,7 +515,9 @@ paste allphi.dat weights.dat | grep -v \# > allphi-w.dat
 
 This creates a file called `allphi-w.dat` which has a line for each $$\phi$$ value and its assigned weight:
  
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>allphi-w.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
  0.000000 -1.497988	0.002555818652810523585600099850
  10.000000 -2.756400	0.000404575092851750114323478025
  20.000000 -2.867971	0.000172305439814177655975455106
@@ -511,7 +528,8 @@ This creates a file called `allphi-w.dat` which has a line for each $$\phi$$ val
  70.000000 -2.914030	0.000109361274168485696819258512
  80.000000 -3.016811	0.000030548240369112431155055459
  90.000000 -2.908864	0.000115041781372963292486358289
-{% endhighlight %} 
+</code></pre>
+</div>  
 
 The first column is the frame number, the second column is the $$\phi$$ value and the third column is the weight. Finally, we use this to construct the free energy surface with the provided code `do_fes.py`:
 
@@ -524,3 +542,5 @@ The resulting free energy profile will be written to the output `fes.dat` file a
 ![FES_umbrella_sampling](../../images/FES_umbrella_sampling.png)
 
 Congratulations, you have just performed a free energy calculation using umbrella sampling. When you have finished this section, you should move on to the [Metadynamics Tutorial](../../day2/metadynamics/metadynamics.md) 
+
+[Return to Day 2 homepage](../../day2.md)
