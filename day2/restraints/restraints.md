@@ -80,17 +80,9 @@ cat plumed_example1.dat
 Here we see the plumed_example1.dat file contents:
 
 <div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
-<p style="margin-top:0;"><strong>Contents of <code>plumed.dat</code></strong></p>
+<p style="margin-top:0;"><strong>Contents of <code>plumed_example1.dat</code></strong></p>
 <pre style="background-color:transparent; border:none; margin-bottom:0;"><code>MOLINFO STRUCTURE=dialaA.pdb
 
-phi: TORSION ATOMS=@phi-2
-psi: TORSION ATOMS=@psi-2
-PRINT ARG=phi,psi FILE=COLVAR</code></pre>
-</div>
-
-
-
-{% highlight git %}
 # set up two variables for Phi and Psi dihedral angles 
 phi: TORSION ATOMS=5,7,9,15
 psi: TORSION ATOMS=7,9,15,17
@@ -99,8 +91,8 @@ psi: TORSION ATOMS=7,9,15,17
 restraint: RESTRAINT ARG=phi KAPPA=10 AT=-1.5
 
 # Print output
-PRINT FILE=dihedrals_weak_restraint.dat ARG=phi,psi,restraint.bias STRIDE=100 
-{% endhighlight %}
+PRINT FILE=dihedrals_weak_restraint.dat ARG=phi,psi,restraint.bias STRIDE=100 </code></pre>
+</div>
 
 The first two lines tell PLUMED to compute the $\phi$ and $\psi$ angles and store these values as variables `phi` and `psi`. The next line specifies that we are putting a restraint on the `phi` variable centered around a values of -1.5 radians with a harmonic spring constant of $$\kappa=10$$ kJ/mol specified by the `KAPPA` keyword. Finally, we are printing both the dihedral angles and the value of the bias potential to the file called `dihedrals_weak_restraint.dat`. The frequency of writing to the output file is specified by the STRIDE keyword. Here we are printing every 100 steps (0.2 ps). After looking at this file, you can set up a **biased** simulation in GROMACS by typing:
 
