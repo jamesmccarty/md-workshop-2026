@@ -103,7 +103,9 @@ nano plumed_metad1.dat
 The first several lines define the collective variables $$\phi$$ and $$\psi$$. 
 For help defining the $$\phi$$ and $$\psi$$ angles, you might need to refer back to the previous tutorial on [Introduction to PLUMED syntax](../../day1/intro_plumed_syntax/analysis.md).
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_metad_phi.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 MOLINFO STRUCTURE=dialaA.pdb
 # Compute the backbone dihedral angle phi, defined by atoms C-N-CA-C
 # you might want to use MOLINFO shortcuts
@@ -111,11 +113,14 @@ phi: TORSION ATOMS=__FILL__
 # Compute the backbone dihedral angle psi, defined by atoms N-CA-C-N
 # here also you might want to use MOLINFO shortcuts
 psi: TORSION ATOMS=__FILL__
-{% endhighlight %}
+</code></pre>
+</div>  
 
 The next lines initiate metadynamics with the [METAD](https://www.plumed.org/doc-v2.9/user-doc/html/_m_e_t_a_d.html) action. Read this section carefully; it is important to understand what each of these input options means.
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_metad_phi.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # Activate well-tempered metadynamics in phi
 metad: METAD ...
     ARG=phi
@@ -130,7 +135,8 @@ metad: METAD ...
    # Gaussians will be written to HILLS file and stored on grid 
    FILE=HILLS GRID_MIN=-pi GRID_MAX=pi
 ...
-{% endhighlight %}
+</code></pre>
+</div>  
 
 The above lines tell PLUMED that we will run metadyanics on the $$\phi$$ angle. The `PACE` sets the Gaussian deposition rate (how frequently a new Gaussian is deposited). Set this to `PACE=500`, meaning we will add a new Gaussian every 500 MD steps. The `SIGMA` and `HEIGHT` section specify the Gaussian width and height, respectively. The units here for `SIGMA` will be in radians (since $$\phi$$ is in radians) and for `HEIGHT` is in energy units (kJ/mol). In this example, set `SIGMA=0.1` radians and `HEIGHT=1.2` kJ/mol. The `BIASFACTOR` dictates the level of sampling. In so-called **well-tempered metadynamics** the biasfactor determines the rescaling of the initial Gaussian height so that the bias potential smoothly converges to a fixed level in the long time limit. 
 
@@ -138,15 +144,21 @@ A good rule of thumb is that the `BIASFACTOR` should be large enough to accelera
 
 It is computationally more efficient to use a grid to store the accumulated bias. The following lines within the METAD action tell PLUMED to store the Gaussian bias kernels in a file called `HILLS` that will be constructed on a grid with range $$-\pi$$ to $$\pi$$. 
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_metad_phi.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 FILE=HILLS GRID_MIN=-pi GRID_MAX=pi
-{% endhighlight %}
+</code></pre>
+</div>  
 
 Finally, we print everything to the file `COLVAR_phi` with the PRINT action. 
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_metad_phi.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 PRINT ARG=phi,psi,metad.bias FILE=COLVAR_phi STRIDE=100
-{% endhighlight %} 
+</code></pre>
+</div>  
 
 **Important**: When running a metadynamics simulation, don't forget to PRINT the metadynamics bias (metad.bias) because you will need this for post-processing.
 
@@ -176,14 +188,18 @@ First, let's look at the output `COLVAR_phi` and `fes.dat` file from your metady
 
 The contents of the `COLVAR_phi` file are:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>COLVAR_phi</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 #! FIELDS time phi psi metad.bias
  0.000000 -1.498385 0.273949 0.000000
  0.200000 -1.181761 0.833923 0.000000
  0.400000 -1.536486 2.057503 0.000000
  0.600000 -1.632213 2.782492 0.000000
  0.800000 -1.854007 2.674607 0.000000
-{% endhighlight %}
+</code></pre>
+</div>  
+
 
 Plotting the first two columns shows $$\phi$$ vs. time over the course of the metadynamics simulation:
 
@@ -223,14 +239,17 @@ Now transfer both the `HILLS` file and `fes_files.tar` from bigzam to your local
 
 First, we will look at the contents of the `HILLS` file. Upload this file to the Google Colab document for plotting. The content of the `HILLS` file looks like:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>HILLS</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 #! FIELDS time phi sigma_phi height biasf
       1.000000047497451     -2.826761701208621                    0.1      1.371428571428571                      8
       2.000000094994903     -2.544430577600947                    0.1      1.369678231037363                      8
       3.000000142492354     -2.624871079432158                    0.1       1.29334497169472                      8
       4.000000189989805     -1.306362263528052                    0.1      1.371428571428571                      8
       5.000000237487257     -1.082306877531441                    0.1       1.36379033894263                      8
-{% endhighlight %}
+</code></pre>
+</div> 
 
 The line starting with FIELDS tells us what is displayed in the various columns of the HILLS file. We see that at each time frame we have a Gaussian kernel centered at a specific value of $$\phi$$ (second column) with a specified width (sigma, third column), and height (fourth column). 
 
@@ -276,7 +295,9 @@ First, have a look at the `plumed_metad_phi_psi.dat` file and make sure you unde
 cat plumed_metad_phi_psi.dat
 {% endhighlight %}
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_metad_phi_psi.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # Activate MOLINFO functionalities
 MOLINFO STRUCTURE=dialaA.pdb 
 # Compute the backbone dihedral angle phi, defined by atoms C-N-CA-C
@@ -305,7 +326,8 @@ metad: METAD ...
 
 # Print both collective variables on COLVAR file every 10 steps
 PRINT ARG=phi,psi,metad.bias,metad.rbias FILE=COLVAR STRIDE=100
-{% endhighlight %}
+</code></pre>
+</div> 
 
 This file looks very similar to our previous ones except that in the METAD section we include both phi and psi as arguments with `ARG=phi,psi` (no spaces between commas in PLUMED), and we include a SIGMA value for each and the HILLS file will be on a 2D grid.  
 
@@ -344,7 +366,9 @@ Instead of using Python, we will calculate the histogram and corresponding free 
 
 The `plumed_reweight.dat` file looks like this:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed_reweight.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 # Read the variable we want to reweight from the COLVAR file
 rphi: READ FILE=COLVAR VALUES=phi IGNORE_TIME 
 rpsi: READ FILE=COLVAR VALUES=psi IGNORE_TIME
@@ -384,7 +408,8 @@ psi_fes: CONVERT_TO_FES GRID=psi_histo TEMP=300
 DUMPGRID GRID=phi_fes FILE=fes-rw-phi.dat 
 
 DUMPGRID GRID=psi_fes FILE=fes-rw-psi.dat
-{% endhighlight %}
+</code></pre>
+</div> 
 
 In the above PLUMED input we are reading columns from the output COLVAR file, constructing a reweighted histogram accounting for the metadynamics bias, and outputing a one-dimensional free energy surface along each of the $$\phi$$ and $$\psi$$ angles. 
   
