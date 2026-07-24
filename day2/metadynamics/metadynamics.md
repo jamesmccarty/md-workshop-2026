@@ -175,7 +175,7 @@ gmx mdrun -v -deffnm metad_run1 -plumed plumed_metad_phi.dat -nt 1
 When this job finishes, you will have produced a `HILLS` file along with a `COLVAR_phi` file. The `HILLS` file contains each of the Gaussian bias kernels that were deposited during the simulation. To get a quick estimate of the free energy surface as a function of the $$\phi$$ angle, you can use the PLUMED utility `sum_hills`, which sums the Gaussian kernels deposited during the simulation and stored in the `HILLS` file. Here, it is sufficient to type the following command line:
 
 {% highlight git %}
-plumed sum_hills --hils HILLS 
+plumed sum_hills --hills HILLS 
 {% endhighlight %} 
 
 The command above generates a file called `fes.dat` in which the free-energy surface as function of $$\phi$$ is calculated on a regular grid based on the sum of Gaussian hills that were added. 
