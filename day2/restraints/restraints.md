@@ -79,25 +79,15 @@ cat plumed_example1.dat
 
 Here we see the plumed_example1.dat file contents:
 
-<div style="background:#eef3ff;
-            border-left:5px solid #4a6cf7;
-            padding:12px;
-            border-radius:6px;
-            margin:15px 0;">
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong>Contents of <code>plumed.dat</code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>MOLINFO STRUCTURE=dialaA.pdb
 
-<b>Contents of <code>plumed.dat</code></b>
-
-<pre><code># set up two variables for Phi and Psi dihedral angles
-phi: TORSION ATOMS=5,7,9,15
-psi: TORSION ATOMS=7,9,15,17
-
-# Set up harmonic restraint
-restraint: RESTRAINT ARG=phi KAPPA=10 AT=-1.5
-
-# Print output
-PRINT FILE=dihedrals_weak_restraint.dat ARG=phi,psi,restraint.bias STRIDE=100
-
+phi: TORSION ATOMS=@phi-2
+psi: TORSION ATOMS=@psi-2
+PRINT ARG=phi,psi FILE=COLVAR</code></pre>
 </div>
+
 
 
 {% highlight git %}
