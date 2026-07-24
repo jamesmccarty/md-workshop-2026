@@ -307,6 +307,4 @@ Congratulations you have compete the workshop tutorials!
 [Return to Day 2 homepage](../../day2.md)
  
 
-~    
-
 
