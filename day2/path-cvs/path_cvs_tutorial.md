@@ -63,7 +63,7 @@ Unlike the previous metadynamics tutorial, here we will demonstrate the use of p
 
 **Files**
 Files to complete this tutorial can be accessed here:
-[tutorial files](coming soon)
+[tutorial files](https://github.com/jamesmccarty/path-CVs-tutorial-files.git)
 
 These files are already located on bigzam:
 /opt/workshop/path-CVs/ 

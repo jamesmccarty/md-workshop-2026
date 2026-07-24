@@ -25,7 +25,7 @@ While simple, this system is a nice example because it presents two metastable s
 
 **Files**
 Files to complete this tutorial can be accessed here:
-[tutorial files](coming soon)
+[tutorial files](https://github.com/jamesmccarty/using-restraints-tutorial-files.git)
 
 These files are already located on bigzam:
 /opt/workshop/using_restraints/
