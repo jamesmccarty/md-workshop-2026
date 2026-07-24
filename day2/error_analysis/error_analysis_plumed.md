@@ -22,11 +22,14 @@ In this first example, I have run a 1-$$\mu$$s MD simulation trajectory of the R
 
 The file `RC9_distance.dat` contains the distance between atom HA1 on Gly1 and atom HN on Leu9. For transparency, I created this data using the PLUMED driver with the following input:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> example PLUMED input for reference <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 d1: DISTANCE ATOMS=6,98 # distance between atom HA1 on Gly1 and HN on Leu9
 
 PRINT ARG=d1 STRIDE=80 FILE=distance.dat
-{% endhighlight %}
+</code></pre>
+</div>  
 
 This data is provided for download [here](https://drive.google.com/file/d/1j48wvCrlDujbNO4fM-r1iEl4w4065Agx/view?usp=sharing). Use this link to download the data file to your Windows machine. 
 
@@ -38,10 +41,13 @@ The beginning of this document is similar to what you have done before in earlie
 
 Then we calculate the mean and standard deviation as follows:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python code <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 d_mean_value = np.mean(d)
 d_std_value = np.std(d)
-{% endhighlight %}
+</code></pre>
+</div>  
 
 What is the value of the mean distance between HA1 and HN in our simulation?
 
@@ -62,7 +68,9 @@ The advantage of this approach is that we do not make any assumptions about the 
 
 A simple four lines of Python code will perform the bootstrapping analysis:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python code <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 for i in range(n_bootstrap):
     sample = rng.choice(d, size=n, replace=True) # sampling with replacement
     boot_hist[i], _ = np.histogram(sample, bins=bins, density=False) # generating new histogram 
@@ -70,7 +78,8 @@ for i in range(n_bootstrap):
 
 # confidence intervals (95% interval lies between the 2.5th percentile and 97.5th percentile)
 lower, upper = np.percentile(boot_hist, [2.5, 97.5], axis=0)
-{% endhighlight %}
+</code></pre>
+</div>  
 
 In the Colab notebook provided, we choose 1000 bootstrap samples. Note that because each bootstrap sample is drawn from the original trajectory with replacement, some frames will randomly be chosen multiple times, while others may not be chosen at all. Repeating the resampling proceedure many times allows us to estimate how much the histogram would vary if we repeated the MD simulation under similar conditions. 
 
@@ -106,20 +115,26 @@ After computing the KS statistic, the test calculates a $$p-value$$. The p-value
 
 Performing the KS test is quite easy in Python using the `scipy.stats` library. Here we should use the two-sample Kolmogorov-Smirnov test, [ks_2samp](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ks_2samp.html) since we are comparing two different data sets. If we have two sets of data, `trialA` and `trialB`, we can run the KS test in Python with the lines:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python code <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 from scipy.stats import ks_2samp
 
 result = ks_2samp(trialA, trialB)
 
-{% endhighlight %} 
+</code></pre>
+</div> 
 
 The result will have two components that we can print, the KS statistic ($$D$$) and the p-value:
 
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python code <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 print(result.statistic)
 print(result.pvalue)
-{% endhighlight %}
+</code></pre>
+</div> 
 
 We can perform this test on any pair of trials to decide if they sample the same distribution or are statistically different. 
 
@@ -132,18 +147,25 @@ Download the compressed archive containing the three trials to your local Window
 [KS test notebook](https://colab.research.google.com/drive/1GUF6SWx2ibZVbENVv-pmxqOzApnDeAUz?usp=sharing) 
 
 We unzip the archived data files with the line: 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python code <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 !tar -xzf distance_trials.tar.gz
-{% endhighlight %}
+</code></pre>
+</div> 
 
 Then store the three datasets as `trialA`, `trialB`, and `trialC`. 
 
 Performing the KS test on `trialA` and `trialB` gives the following:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python output<code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 KS statistic = 0.7463
 p-value = 3.6019e-272
-{% endhighlight %}
+</code></pre>
+</div> 
+
 
 Here we see the p-value is much smaller that 0.05 indicating the distributions are statistically different. We can confirm this by plotting the CDFs for the two datasets. Notice that the CDFs hardly overlap and the vertical difference between them is large. 
 
@@ -181,7 +203,9 @@ For this tutorial, I have run a long metadynamics simulation of alanine dipeptid
 
 The output from the metadynamics simulation is written to the file called [COLVAR](https://drive.google.com/file/d/1-o5N4ePfjtAliITh7hcpBxCL89VKU7Ec/view?usp=sharing). Download this file to your local Windows machine for this tutorial. The contents of this file have the form:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example COLVAR file <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 #! FIELDS time phi psi metad.bias metad.rbias
 #! SET min_phi -pi
 #! SET max_phi pi
@@ -192,7 +216,8 @@ The output from the metadynamics simulation is written to the file called [COLVA
  1.000000 -2.074010 2.646855 0.000000 0.000000
  1.500000 -2.215670 2.421693 0.034877 0.032636
  2.000000 -2.412214 -3.134460 0.000000 -0.002241
-{% endhighlight %} 
+</code></pre>
+</div> 
 
 where the first line tells us the the first column is the time (ps), the second column $$\phi$$ (rad), the third column is $$\psi$$ (rad), the fourth column is the metadyanmics bias, $$V(t)$$ (kJ/mol), and the final column is the time-dependent reweighting factor which is $$V(t) - C(t)$$ where $$C(t)$$ is a time-dependent constant that does not depend on the collective variable. To assign a weight to any frame, $$i$$, in our biased simulation, we simply compute the weight as:
 
@@ -200,23 +225,31 @@ $$w_i = \exp \left(\frac{V_i -C(t_i)}{RT}\right)$$
 
 In Python this can be done with the line:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python code <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 weights = np.exp(rbias/RT)
-{% endhighlight %}   
+</code></pre>
+</div>   
 
 Upload your `COLVAR` file to the following Colab notebook that can be used to perform a block analysis:
 
 [Link to Block Analysis Notebook](https://colab.research.google.com/drive/1dqVtUXJHNLynpOjFruLKxJs0Z7Bo-0Es?usp=sharing)
 
 After loading the file, the script will calculate the weight for each frame. If we print the $$\phi$$ value with its corresponding weight, we can inspect the first 10 frames: 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python code <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 for i in range(10):
   print(phi[i],weights[i])
-{% endhighlight %}  
+</code></pre>
+</div>    
 
 Each line contains the value of the dihedral $$\phi$$ along with the corresponding (un-normalized) weight $$w$$ for each frame of the metadynamics trajectory:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python output <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 -1.498385 0.029356663080163204
 -1.28402 0.029356663080163204
 -2.07401 0.029356663080163204
@@ -227,7 +260,8 @@ Each line contains the value of the dihedral $$\phi$$ along with the correspondi
 -2.484923 0.04218933745045227
 -1.485115 0.02927095481982935
 -1.266694 0.029244762392134548
-{% endhighlight %}
+</code></pre>
+</div>  
 
 At this point we can apply the block-analysis technique to calculate the average free energy across the blocks and the error as a function of block size. The idea is that instead of treating the entire trajectory data as one long simulation, we divide it into chunck or **blocks** of equal pieces. Each block is treated as though it were an independent simulation and gives an independent estimate of the free energy. 
 
@@ -235,9 +269,12 @@ Finally, we calculate the average error along each free-energy profile as a func
 
 We create an array to test block sizes ranging from 1 to 1000:
 
-{% highlight git %}
+<div style="background-color:#eef3ff; border-left:5px solid #4a6cf7; padding:12px; border-radius:6px; margin:15px 0;">
+<p style="margin-top:0;"><strong> Example Python code <code></code></strong></p>
+<pre style="background-color:transparent; border:none; margin-bottom:0;"><code>
 block_sizes = np.arange(1, 1001, 10)
-{% endhighlight %}
+</code></pre>
+</div>  
 
 After running the block analysis, we can plot the average error along each free-energy profile as a function of the block size:
 
@@ -264,3 +301,12 @@ Here we see that the low free energy metastable basins have uncertainties below 
 Overall, we can conclude that the major features in the free energy landsacpe are well converged. 
 
 In conclusion, error analysis and assessment of the free energy convergence is an essential part of enhanced sampling calculations, as it provides a measure of confidence in the calculated free-energy surface. 
+
+Congratulations you have compete the workshop tutorials! 
+
+[Return to Day 2 homepage](../../day2.md)
+ 
+
+~    
+
+
